@@ -1,0 +1,91 @@
+%styl klasy z Polskimi Normami oprac. Marcin Wolinski
+\documentclass[a4paper,titleauthor]{mwart} 
+
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx} %pakiet do wstawiania grafiki
+\usepackage[hyphens]{url} %pakiet do wstawiania linkow
+%\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{authblk}%pakiet do tworzenia afiliacji
+\usepackage{tabularx}%pakiet do tabel
+\usepackage[a4paper, left=2cm, right=2cm, top=3cm, bottom=3cm]{geometry}
+\usepackage{listings}
+\usepackage{placeins}%pakiet do kontroli umieszczania obiektow
+\usepackage{hyperref}%pakiet do m.in. kolorowania linkow
+\usepackage[]{xcolor}
+\usepackage{float}
+\usepackage{minted}
+
+
+\usepackage[tablegrid,owncaptions]{vhistory}
+\renewcommand{\vhhistoryname}{Historia zmian}
+\renewcommand{\vhversionname}{Wersja}
+\renewcommand{\vhdatename}   {Data}
+\renewcommand{\vhauthorname} {Autor}
+\renewcommand{\vhchangename} {Opis zmian}
+
+\renewcommand\figurename{Rys.}%skrocony podpis
+\renewcommand\lstlistingname{Wydruk}
+
+
+%------------------------------------------------------------------------
+% Dane do strony tytułowej
+
+\title{{\Huge  Projekt BDBT}\\ - \\{\Large Zespół A2}\\ }
+
+\author{Szymon Boniuk XXX \and Jakub Celiński 337318}
+
+\affil{Politechnika Warszawska, Wydział EiTI}
+\date{\today}
+
+%------------------------------------------------------------------------
+% Początek dokumentu
+\begin{document}
+	
+	%Automatycznie generowany tytuł dokumentu
+	\maketitle
+	
+	\newpage
+	\tableofcontents
+	\newpage
+	%------------------------------------------------------------------------
+	\section{Zakres i cel projektu (opis założeń funkcjonalnych projektowanej bazy danych)}
+	
+	\section{Definicja systemu}
+	\subsection{Perspektywy użytkowników}
+	
+	\section{Model konceptualny}
+	\subsection{Definicja zbiorów encji określonych w projekcie (decyzje projektowe)}
+	\subsection{Ustalenie związków między encjami i ich typów}
+	\subsection{Określenie atrybutów i ich dziedzin}
+	\subsection{Dodatkowe reguły integralnościowe (reguły biznesowe)}
+	\subsection{Klucze kandydujące i główne (decyzje projektowe)}
+	\subsection{Schemat ER na poziomie konceptualnym}
+	\subsection{Problem pułapek szczelinowych i wachlarzowych – analiza i przykłady}
+	
+	\section{Model logiczny}
+	\subsection{Charakterystyka modelu relacyjnego}
+	\subsection{Usunięcie właściwości niekompatybilnych z modelem relacyjnym - przykłady}
+	\subsection{Proces normalizacji – analiza i przykłady}
+	\subsection{Schemat ER na poziomie modelu logicznego}
+	\subsection{Więzy integralności}
+	\subsection{Proces denominacji – analiza i przykłady}
+	
+	\section{Faza fizyczna}
+	\subsection{Projekt transakcji i weryfikacja ich wykonalności}
+	\subsection{Strojenie bazy danych – dobór indeksów}
+	\subsection{Skrypt SQL zakładający bazę danych}
+	\subsection{Przykłady zapytań i poleceń SQL odnoszących się do bazy danych}
+	\newpage
+
+\bibliographystyle{unsrt} % plplain plabbrv plalpha
+\bibliography{BDBT}
+
+\end{document}
+
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[scale = 0.6]{nazwa.png}
+%	\caption{PODPIS}
+%	\label{fig:PODPIS}
+%\end{figure}
