@@ -2,6 +2,8 @@
 \documentclass[a4paper,titleauthor]{mwart} 
 
 \usepackage{polski}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx} %pakiet do wstawiania grafiki
 \usepackage[hyphens]{url} %pakiet do wstawiania linkow
@@ -31,7 +33,7 @@
 %------------------------------------------------------------------------
 % Dane do strony tytułowej
 
-\title{{\Huge  Projekt BDBT}\\ - \\{\Large Zespół A2}\\ }
+\title{{\Huge  Projekt BDBT}\\ - \\{\Large Zespół A2}\\ {\Large Salon Samochodowy}}
 
 \author{Szymon Boniuk 337314 \and Jakub Celiński 337318}
 
@@ -51,18 +53,642 @@
 	%------------------------------------------------------------------------
 	\section{Zakres i cel projektu (opis założeń funkcjonalnych projektowanej bazy danych)}
 	
+	\subsection{Wprowadzenie}
+	
+	Realizowany projekt dotyczy przedsiębiorstwa z branży motoryzacyjnej – salonu samochodowego. Projekt bazy danych ma na celu wsparcie kompleksowej obsługi wszystkich procesów biznesowych związanych ze sprzedażą, serwisowaniem oraz zarządzaniem pojazdami.
+	
+	\subsection{Opis działalności biznesowej}
+	
+	Salon samochodowy zajmuje się:
+	\begin{itemize}
+		\item Sprzedażą nowych i używanych samochodów osobowych
+		\item Organizacją jazd testowych dla klientów
+		\item Serwisem i naprawami samochodów
+		\item Obsługą zamówień specjalnych
+	\end{itemize}
+	
+	\subsection{Główne procesy biznesowe}
+	
+	System bazy danych będzie wspierał następujące procesy:
+	
+	\begin{enumerate}
+		\item \textbf{Zarządzanie stanem magazynowym pojazdów} – śledzenie dostępności, statusu i lokalizacji pojazdów w poszczególnych oddziałach salonu
+		\item \textbf{Obsługa klientów indywidualnych i firm} – rejestracja klientów, prowadzenie historii kontaktów i transakcji
+		\item \textbf{Realizacja sprzedaży z różnymi formami płatności} – kompleksowa obsługa procesu sprzedaży
+		\item \textbf{Organizacja i rejestracja jazd testowych} – rezerwacja i ewidencja jazd próbnych
+		\item \textbf{Obsługa serwisowa pojazdów} – rejestracja zleceń naprawczych, ewidencja kosztów i historii serwisowania
+		\item \textbf{Zarządzanie pracownikami (sprzedawcy, serwisanci)} – ewidencja pracowników wraz z ich specjalizacjami
+		\item \textbf{Obsługa zamówień indywidualnych} – przyjmowanie i realizacja zamówień na pojazdy niedostępne w salonie
+		\item \textbf{Wystawianie faktur i dokumentacji sprzedaży} – generowanie dokumentów transakcji
+	\end{enumerate}
+	
+	\subsection{Cele projektowanej bazy danych}
+	
+	\begin{itemize}
+		\item Centralizacja danych o pojazdach, klientach i transakcjach
+		\item Wsparcie procesów decyzyjnych poprzez zapewnienie aktualnych danych
+		\item Eliminacja redundancji danych
+		\item Zapewnienie integralności i spójności informacji
+		\item Umożliwienie generowania raportów sprzedażowych i analitycznych
+		\item Ułatwienie obsługi klienta poprzez dostęp do pełnej historii współpracy
+	\end{itemize}
+	
+	%------------------------------------------------------------------------
 	\section{Definicja systemu}
+	
 	\subsection{Perspektywy użytkowników}
 	
+	System będzie wykorzystywany przez cztery główne grupy użytkowników, z których każda ma określone wymagania funkcjonalne.
+	
+	\subsubsection{Manager Salonu}
+	
+	\textbf{Cele:} Zarządzanie oddziałem, nadzór nad sprzedażą i pracownikami
+	
+	\textbf{Operacje:}
+	\begin{itemize}
+		\item Przeglądanie raportów sprzedaży
+		\item Zarządzanie stanem magazynowym
+		\item Ocena wyników pracowników
+		\item Analiza rentowności
+	\end{itemize}
+	
+	\subsubsection{Sprzedawca}
+	
+	\textbf{Cele:} Sprzedaż pojazdów, obsługa klientów
+	
+	\textbf{Operacje:}
+	\begin{itemize}
+		\item Rejestracja nowych klientów
+		\item Organizacja jazd testowych
+		\item Realizacja sprzedaży
+		\item Stosowanie rabatów (w ramach limitu)
+		\item Wystawianie faktur
+	\end{itemize}
+	
+	\subsubsection{Serwisant}
+	
+	\textbf{Cele:} Naprawa i konserwacja pojazdów
+	
+	\textbf{Operacje:}
+	\begin{itemize}
+		\item Rejestracja zleceń serwisowych
+		\item Aktualizacja statusu naprawy
+		\item Wprowadzanie kosztów części i robocizny
+		\item Zamykanie zleceń
+	\end{itemize}
+	
+	\subsubsection{Klient}
+	
+	\textbf{Cele:} Zakup pojazdu, serwis
+	
+	\textbf{Operacje:}
+	\begin{itemize}
+		\item Przeglądanie dostępnych pojazdów
+		\item Rezerwacja jazdy testowej
+		\item Składanie zamówienia
+		\item Sprawdzanie historii zakupów
+		\item Zgłaszanie pojazdu do serwisu
+	\end{itemize}
+	
+	%------------------------------------------------------------------------
 	\section{Model konceptualny}
+	
 	\subsection{Definicja zbiorów encji określonych w projekcie (decyzje projektowe)}
+	
+	Model konceptualny składa się z ośmiu głównych encji. Zgodnie z zasadami modelowania konceptualnego, wszystkie encje są nazwane w liczbie pojedynczej.
+	
+	\subsubsection{SALON}
+	
+	Encja główna systemu, reprezentująca oddział salonu samochodowego. Umieszczona w lewym górnym rogu diagramu ER jako punkt wyjściowy modelu.
+	
+	\textbf{Atrybuty:}
+	\begin{itemize}
+		\item \textbf{nr\_salonu} (PK) – sztuczny klucz główny
+		\item nazwa – nazwa oddziału
+		\item \textbf{adres} – atrybut złożony (composite) zawierający: ulica, miasto, kod\_pocztowy
+		\item telefon – numer kontaktowy
+		\item email – adres email oddziału
+	\end{itemize}
+	
+	\subsubsection{POJAZD}
+	
+	Reprezentuje pojedynczy egzemplarz pojazdu znajdujący się w ofercie salonu.
+	
+	\textbf{Atrybuty:}
+	\begin{itemize}
+		\item \textbf{nr\_vin} (PK) – numer identyfikacyjny pojazdu (naturalny klucz)
+		\item rok\_produkcji – rok wyprodukowania pojazdu
+		\item przebieg – liczba przejechanych kilometrów
+		\item kolor – kolor nadwozia
+		\item cena\_katalogowa – typu Money (cena wywoławcza)
+		\item stan – dziedzina \{Nowy, Uzywany\}
+		\item status – dziedzina \{Dostepny, Sprzedany, Rezerwacja, Serwis\}
+		\item data\_przyjecia – data wpływu pojazdu do salonu
+		\item uwagi – typu VARCHAR(500) dla dodatkowych informacji
+	\end{itemize}
+	
+	\subsubsection{MODEL\_SAMOCHODU}
+	
+	Reprezentuje typ/model pojazdu oferowany przez producenta.
+	
+	\textbf{Atrybuty:}
+	\begin{itemize}
+		\item \textbf{id\_modelu} (PK) – sztuczny klucz główny
+		\item nazwa\_modelu – komercyjna nazwa modelu
+		\item typ\_nadwozia – dziedzina \{Sedan, SUV, Hatchback, Kombi\}
+		\item pojemnosc\_silnika – pojemność w litrach
+		\item moc\_km – moc silnika w koniach mechanicznych
+		\item rodzaj\_paliwa – dziedzina \{Benzyna, Diesel, Elektryczny, Hybryda\}
+		\item liczba\_miejsc – liczba miejsc siedzących
+	\end{itemize}
+	
+	\subsubsection{PRODUCENT}
+	
+	Reprezentuje producenta samochodów (markę).
+	
+	\textbf{Atrybuty:}
+	\begin{itemize}
+		\item \textbf{id\_producenta} (PK) – sztuczny klucz główny
+		\item nazwa\_producenta – nazwa marki
+		\item kraj\_pochodzenia – kraj siedziby producenta
+	\end{itemize}
+	
+	\subsubsection{KLIENT}
+	
+	Reprezentuje klienta salonu – osobę fizyczną lub firmę.
+	
+	\textbf{Atrybuty:}
+	\begin{itemize}
+		\item \textbf{nr\_klienta} (PK) – sztuczny klucz główny
+		\item typ\_klienta – dziedzina \{Indywidualny, Firma\}
+		\item \textbf{dane\_osobowe} – atrybut złożony (composite) dla klientów indywidualnych:
+		\begin{itemize}
+			\item imie
+			\item nazwisko
+			\item pesel (klucz kandydujący)
+		\end{itemize}
+		\item \textbf{dane\_firmowe} – atrybut złożony (composite) dla firm:
+		\begin{itemize}
+			\item nazwa\_firmy
+			\item nip (klucz kandydujący)
+		\end{itemize}
+		\item \textbf{adres} – atrybut złożony (composite)
+		\item telefon – numer kontaktowy (obowiązkowy)
+		\item email – adres email
+		\item data\_rejestracji – data dodania do bazy
+	\end{itemize}
+	
+	\textbf{Klucze kandydujące:}
+	\begin{itemize}
+		\item pesel – dla klientów indywidualnych
+		\item nip – dla klientów firmowych
+	\end{itemize}
+	
+	\subsubsection{PRACOWNIK (z hierarchią specjalizacji)}
+	
+	Reprezentuje pracownika salonu. Jest encją nadrzędną w hierarchii dziedziczenia.
+	
+	\textbf{Atrybuty wspólne:}
+	\begin{itemize}
+		\item \textbf{nr\_pracownika} (PK) – sztuczny klucz główny
+		\item imie – imię pracownika
+		\item nazwisko – nazwisko pracownika
+		\item pesel – PESEL (klucz kandydujący)
+		\item stanowisko – zajmowane stanowisko
+		\item data\_zatrudnienia – data rozpoczęcia pracy
+		\item pensja\_podstawowa – wynagrodzenie zasadnicze (typu Money)
+	\end{itemize}
+	
+	\textbf{Specjalizacja: SPRZEDAWCA}
+	
+	Atrybuty specyficzne (2-3 atrybuty zgodnie z wytycznymi):
+	\begin{itemize}
+		\item prowizja\_procent – procent prowizji od sprzedaży
+		\item limit\_rabatu\_procent – maksymalny rabat jaki może przyznać
+		\item liczba\_sprzedazy – licznik sprzedanych pojazdów w bieżącym miesiącu
+	\end{itemize}
+	
+	\textbf{Specjalizacja: SERWISANT}
+	
+	Atrybuty specyficzne:
+	\begin{itemize}
+		\item specjalizacja – obszar specjalizacji technicznej
+		\item certyfikaty – atrybut wielowartościowy (multivalued) lub TEXT zawierający posiadane certyfikaty
+		\item stawka\_godzinowa – stawka za godzinę pracy (typu Money)
+	\end{itemize}
+	
+	\textbf{Właściwości hierarchii:}
+	\begin{itemize}
+		\item Typ: Overlapping – pracownik może być jednocześnie sprzedawcą i serwisantem
+		\item Uczestnictwo: Partial – nie każdy pracownik musi należeć do specjalizacji
+		\item W encjach specjalizacji nie definiujemy osobnych kluczy głównych (dziedziczą nr\_pracownika)
+	\end{itemize}
+	
+	\subsubsection{SPRZEDAZ}
+	
+	Reprezentuje transakcję sprzedaży pojazdu.
+	
+	\textbf{Atrybuty:}
+	\begin{itemize}
+		\item \textbf{nr\_sprzedazy} (PK) – sztuczny klucz główny
+		\item data\_sprzedazy – data zawarcia transakcji
+		\item cena\_sprzedazy – cena wywoławcza (typu Money)
+		\item cena\_koncowa – ostateczna cena po rabacie (typu Money)
+		\item metoda\_platnosci – dziedzina \{Gotowka, Przelew, Finansowanie, Leasing\}
+		\item status – dziedzina \{W\_trakcie, Zakonczona, Anulowana\}
+	\end{itemize}
+	
+	\subsubsection{WYPOSAZENIE}
+	
+	Reprezentuje element wyposażenia dodatkowego pojazdu.
+	
+	\textbf{Atrybuty:}
+	\begin{itemize}
+		\item \textbf{id\_wyposazenia} (PK) – sztuczny klucz główny
+		\item nazwa – nazwa elementu wyposażenia (klucz kandydujący)
+		\item kategoria – dziedzina \{Bezpieczenstwo, Komfort, Multimedia\}
+		\item dodatkowa\_cena – dopłata za element (typu Money)
+	\end{itemize}
+	
 	\subsection{Ustalenie związków między encjami i ich typów}
+	
+	\subsubsection{Związki typu 1:M}
+	
+	\textbf{1. SALON [posiada] POJAZD (1:M)}
+	
+	Krotność: (1,1) : (0,N)
+	\begin{itemize}
+		\item Każdy pojazd należy do dokładnie jednego salonu (oddziału)
+		\item Salon może posiadać wiele pojazdów lub nie posiadać żadnego
+	\end{itemize}
+	
+	\textbf{2. SALON [zatrudnia] PRACOWNIK (1:M)}
+	
+	Krotność: (1,1) : (0,N)
+	\begin{itemize}
+		\item Każdy pracownik jest przypisany do dokładnie jednego salonu
+		\item Salon może zatrudniać wielu pracowników
+	\end{itemize}
+	
+	\textbf{3. PRODUCENT [produkuje] MODEL\_SAMOCHODU (1:M)}
+	
+	Krotność: (1,1) : (1,N)
+	\begin{itemize}
+		\item Każdy model jest produkowany przez dokładnie jednego producenta
+		\item Producent musi mieć przynajmniej jeden model w ofercie
+	\end{itemize}
+	
+	\textbf{4. MODEL\_SAMOCHODU [jest\_instancja] POJAZD (1:M)}
+	
+	Krotność: (1,1) : (1,N)
+	\begin{itemize}
+		\item Każdy pojazd jest egzemplarzem dokładnie jednego modelu
+		\item Model musi mieć przynajmniej jedną instancję w systemie
+	\end{itemize}
+	
+	\textbf{5. KLIENT [dokonuje] SPRZEDAZ (1:M)}
+	
+	Krotność: (1,1) : (0,N)
+	\begin{itemize}
+		\item Każda sprzedaż dotyczy dokładnie jednego klienta
+		\item Klient może dokonać wielu zakupów lub żadnego
+	\end{itemize}
+	
+	\textbf{6. PRACOWNIK [realizuje] SPRZEDAZ (1:M)}
+	
+	Krotność: (1,1) : (0,N)
+	\begin{itemize}
+		\item Każda sprzedaż jest realizowana przez dokładnie jednego pracownika
+		\item Pracownik może zrealizować wiele sprzedaży
+	\end{itemize}
+	
+	\textbf{7. POJAZD [jest\_przedmiotem] SPRZEDAZ (M:1)}
+	
+	Krotność: (1,1) : (0,1)
+	\begin{itemize}
+		\item Każda sprzedaż dotyczy dokładnie jednego pojazdu
+		\item Pojazd może być przedmiotem maksymalnie jednej sprzedaży (nie można sprzedać tego samego pojazdu dwa razy)
+	\end{itemize}
+	
+	\subsubsection{Związki typu M:N (wymagane w modelu konceptualnym)}
+	
+	\textbf{1. POJAZD [ma\_wyposazenie] WYPOSAŻENIE (M:N)}
+	
+	Krotność: (1,N) : (0,N)
+	\begin{itemize}
+		\item Jeden pojazd musi mieć przynajmniej jedno wyposażenie
+		\item Jedno wyposażenie może występować w wielu pojazdach
+		\item Element wyposażenia może nie być przypisany do żadnego pojazdu (jeśli nie jest obecnie używany)
+	\end{itemize}
+	
+	\textbf{2. KLIENT [rezerwuje] POJAZD poprzez TEST\_DRIVE (M:N)}
+	
+	Krotność: (0,N) : (0,N)
+	\begin{itemize}
+		\item Klient może zarezerwować wiele jazd testowych (dla różnych pojazdów)
+		\item Pojazd może być użyty w wielu jazdach testowych (przez różnych klientów)
+		\item Zarówno klient jak i pojazd mogą nie mieć żadnych jazd testowych
+	\end{itemize}
+	
+	\subsubsection{Związek specjalizacji (ISA)}
+	
+	\textbf{PRACOWNIK [ISA] \{SPRZEDAWCA, SERWISANT\}}
+	
+	Właściwości:
+	\begin{itemize}
+		\item \textbf{Typ:} Overlapping (nakładające się) – pracownik może być jednocześnie sprzedawcą i serwisantem
+		\item \textbf{Uczestnictwo:} Partial (częściowe) – nie każdy pracownik musi należeć do specjalizacji
+		\item \textbf{Konwersja do modelu logicznego:} Wymaga ustawienia generacji na N tablic (osobne tabele dla każdej specjalizacji)
+	\end{itemize}
+	
 	\subsection{Określenie atrybutów i ich dziedzin}
+	
+	\subsubsection{Typy atrybutów stosowane w modelu konceptualnym}
+	
+	\textbf{Atrybuty złożone (composite):}
+	\begin{itemize}
+		\item adres $\rightarrow$ (ulica, miasto, kod\_pocztowy)
+		\item dane\_osobowe $\rightarrow$ (imie, nazwisko, pesel)
+		\item dane\_firmowe $\rightarrow$ (nazwa\_firmy, nip)
+	\end{itemize}
+	
+	\textbf{Atrybuty wielowartościowe (multivalued):}
+	\begin{itemize}
+		\item certyfikaty – dla SERWISANT
+	\end{itemize}
+	
+	\subsubsection{Dziedziny wartości}
+	
+	Dla atrybutów z małym zbiorem wartości stosujemy dziedziny wyliczane:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|p{7cm}|}
+			\hline
+			\textbf{Atrybut} & \textbf{Encja} & \textbf{Dziedzina} \\
+			\hline
+			stan & POJAZD & \{Nowy, Uzywany\} \\
+			\hline
+			status & POJAZD & \{Dostepny, Sprzedany, Rezerwacja, Serwis\} \\
+			\hline
+			typ\_klienta & KLIENT & \{Indywidualny, Firma\} \\
+			\hline
+			typ\_nadwozia & MODEL\_SAMOCHODU & \{Sedan, SUV, Hatchback, Kombi\} \\
+			\hline
+			rodzaj\_paliwa & MODEL\_SAMOCHODU & \{Benzyna, Diesel, Elektryczny, Hybryda\} \\
+			\hline
+			metoda\_platnosci & SPRZEDAZ & \{Gotowka, Przelew, Finansowanie, Leasing\} \\
+			\hline
+			status & SPRZEDAZ & \{W\_trakcie, Zakonczona, Anulowana\} \\
+			\hline
+			kategoria & WYPOSAZENIE & \{Bezpieczenstwo, Komfort, Multimedia\} \\
+			\hline
+		\end{tabular}
+		\caption{Dziedziny atrybutów wyliczanych}
+	\end{table}
+	
+	\textbf{Postać SQL dla dziedzin:}
+	
+	W implementacji fizycznej dziedziny będą reprezentowane przez ograniczenia CHECK, np.:
+	\begin{verbatim}
+	stan VARCHAR2(10) CHECK (stan IN ('Nowy', 'Uzywany'))
+	\end{verbatim}
+	
+	\subsubsection{Typy danych}
+	
+	Dobór typów danych zgodnie z zasadami:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Typ logiczny} & \textbf{Model konceptualny} & \textbf{Oracle (logiczny/fizyczny)} \\
+			\hline
+			Kwota/cena & Money & NUMBER(10,2) \\
+			\hline
+			PESEL & CHAR(11) & CHAR(11) \\
+			\hline
+			NIP & CHAR(10) & CHAR(10) \\
+			\hline
+			Kod pocztowy & CHAR(6) & CHAR(6) \\
+			\hline
+			Tekst krótki & VARCHAR(n) & VARCHAR2(n) \\
+			\hline
+			Tekst długi & VARCHAR(500) & VARCHAR2(500) \\
+			\hline
+			Data & Date & DATE \\
+			\hline
+			Liczba całkowita & Integer/Number & NUMBER(n) \\
+			\hline
+		\end{tabular}
+		\caption{Mapowanie typów danych}
+	\end{table}
+	
 	\subsection{Dodatkowe reguły integralnościowe (reguły biznesowe)}
+	
+	\subsubsection{Reguły domenowe}
+	
+	\begin{enumerate}
+		\item PESEL musi mieć dokładnie 11 znaków cyfr: \texttt{CHAR(11)}
+		\item NIP musi mieć dokładnie 10 znaków cyfr: \texttt{CHAR(10)}
+		\item Cena pojazdu musi być $> 0$
+		\item Rok produkcji: $1900 \leq \text{rok\_produkcji} \leq 2025$
+		\item Przebieg $\geq 0$
+		\item Stan pojazdu: \texttt{IN ('Nowy', 'Uzywany')}
+		\item Metoda płatności: \texttt{IN ('Gotowka', 'Przelew', 'Finansowanie', 'Leasing')}
+		\item Email musi być unikalny dla KLIENT i PRACOWNIK
+	\end{enumerate}
+	
+	\subsubsection{Reguły encji}
+	
+	\begin{enumerate}
+		\item Każdy POJAZD musi mieć przypisany MODEL\_SAMOCHODU
+		\item SPRZEDAZ wymaga KLIENTA i POJAZDU
+		\item Cena końcowa $\leq$ cena sprzedaży (rabat)
+		\item Data zatrudnienia $\leq$ data zwolnienia (jeśli istnieje)
+		\item KLIENT typu "Indywidualny" musi mieć PESEL
+		\item KLIENT typu "Firma" musi mieć NIP
+	\end{enumerate}
+	
+	\subsubsection{Reguły referencyjne}
+	
+	\begin{enumerate}
+		\item POJAZD ze statusem "Sprzedany" musi mieć powiązaną SPRZEDAZ
+		\item Nie można usunąć KLIENTA, który ma historię SPRZEDAZY
+		\item Nie można usunąć POJAZDU, który został sprzedany
+		\item TEST\_DRIVE wymaga ważnego numeru prawa jazdy
+	\end{enumerate}
+	
 	\subsection{Klucze kandydujące i główne (decyzje projektowe)}
+	
+	\subsubsection{Zasady wyboru kluczy}
+	
+	W modelu konceptualnym stosujemy następujące zasady:
+	\begin{itemize}
+		\item \textbf{Klucze główne (PK):} Preferujemy klucze sztuczne zaczynające się od \textbf{id\_} lub \textbf{nr\_}
+		\item \textbf{Wyjątek:} POJAZD używa naturalnego klucza \textbf{nr\_vin} (VIN jest unikalny i stabilny)
+		\item \textbf{Klucze kandydujące (UK):} Identyfikujemy naturalne klucze, które mogą służyć jako alternatywne identyfikatory
+	\end{itemize}
+	
+	\subsubsection{Zestawienie kluczy}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Encja} & \textbf{Klucz główny (PK)} & \textbf{Klucze kandydujące (UK)} \\
+			\hline
+			SALON & nr\_salonu & nazwa \\
+			\hline
+			POJAZD & nr\_vin & - \\
+			\hline
+			MODEL\_SAMOCHODU & id\_modelu & - \\
+			\hline
+			PRODUCENT & id\_producenta & nazwa\_producenta \\
+			\hline
+			KLIENT & nr\_klienta & pesel (indywidualny), nip (firma) \\
+			\hline
+			PRACOWNIK & nr\_pracownika & pesel \\
+			\hline
+			SPRZEDAWCA & (nr\_pracownika) & - \\
+			\hline
+			SERWISANT & (nr\_pracownika) & - \\
+			\hline
+			SPRZEDAZ & nr\_sprzedazy & - \\
+			\hline
+			WYPOSAZENIE & id\_wyposazenia & nazwa \\
+			\hline
+		\end{tabular}
+		\caption{Klucze główne i kandydujące}
+	\end{table}
+	
 	\subsection{Schemat ER na poziomie konceptualnym}
+	
+	% Tutaj wstaw diagram ER
+	\begin{figure}[H]
+		\centering
+		% \includegraphics[width=\textwidth]{er_model_konceptualny.pdf}
+		\caption{Diagram ER modelu konceptualnego - Salon Samochodowy}
+		\label{fig:er_konceptualny}
+	\end{figure}
+	
+	\textbf{Opis diagramu:}
+	
+	Diagram przedstawia kompletny model konceptualny systemu Salon Samochodowy. Główne cechy:
+	
+	\begin{itemize}
+		\item Encja główna SALON umieszczona w lewym górnym rogu
+		\item 8 encji głównych połączonych związkami
+		\item Hierarchia dziedziczenia: PRACOWNIK z podtypami SPRZEDAWCA i SERWISANT
+		\item Dwa związki M:N: POJAZD-WYPOSAZENIE oraz KLIENT-POJAZD (przez TEST\_DRIVE)
+		\item Atrybuty złożone (adres, dane\_osobowe, dane\_firmowe) oznaczone odpowiednio
+		\item Atrybuty wielowartościowe (certyfikaty) oznaczone podwójnymi owalami
+		\item Krotności związków zaznaczone przy liniach
+		\item Klucze główne podkreślone
+	\end{itemize}
+	
 	\subsection{Problem pułapek szczelinowych i wachlarzowych – analiza i przykłady}
 	
+	\subsubsection{Pułapka wachlarzowa (Fan Trap)}
+	
+	\textbf{Definicja:} Pułapka wachlarzowa występuje, gdy model reprezentuje związek między encjami w sposób niejednoznaczny, co prowadzi do problemów z interpretacją ścieżki między encjami.
+	
+	\textbf{Analiza w projekcie:}
+	
+	Potencjalna pułapka wachlarzowa mogłaby wystąpić w łańcuchu:
+	$$\text{SALON} \rightarrow \text{PRACOWNIK} \rightarrow \text{SPRZEDAZ} \leftarrow \text{POJAZD}$$
+	
+	\textbf{Problem:} Czy można jednoznacznie określić, w którym salonie został sprzedany pojazd?
+	
+	\textbf{Rozwiązanie zastosowane w projekcie:}
+	
+	Model jest zaprojektowany tak, że:
+	\begin{itemize}
+		\item Każdy POJAZD należy do dokładnie jednego SALON (związek 1:M)
+		\item Każdy PRACOWNIK należy do dokładnie jednego SALON (związek 1:M)
+		\item Każda SPRZEDAZ jest realizowana przez PRACOWNIKA i dotyczy POJAZDU
+	\end{itemize}
+	
+	Dzięki temu można jednoznacznie określić salon sprzedaży poprzez:
+	\begin{itemize}
+		\item Salon pracownika realizującego sprzedaż
+		\item Salon, do którego należał pojazd przed sprzedażą
+	\end{itemize}
+	
+	\textbf{Reguła weryfikacyjna:}
+	
+	Należy zapewnić, że pojazd i pracownik realizujący sprzedaż należą do tego samego salonu:
+	\begin{verbatim}
+	CHECK (POJAZD.nr_salonu = PRACOWNIK.nr_salonu)
+	\end{verbatim}
+	
+	\subsubsection{Pułapka szczelinowa (Chasm Trap)}
+	
+	\textbf{Definicja:} Pułapka szczelinowa występuje, gdy brakuje kompletnej ścieżki między encjami w modelu, co uniemożliwia uzyskanie niektórych informacji.
+	
+	\textbf{Analiza w projekcie:}
+	
+	Potencjalna pułapka szczelinowa:
+	$$\text{KLIENT} \rightarrow \text{SPRZEDAZ} \leftarrow \text{POJAZD} \rightarrow \text{MODEL\_SAMOCHODU}$$
+	
+	\textbf{Problem:} Czy można znaleźć wszystkie pojazdy danego modelu, które oglądał klient (bez zakupu)?
+	
+	Odpowiedź: NIE – jeśli klient nie dokonał zakupu, nie ma ścieżki przez SPRZEDAZ.
+	
+	\textbf{Rozwiązanie:}
+	
+	Wprowadzono encję TEST\_DRIVE, która tworzy alternatywną ścieżkę:
+	$$\text{KLIENT} \rightarrow \text{TEST\_DRIVE} \leftarrow \text{POJAZD} \rightarrow \text{MODEL\_SAMOCHODU}$$
+	
+	Teraz możliwe są zapytania:
+	\begin{itemize}
+		\item Jakie modele testował klient?
+		\item Którzy klienci testowali pojazdy, ale nie kupili?
+		\item Jaki odsetek jazd testowych kończy się zakupem?
+	\end{itemize}
+	
+	\textbf{Przykładowe zapytanie (SQL):}
+	\begin{verbatim}
+	SELECT k.nazwisko, m.nazwa_modelu
+	FROM klient k
+	JOIN test_drive td ON k.nr_klienta = td.nr_klienta
+	JOIN pojazd p ON td.nr_vin = p.nr_vin
+	JOIN model_samochodu m ON p.id_modelu = m.id_modelu
+	WHERE k.nr_klienta NOT IN (SELECT nr_klienta FROM sprzedaz);
+	\end{verbatim}
+	
+	\subsubsection{Weryfikacja braku innych pułapek}
+	
+	\textbf{Sprawdzenie kompletności ścieżek:}
+	
+	\begin{enumerate}
+		\item \textbf{PRODUCENT → MODEL\_SAMOCHODU → POJAZD → SPRZEDAZ}
+		\begin{itemize}
+			\item Ścieżka kompletna
+			\item Możliwe zapytanie: Jaka jest sprzedaż pojazdów danego producenta?
+		\end{itemize}
+		
+		\item \textbf{SALON → PRACOWNIK → SPRZEDAZ}
+		\begin{itemize}
+			\item Ścieżka kompletna
+			\item Możliwe zapytanie: Ile sprzedali pracownicy danego salonu?
+		\end{itemize}
+		
+		\item \textbf{SALON → POJAZD → SPRZEDAZ}
+		\begin{itemize}
+			\item Ścieżka kompletna
+			\item Możliwe zapytanie: Które pojazdy z danego salonu zostały sprzedane?
+		\end{itemize}
+	\end{enumerate}
+	
+	\textbf{Wnioski:}
+	\begin{itemize}
+		\item Model nie zawiera pułapek wachlarzowych dzięki odpowiedniej strukturze związków
+		\item Pułapka szczelinowa została wyeliminowana przez encję TEST\_DRIVE
+		\item Wszystkie wymagane zapytania biznesowe są możliwe do zrealizowania
+	\end{itemize}
+	
+	%------------------------------------------------------------------------
 	\section{Model logiczny}
 	\subsection{Charakterystyka modelu relacyjnego}
 	\subsection{Usunięcie właściwości niekompatybilnych z modelem relacyjnym - przykłady}
@@ -82,10 +708,3 @@
 \bibliography{BDBT}
 
 \end{document}
-
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[scale = 0.6]{nazwa.png}
-%	\caption{PODPIS}
-%	\label{fig:PODPIS}
-%\end{figure}
