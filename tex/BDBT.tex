@@ -563,29 +563,13 @@
 	\end{table}
 	
 	\subsection{Schemat ER na poziomie konceptualnym}
-	
-	% Tutaj wstaw diagram ER
+
 	\begin{figure}[H]
 		\centering
-		% \includegraphics[width=\textwidth]{er_model_konceptualny.pdf}
+		\includegraphics[width=\textwidth]{tex/koncept.png}
 		\caption{Diagram ER modelu konceptualnego - Salon Samochodowy}
 		\label{fig:er_konceptualny}
 	\end{figure}
-	
-	\textbf{Opis diagramu:}
-	
-	Diagram przedstawia kompletny model konceptualny systemu Salon Samochodowy. Główne cechy:
-	
-	\begin{itemize}
-		\item Encja główna SALON umieszczona w lewym górnym rogu
-		\item 8 encji głównych połączonych związkami
-		\item Hierarchia dziedziczenia: PRACOWNIK z podtypami SPRZEDAWCA i SERWISANT
-		\item Dwa związki M:N: POJAZD-WYPOSAZENIE oraz KLIENT-POJAZD (przez TEST\_DRIVE)
-		\item Atrybuty złożone (adres, dane\_osobowe, dane\_firmowe) oznaczone odpowiednio
-		\item Atrybuty wielowartościowe (certyfikaty) oznaczone podwójnymi owalami
-		\item Krotności związków zaznaczone przy liniach
-		\item Klucze główne podkreślone
-	\end{itemize}
 	
 	\subsection{Problem pułapek szczelinowych i wachlarzowych – analiza i przykłady}
 	
