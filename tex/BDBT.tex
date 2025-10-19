@@ -1,19 +1,18 @@
-%styl klasy z Polskimi Normami oprac. Marcin Wolinski
 \documentclass[a4paper,titleauthor]{mwart} 
 
 \usepackage{polski}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx} %pakiet do wstawiania grafiki
-\usepackage[hyphens]{url} %pakiet do wstawiania linkow
+\usepackage{graphicx}
+\usepackage[hyphens]{url}
 %\usepackage[hidelinks,breaklinks]{hyperref}
-\usepackage{authblk}%pakiet do tworzenia afiliacji
-\usepackage{tabularx}%pakiet do tabel
+\usepackage{authblk}
+\usepackage{tabularx}
 \usepackage[a4paper, left=2cm, right=2cm, top=3cm, bottom=3cm]{geometry}
 \usepackage{listings}
-\usepackage{placeins}%pakiet do kontroli umieszczania obiektow
-\usepackage{hyperref}%pakiet do m.in. kolorowania linkow
+\usepackage{placeins}
+\usepackage{hyperref}
 \usepackage[]{xcolor}
 \usepackage{float}
 \usepackage{minted}
@@ -29,10 +28,6 @@
 \renewcommand\figurename{Rys.}%skrocony podpis
 \renewcommand\lstlistingname{Wydruk}
 
-
-%------------------------------------------------------------------------
-% Dane do strony tytułowej
-
 \title{{\Huge  Projekt BDBT}\\ - \\{\Large Zespół A2}\\ {\Large Salon Samochodowy}}
 
 \author{Szymon Boniuk 337314 \and Jakub Celiński 337318}
@@ -40,17 +35,13 @@
 \affil{Politechnika Warszawska, Wydział EiTI}
 \date{\today}
 
-%------------------------------------------------------------------------
-% Początek dokumentu
 \begin{document}
 	
-	%Automatycznie generowany tytuł dokumentu
 	\maketitle
 	
 	\newpage
 	\tableofcontents
 	\newpage
-	%------------------------------------------------------------------------
 	\section{Zakres i cel projektu (opis założeń funkcjonalnych projektowanej bazy danych)}
 	
 	\subsection{Wprowadzenie}
@@ -93,7 +84,6 @@
 		\item Ułatwienie obsługi klienta poprzez dostęp do pełnej historii współpracy
 	\end{itemize}
 	
-	%------------------------------------------------------------------------
 	\section{Definicja systemu}
 	
 	\subsection{Perspektywy użytkowników}
@@ -150,7 +140,6 @@
 		\item Zgłaszanie pojazdu do serwisu
 	\end{itemize}
 	
-	%------------------------------------------------------------------------
 	\section{Model konceptualny}
 	
 	\subsection{Definicja zbiorów encji określonych w projekcie (decyzje projektowe)}
@@ -672,7 +661,6 @@
 		\item Wszystkie wymagane zapytania biznesowe są możliwe do zrealizowania
 	\end{itemize}
 	
-	%------------------------------------------------------------------------
 	\section{Model logiczny}
 	\subsection{Charakterystyka modelu relacyjnego}
 	\subsection{Usunięcie właściwości niekompatybilnych z modelem relacyjnym - przykłady}
@@ -688,7 +676,7 @@
 	\subsection{Przykłady zapytań i poleceń SQL odnoszących się do bazy danych}
 	\newpage
 
-\bibliographystyle{unsrt} % plplain plabbrv plalpha
+\bibliographystyle{unsrt}
 \bibliography{BDBT}
 
 \end{document}
