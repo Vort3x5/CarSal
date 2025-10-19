@@ -1,0 +1,210 @@
+@startuml logic
+' Schemat ER - Salon Samochodowy - Model Logiczny
+' Notacja: Crow's Foot
+' Zgodny z wymaganiami: 13 tabel (12-20), nazwy w l. mnogiej, brak pol. znaków, 3NF.
+
+title "Diagram ER - Model Logiczny - Salon Samochodowy"
+
+skinparam linetype ortho
+skinparam ranksep 80
+skinparam nodesep 60
+skinparam defaultFontName "Arial"
+skinparam entity {
+  BorderColor #333
+  BackgroundColor #EEE
+}
+
+' ============ TABELE (RELACJE) ============
+
+entity "SALONY" as salony {
+  * **nr_salonu** : NUMBER(5) <<PK>>
+  --
+  * nazwa : VARCHAR2(100) <<NN, UK>>
+  * ulica : VARCHAR2(100) <<NN>>
+  * miasto : VARCHAR2(50) <<NN>>
+  * kod_pocztowy : CHAR(6) <<NN>>
+  * telefon : VARCHAR2(15)
+  * email : VARCHAR2(100)
+}
+
+entity "PRODUCENCI" as producenci {
+  * **id_producenta** : NUMBER(5) <<PK>>
+  --
+  * nazwa_producenta : VARCHAR2(50) <<NN, UK>>
+  * kraj_pochodzenia : VARCHAR2(50)
+}
+
+entity "MODELE_SAMOCHODOW" as modele_samochodow {
+  * **id_modelu** : NUMBER(10) <<PK>>
+  --
+  * id_producenta : NUMBER(5) <<FK, NN>>
+  * nazwa_modelu : VARCHAR2(50) <<NN>>
+  * typ_nadwozia : VARCHAR2(15) <<NN>>
+    ''CHECK (typ_nadwozia IN ('Sedan', 'SUV', 'Hatchback', 'Kombi'))''
+  * pojemnosc_silnika : NUMBER(3,1)
+  * moc_km : NUMBER(4)
+  * rodzaj_paliwa : VARCHAR2(15) <<NN>>
+    ''CHECK (rodzaj_paliwa IN ('Benzyna', 'Diesel', 'Elektryczny', 'Hybryda'))''
+  * liczba_miejsc : NUMBER(1)
+}
+
+entity "POJAZDY" as pojazdy {
+  * **nr_vin** : CHAR(17) <<PK>>
+  --
+  * id_modelu : NUMBER(10) <<FK, NN>>
+  * nr_salonu : NUMBER(5) <<FK, NN>>
+  * rok_produkcji : NUMBER(4) <<NN>>
+  * przebieg : NUMBER(10)
+  * kolor : VARCHAR2(30)
+  * cena_katalogowa : NUMBER(10,2) <<NN>>
+    ''CHECK (cena_katalogowa > 0)''
+  * stan : VARCHAR2(10) <<NN>>
+    ''CHECK (stan IN ('Nowy', 'Uzywany'))''
+  * status : VARCHAR2(15) <<NN>>
+    ''CHECK (status IN ('Dostepny', 'Sprzedany', 'Rezerwacja', 'Serwis'))''
+  * data_przyjecia : DATE
+  * uwagi : VARCHAR2(500)
+}
+
+entity "KLIENTCI" as klientci {
+  * **nr_klienta** : NUMBER(10) <<PK>>
+  --
+  * typ_klienta : VARCHAR2(15) <<NN>>
+    ''CHECK (typ_klienta IN ('Indywidualny', 'Firma'))''
+  * imie : VARCHAR2(50)
+  * nazwisko : VARCHAR2(50)
+  * pesel : CHAR(11) <<UK>>
+  * nazwa_firmy : VARCHAR2(100)
+  * nip : CHAR(10) <<UK>>
+  * ulica : VARCHAR2(100)
+  * miasto : VARCHAR2(50)
+  * kod_pocztowy : CHAR(6)
+  * telefon : VARCHAR2(15) <<NN>>
+  * email : VARCHAR2(100) <<UK>>
+  * data_rejestracji : DATE
+}
+
+entity "PRACOWNICY" as pracownicy {
+  * **nr_pracownika** : NUMBER(7) <<PK>>
+  --
+  * nr_salonu : NUMBER(5) <<FK, NN>>
+  * imie : VARCHAR2(50) <<NN>>
+  * nazwisko : VARCHAR2(50) <<NN>>
+  * pesel : CHAR(11) <<NN, UK>>
+  * stanowisko : VARCHAR2(50) <<NN>>
+  * data_zatrudnienia : DATE <<NN>>
+  * pensja_podstawowa : NUMBER(10,2) <<NN>>
+}
+
+entity "SPRZEDAWCY" as sprzedawcy {
+  * **nr_pracownika** : NUMBER(7) <<PK, FK>>
+  --
+  * prowizja_procent : NUMBER(5,2)
+  * limit_rabatu_procent : NUMBER(5,2)
+  * liczba_sprzedazy : NUMBER(5)
+}
+
+entity "SERWISANCI" as serwisanci {
+  * **nr_pracownika** : NUMBER(7) <<PK, FK>>
+  --
+  * specjalizacja : VARCHAR2(100)
+  * stawka_godzinowa : NUMBER(10,2) <<NN>>
+}
+
+entity "CERTYFIKATY_SERWISANTA" as certyfikaty_serwisanta {
+  * **id_certyfikatu** : NUMBER(10) <<PK>>
+  --
+  * nr_pracownika : NUMBER(7) <<FK, NN>>
+  * certyfikat : VARCHAR2(200) <<NN>>
+}
+note left of certyfikaty_serwisanta
+  Tabela z atrybutu
+  wielowartościowego
+  `SERWISANT.certyfikaty`
+end note
+
+entity "SPRZEDAZ" as sprzedaze {
+  * **nr_sprzedazy** : NUMBER(10) <<PK>>
+  --
+  * nr_vin : CHAR(17) <<FK, NN, UK>>
+  * nr_klienta : NUMBER(10) <<FK, NN>>
+  * nr_pracownika : NUMBER(7) <<FK, NN>>
+  * data_sprzedazy : DATE <<NN>>
+  * cena_sprzedazy : NUMBER(10,2) <<NN>>
+  * cena_koncowa : NUMBER(10,2) <<NN>>
+  * metoda_platnosci : VARCHAR2(20) <<NN>>
+    ''CHECK (metoda_platnosci IN ('Gotowka', 'Przelew', 'Finansowanie', 'Leasing'))''
+  * status : VARCHAR2(15) <<NN>>
+    ''CHECK (status IN ('W_trakcie', 'Zakonczona', 'Anulowana'))''
+}
+
+entity "WYPOSAZENIE" as wyposazenie {
+  * **id_wyposazenia** : NUMBER(10) <<PK>>
+  --
+  * nazwa : VARCHAR2(100) <<NN, UK>>
+  * kategoria : VARCHAR2(20)
+    ''CHECK (kategoria IN ('Bezpieczenstwo', 'Komfort', 'Multimedia'))''
+  * dodatkowa_cena : NUMBER(10,2)
+}
+
+' ============ TABELE ŁĄCZĄCE (M:N) ============
+
+entity "POJAZDY_WYPOSAZENIE" as pojazdy_wyposazenie {
+  * **nr_vin** : CHAR(17) <<PK, FK>>
+  * **id_wyposazenia** : NUMBER(10) <<PK, FK>>
+}
+note bottom of pojazdy_wyposazenie
+  Tabela łącząca M:N
+  (POJAZDY - WYPOSAZENIE)
+end note
+
+entity "JAZDY_TESTOWE" as jazdy_testowe {
+  * **nr_jazdy** : NUMBER(10) <<PK>>
+  --
+  * nr_klienta : NUMBER(10) <<FK, NN>>
+  * nr_vin : CHAR(17) <<FK, NN>>
+  * data_jazdy : DATE <<NN>>
+  * godzina_jazdy : TIMESTAMP
+  * nr_prawa_jazdy : VARCHAR2(20)
+  * status : VARCHAR2(20)
+    ''CHECK (status IN ('Zarezerwowana', 'Odbyta', 'Anulowana'))''
+  --
+  ''UNIQUE (nr_klienta, nr_vin, data_jazdy)''
+}
+note bottom of jazdy_testowe
+  Tabela łącząca M:N
+  (KLIENTCI - POJAZDY)
+  Z encji `TEST_DRIVE`
+end note
+
+
+' ============ ZWIĄZKI (RELACJE) ============
+
+' --- Związki 1:M ---
+producenci ||--|{ modele_samochodow : "produkuje (1,1:1,N)"
+modele_samochodow ||--|{ pojazdy : "jest_typu (1,1:1,N)"
+salony ||--o{ pojazdy : "posiada (1,1:0,N)"
+salony ||--o{ pracownicy : "zatrudnia (1,1:0,N)"
+klientci ||--o{ sprzedaze : "dokonuje (1,1:0,N)"
+' Sprzedaż może być realizowana tylko przez sprzedawcę
+sprzedawcy ||--o{ sprzedaze : "realizuje (1,1:0,N)"
+
+' --- Związek 1:1 ---
+' Związek 1:0..1 - Pojazd może być sprzedany max 1 raz
+pojazdy ||--o| sprzedaze : "jest_przedmiotem (1,1:0,1)"
+
+' --- Związki M:N (przez tabele łączące) ---
+pojazdy }|--|| pojazdy_wyposazenie : "(1,N)" ' Pojazd musi mieć wyposazenie
+wyposazenie }o--|| pojazdy_wyposazenie : "(0,N)" ' Wyposazenie może nie być użyte
+
+klientci }o--|| jazdy_testowe : "(0,N)" ' Klient może nie mieć jazd
+pojazdy }o--|| jazdy_testowe : "(0,N)" ' Pojazd może nie mieć jazd
+
+' --- Hierarchia specjalizacji (ISA) - Związki 1:1 (Partial) ---
+pracownicy ||--o| sprzedawcy : "<<specjalizacja>>"
+pracownicy ||--o| serwisanci : "<<specjalizacja>>"
+
+' --- Atrybut wielowartościowy ---
+serwisanci ||--o{ certyfikaty_serwisanta : "posiada_certyfikat"
+
+@enduml
