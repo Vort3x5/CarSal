@@ -5,4 +5,4 @@ sprawko:
 
 clean:
 	if pgrep evince; then pkill evince; fi
-	rm -rf BDBT*
+	rm -rf BDBT* _minted

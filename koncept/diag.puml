@@ -1,10 +1,11 @@
 @startuml koncept
 ' Schemat ER - Salon Samochodowy - Model Konceptualny
 ' Notacja: Chen/Crow's Foot
+' Format pionowy (A4)
 
-skinparam linetype ortho
-skinparam ranksep 80
-skinparam nodesep 60
+skinparam ranksep 100
+skinparam nodesep 40
+skinparam defaultFontName "Arial"
 
 ' ============ ENCJE ============
 
@@ -18,57 +19,6 @@ entity "SALON" as salon {
     ** kod_pocztowy : CHAR(6)
   * telefon : VARCHAR(15)
   * email : VARCHAR(100)
-}
-
-entity "POJAZD" as pojazd {
-  * **nr_vin** : PK, CHAR(17)
-  --
-  * rok_produkcji : NUMBER(4)
-  * przebieg : NUMBER(10)
-  * kolor : VARCHAR(30)
-  * cena_katalogowa : NUMBER(10,2)
-  * stan : {Nowy, Uzywany}
-  * status : {Dostepny, Sprzedany, Rezerwacja, Serwis}
-  * data_przyjecia : DATE
-  uwagi : VARCHAR(500)
-}
-
-entity "MODEL_SAMOCHODU" as model {
-  * **id_modelu** : PK
-  --
-  * nazwa_modelu : VARCHAR(50)
-  * typ_nadwozia : {Sedan, SUV, Hatchback, Kombi}
-  * pojemnosc_silnika : NUMBER(3,1)
-  * moc_km : NUMBER(4)
-  * rodzaj_paliwa : {Benzyna, Diesel, Elektryczny, Hybryda}
-  * liczba_miejsc : NUMBER(1)
-}
-
-entity "PRODUCENT" as producent {
-  * **id_producenta** : PK
-  --
-  * nazwa_producenta : VARCHAR(50) <<UK>>
-  * kraj_pochodzenia : VARCHAR(50)
-}
-
-entity "KLIENT" as klient {
-  * **nr_klienta** : PK
-  --
-  * typ_klienta : {Indywidualny, Firma}
-  <<composite>> dane_osobowe (dla Indywidualny)
-    ** imie : VARCHAR(50)
-    ** nazwisko : VARCHAR(50)
-    ** pesel : CHAR(11) <<UK>>
-  <<composite>> dane_firmowe (dla Firma)
-    ** nazwa_firmy : VARCHAR(100)
-    ** nip : CHAR(10) <<UK>>
-  * <<composite>> adres
-    ** ulica : VARCHAR(100)
-    ** miasto : VARCHAR(50)
-    ** kod_pocztowy : CHAR(6)
-  * telefon : VARCHAR(15)
-  * email : VARCHAR(100)
-  * data_rejestracji : DATE
 }
 
 entity "PRACOWNIK" as pracownik {
@@ -98,25 +48,72 @@ entity "SERWISANT" as serwisant {
   * stawka_godzinowa : NUMBER(10,2)
 }
 
+entity "POJAZD" as pojazd {
+  * **nr_vin** : PK, CHAR(17)
+  --
+  * rok_produkcji : NUMBER(4)
+  * przebieg : NUMBER(10)
+  * kolor : VARCHAR(30)
+  * cena_katalogowa : NUMBER(10,2)
+  * stan : {Nowy, Uzywany}
+  * status : {Dostepny, Sprzedany,\nRezerwacja, Serwis}
+  * data_przyjecia : DATE
+  uwagi : VARCHAR(500)
+}
+
+entity "MODEL_SAMOCHODU" as model {
+  * **id_modelu** : PK
+  --
+  * nazwa_modelu : VARCHAR(50)
+  * typ_nadwozia : {Sedan, SUV,\nHatchback, Kombi}
+  * pojemnosc_silnika : NUMBER(3,1)
+  * moc_km : NUMBER(4)
+  * rodzaj_paliwa : {Benzyna, Diesel,\nElektryczny, Hybryda}
+  * liczba_miejsc : NUMBER(1)
+}
+
+entity "PRODUCENT" as producent {
+  * **id_producenta** : PK
+  --
+  * nazwa_producenta : VARCHAR(50) <<UK>>
+  * kraj_pochodzenia : VARCHAR(50)
+}
+
 entity "SPRZEDAZ" as sprzedaz {
   * **nr_sprzedazy** : PK
   --
   * data_sprzedazy : DATE
   * cena_sprzedazy : NUMBER(10,2)
   * cena_koncowa : NUMBER(10,2)
-  * metoda_platnosci : {Gotowka, Przelew, Finansowanie, Leasing}
-  * status : {W_trakcie, Zakonczona, Anulowana}
+  * metoda_platnosci : {Gotowka,\nPrzelew, Finansowanie, Leasing}
+  * status : {W_trakcie,\nZakonczona, Anulowana}
+}
+
+entity "KLIENT" as klient {
+  * **nr_klienta** : PK
+  --
+  * typ_klienta : {Indywidualny, Firma}
+  <<composite>> dane_osobowe
+    ** imie : VARCHAR(50)
+    ** nazwisko : VARCHAR(50)
+    ** pesel : CHAR(11) <<UK>>
+  <<composite>> dane_firmowe
+    ** nazwa_firmy : VARCHAR(100)
+    ** nip : CHAR(10) <<UK>>
+  * <<composite>> adres
+  * telefon : VARCHAR(15)
+  * email : VARCHAR(100)
+  * data_rejestracji : DATE
 }
 
 entity "WYPOSAZENIE" as wyposazenie {
   * **id_wyposazenia** : PK
   --
   * nazwa : VARCHAR(100) <<UK>>
-  * kategoria : {Bezpieczenstwo, Komfort, Multimedia}
+  * kategoria : {Bezpieczenstwo,\nKomfort, Multimedia}
   * dodatkowa_cena : NUMBER(10,2)
 }
 
-' Encja łącząca dla M:N
 entity "TEST_DRIVE" as test_drive {
   * **nr_klienta** : PK, FK
   * **nr_vin** : PK, FK
@@ -132,52 +129,41 @@ entity "POJAZD_WYPOSAZENIE" as pojazd_wyp {
   * **id_wyposazenia** : PK, FK
 }
 
-' ============ ZWIĄZKI 1:M ============
+' ============ UKLAD PIONOWY ============
 
-salon ||--o{ pojazd : "posiada\n(1,1):(0,N)"
-salon ||--o{ pracownik : "zatrudnia\n(1,1):(0,N)"
-producent ||--|{ model : "produkuje\n(1,1):(1,N)"
-model ||--|{ pojazd : "jest_instancja\n(1,1):(1,N)"
-klient ||--o{ sprzedaz : "dokonuje\n(1,1):(0,N)"
-pracownik ||--o{ sprzedaz : "realizuje\n(1,1):(0,N)"
-pojazd ||--o| sprzedaz : "jest_przedmiotem\n(1,1):(0,1)"
+salon -down-> pracownik : "zatrudnia\n(1,1):(0,N)"
+salon -down-> pojazd : "posiada\n(1,1):(0,N)"
 
-' ============ ZWIĄZKI M:N (przez tabele łączące) ============
+pracownik -down-> sprzedawca : "<<ISA>>\nOverlapping\nPartial"
+pracownik -down-> serwisant : "<<ISA>>\nOverlapping\nPartial"
 
-klient ||--o{ test_drive : "(0,N)"
-test_drive }o--|| pojazd : "(0,N)"
+pracownik -down-> sprzedaz : "realizuje\n(1,1):(0,N)"
 
-pojazd ||--|{ pojazd_wyp : "(1,N)"
-pojazd_wyp }o--|| wyposazenie : "(0,N)"
+pojazd -down-> model : "jest_instancja\n(1,1):(1,N)"
+pojazd -down-> sprzedaz : "jest_przedmiotem\n(1,1):(0,1)"
+pojazd -down-> pojazd_wyp : "(1,N)"
+pojazd -down-> test_drive : "(0,N)"
 
-' ============ HIERARCHIA ISA (specjalizacja) ============
+model -down-> producent : "produkuje\n(1,1):(1,N)"
 
-pracownik ||--o{ sprzedawca : "<<ISA>>\nOverlapping\nPartial"
-pracownik ||--o{ serwisant : "<<ISA>>\nOverlapping\nPartial"
+sprzedaz -down-> klient : "dokonuje\n(1,1):(0,N)"
+
+klient -down-> test_drive : "(0,N)"
+
+wyposazenie -down-> pojazd_wyp : "(0,N)"
 
 note right of salon
-  Encja główna
-  (lewy górny róg)
+  Encja glowna
+  (lewy gorny rog)
 end note
 
 note right of pracownik
   Hierarchia specjalizacji:
-  - Overlapping: pracownik może
-    być jednocześnie sprzedawcą
+  - Overlapping: pracownik moze
+    byc jednoczesnie sprzedawca
     i serwisantem
-  - Partial: nie każdy pracownik
-    musi mieć specjalizację
-end note
-
-note bottom of test_drive
-  Encja łącząca dla M:N
-  KLIENT <-> POJAZD
-  (jazdy testowe)
-end note
-
-note bottom of pojazd_wyp
-  Encja łącząca dla M:N
-  POJAZD <-> WYPOSAZENIE
+  - Partial: nie kazdy pracownik
+    musi miec specjalizacje
 end note
 
 @enduml

@@ -6,7 +6,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage[hyphens]{url}
-%\usepackage[hidelinks,breaklinks]{hyperref}
 \usepackage{authblk}
 \usepackage{tabularx}
 \usepackage[a4paper, left=2cm, right=2cm, top=3cm, bottom=3cm]{geometry}
@@ -17,7 +16,6 @@
 \usepackage{float}
 \usepackage{minted}
 
-
 \usepackage[tablegrid,owncaptions]{vhistory}
 \renewcommand{\vhhistoryname}{Historia zmian}
 \renewcommand{\vhversionname}{Wersja}
@@ -25,7 +23,7 @@
 \renewcommand{\vhauthorname} {Autor}
 \renewcommand{\vhchangename} {Opis zmian}
 
-\renewcommand\figurename{Rys.}%skrocony podpis
+\renewcommand\figurename{Rys.}
 \renewcommand\lstlistingname{Wydruk}
 
 \title{{\Huge  Projekt BDBT}\\ - \\{\Large Zespół A2}\\ {\Large Salon Samochodowy}}
@@ -46,7 +44,7 @@
 	
 	\subsection{Wprowadzenie}
 	
-	Realizowany projekt dotyczy przedsiębiorstwa z branży motoryzacyjnej – salonu samochodowego. Projekt bazy danych ma na celu wsparcie kompleksowej obsługi wszystkich procesów biznesowych związanych ze sprzedażą, serwisowaniem oraz zarządzaniem pojazdami.
+	Realizowany projekt dotyczy przedsiębiorstwa z branży motoryzacyjnej -- salonu samochodowego. Projekt bazy danych ma na celu wsparcie kompleksowej obsługi wszystkich procesów biznesowych związanych ze sprzedażą, serwisowaniem oraz zarządzaniem pojazdami.
 	
 	\subsection{Opis działalności biznesowej}
 	
@@ -63,14 +61,14 @@
 	System bazy danych będzie wspierał następujące procesy:
 	
 	\begin{enumerate}
-		\item \textbf{Zarządzanie stanem magazynowym pojazdów} – śledzenie dostępności, statusu i lokalizacji pojazdów w poszczególnych oddziałach salonu
-		\item \textbf{Obsługa klientów indywidualnych i firm} – rejestracja klientów, prowadzenie historii kontaktów i transakcji
-		\item \textbf{Realizacja sprzedaży z różnymi formami płatności} – kompleksowa obsługa procesu sprzedaży
-		\item \textbf{Organizacja i rejestracja jazd testowych} – rezerwacja i ewidencja jazd próbnych
-		\item \textbf{Obsługa serwisowa pojazdów} – rejestracja zleceń naprawczych, ewidencja kosztów i historii serwisowania
-		\item \textbf{Zarządzanie pracownikami (sprzedawcy, serwisanci)} – ewidencja pracowników wraz z ich specjalizacjami
-		\item \textbf{Obsługa zamówień indywidualnych} – przyjmowanie i realizacja zamówień na pojazdy niedostępne w salonie
-		\item \textbf{Wystawianie faktur i dokumentacji sprzedaży} – generowanie dokumentów transakcji
+		\item \textbf{Zarządzanie stanem magazynowym pojazdów} -- śledzenie dostępności, statusu i lokalizacji pojazdów w poszczególnych oddziałach salonu
+		\item \textbf{Obsługa klientów indywidualnych i firm} -- rejestracja klientów, prowadzenie historii kontaktów i transakcji
+		\item \textbf{Realizacja sprzedaży z różnymi formami płatności} -- kompleksowa obsługa procesu sprzedaży
+		\item \textbf{Organizacja i rejestracja jazd testowych} -- rezerwacja i ewidencja jazd próbnych
+		\item \textbf{Obsługa serwisowa pojazdów} -- rejestracja zleceń naprawczych, ewidencja kosztów i historii serwisowania
+		\item \textbf{Zarządzanie pracownikami (sprzedawcy, serwisanci)} -- ewidencja pracowników wraz z ich specjalizacjami
+		\item \textbf{Obsługa zamówień indywidualnych} -- przyjmowanie i realizacja zamówień na pojazdy niedostępne w salonie
+		\item \textbf{Wystawianie faktur i dokumentacji sprzedaży} -- generowanie dokumentów transakcji
 	\end{enumerate}
 	
 	\subsection{Cele projektowanej bazy danych}
@@ -152,11 +150,11 @@
 	
 	\textbf{Atrybuty:}
 	\begin{itemize}
-		\item \textbf{nr\_salonu} (PK) – sztuczny klucz główny
-		\item nazwa – nazwa oddziału
-		\item \textbf{adres} – atrybut złożony (composite) zawierający: ulica, miasto, kod\_pocztowy
-		\item telefon – numer kontaktowy
-		\item email – adres email oddziału
+		\item \textbf{nr\_salonu} (PK) -- sztuczny klucz główny
+		\item nazwa -- nazwa oddziału
+		\item \textbf{adres} -- atrybut złożony (composite) zawierający: ulica, miasto, kod\_pocztowy
+		\item telefon -- numer kontaktowy
+		\item email -- adres email oddziału
 	\end{itemize}
 	
 	\subsubsection{POJAZD}
@@ -165,15 +163,15 @@
 	
 	\textbf{Atrybuty:}
 	\begin{itemize}
-		\item \textbf{nr\_vin} (PK) – numer identyfikacyjny pojazdu (naturalny klucz)
-		\item rok\_produkcji – rok wyprodukowania pojazdu
-		\item przebieg – liczba przejechanych kilometrów
-		\item kolor – kolor nadwozia
-		\item cena\_katalogowa – typu Money (cena wywoławcza)
-		\item stan – dziedzina \{Nowy, Uzywany\}
-		\item status – dziedzina \{Dostepny, Sprzedany, Rezerwacja, Serwis\}
-		\item data\_przyjecia – data wpływu pojazdu do salonu
-		\item uwagi – typu VARCHAR(500) dla dodatkowych informacji
+		\item \textbf{nr\_vin} (PK) -- numer identyfikacyjny pojazdu (naturalny klucz)
+		\item rok\_produkcji -- rok wyprodukowania pojazdu
+		\item przebieg -- liczba przejechanych kilometrów
+		\item kolor -- kolor nadwozia
+		\item cena\_katalogowa -- typu Money (cena wywoławcza)
+		\item stan -- dziedzina \{Nowy, Uzywany\}
+		\item status -- dziedzina \{Dostepny, Sprzedany, Rezerwacja, Serwis\}
+		\item data\_przyjecia -- data wpływu pojazdu do salonu
+		\item uwagi -- typu VARCHAR(500) dla dodatkowych informacji
 	\end{itemize}
 	
 	\subsubsection{MODEL\_SAMOCHODU}
@@ -182,13 +180,13 @@
 	
 	\textbf{Atrybuty:}
 	\begin{itemize}
-		\item \textbf{id\_modelu} (PK) – sztuczny klucz główny
-		\item nazwa\_modelu – komercyjna nazwa modelu
-		\item typ\_nadwozia – dziedzina \{Sedan, SUV, Hatchback, Kombi\}
-		\item pojemnosc\_silnika – pojemność w litrach
-		\item moc\_km – moc silnika w koniach mechanicznych
-		\item rodzaj\_paliwa – dziedzina \{Benzyna, Diesel, Elektryczny, Hybryda\}
-		\item liczba\_miejsc – liczba miejsc siedzących
+		\item \textbf{id\_modelu} (PK) -- sztuczny klucz główny
+		\item nazwa\_modelu -- komercyjna nazwa modelu
+		\item typ\_nadwozia -- dziedzina \{Sedan, SUV, Hatchback, Kombi\}
+		\item pojemnosc\_silnika -- pojemność w litrach
+		\item moc\_km -- moc silnika w koniach mechanicznych
+		\item rodzaj\_paliwa -- dziedzina \{Benzyna, Diesel, Elektryczny, Hybryda\}
+		\item liczba\_miejsc -- liczba miejsc siedzących
 	\end{itemize}
 	
 	\subsubsection{PRODUCENT}
@@ -197,40 +195,40 @@
 	
 	\textbf{Atrybuty:}
 	\begin{itemize}
-		\item \textbf{id\_producenta} (PK) – sztuczny klucz główny
-		\item nazwa\_producenta – nazwa marki
-		\item kraj\_pochodzenia – kraj siedziby producenta
+		\item \textbf{id\_producenta} (PK) -- sztuczny klucz główny
+		\item nazwa\_producenta -- nazwa marki
+		\item kraj\_pochodzenia -- kraj siedziby producenta
 	\end{itemize}
 	
 	\subsubsection{KLIENT}
 	
-	Reprezentuje klienta salonu – osobę fizyczną lub firmę.
+	Reprezentuje klienta salonu -- osobę fizyczną lub firmę.
 	
 	\textbf{Atrybuty:}
 	\begin{itemize}
-		\item \textbf{nr\_klienta} (PK) – sztuczny klucz główny
-		\item typ\_klienta – dziedzina \{Indywidualny, Firma\}
-		\item \textbf{dane\_osobowe} – atrybut złożony (composite) dla klientów indywidualnych:
+		\item \textbf{nr\_klienta} (PK) -- sztuczny klucz główny
+		\item typ\_klienta -- dziedzina \{Indywidualny, Firma\}
+		\item \textbf{dane\_osobowe} -- atrybut złożony (composite) dla klientów indywidualnych:
 		\begin{itemize}
 			\item imie
 			\item nazwisko
 			\item pesel (klucz kandydujący)
 		\end{itemize}
-		\item \textbf{dane\_firmowe} – atrybut złożony (composite) dla firm:
+		\item \textbf{dane\_firmowe} -- atrybut złożony (composite) dla firm:
 		\begin{itemize}
 			\item nazwa\_firmy
 			\item nip (klucz kandydujący)
 		\end{itemize}
-		\item \textbf{adres} – atrybut złożony (composite)
-		\item telefon – numer kontaktowy (obowiązkowy)
-		\item email – adres email
-		\item data\_rejestracji – data dodania do bazy
+		\item \textbf{adres} -- atrybut złożony (composite)
+		\item telefon -- numer kontaktowy (obowiązkowy)
+		\item email -- adres email
+		\item data\_rejestracji -- data dodania do bazy
 	\end{itemize}
 	
 	\textbf{Klucze kandydujące:}
 	\begin{itemize}
-		\item pesel – dla klientów indywidualnych
-		\item nip – dla klientów firmowych
+		\item pesel -- dla klientów indywidualnych
+		\item nip -- dla klientów firmowych
 	\end{itemize}
 	
 	\subsubsection{PRACOWNIK (z hierarchią specjalizacji)}
@@ -239,37 +237,37 @@
 	
 	\textbf{Atrybuty wspólne:}
 	\begin{itemize}
-		\item \textbf{nr\_pracownika} (PK) – sztuczny klucz główny
-		\item imie – imię pracownika
-		\item nazwisko – nazwisko pracownika
-		\item pesel – PESEL (klucz kandydujący)
-		\item stanowisko – zajmowane stanowisko
-		\item data\_zatrudnienia – data rozpoczęcia pracy
-		\item pensja\_podstawowa – wynagrodzenie zasadnicze (typu Money)
+		\item \textbf{nr\_pracownika} (PK) -- sztuczny klucz główny
+		\item imie -- imię pracownika
+		\item nazwisko -- nazwisko pracownika
+		\item pesel -- PESEL (klucz kandydujący)
+		\item stanowisko -- zajmowane stanowisko
+		\item data\_zatrudnienia -- data rozpoczęcia pracy
+		\item pensja\_podstawowa -- wynagrodzenie zasadnicze (typu Money)
 	\end{itemize}
 	
 	\textbf{Specjalizacja: SPRZEDAWCA}
 	
 	Atrybuty specyficzne (2-3 atrybuty zgodnie z wytycznymi):
 	\begin{itemize}
-		\item prowizja\_procent – procent prowizji od sprzedaży
-		\item limit\_rabatu\_procent – maksymalny rabat jaki może przyznać
-		\item liczba\_sprzedazy – licznik sprzedanych pojazdów w bieżącym miesiącu
+		\item prowizja\_procent -- procent prowizji od sprzedaży
+		\item limit\_rabatu\_procent -- maksymalny rabat jaki może przyznać
+		\item liczba\_sprzedazy -- licznik sprzedanych pojazdów w bieżącym miesiącu
 	\end{itemize}
 	
 	\textbf{Specjalizacja: SERWISANT}
 	
 	Atrybuty specyficzne:
 	\begin{itemize}
-		\item specjalizacja – obszar specjalizacji technicznej
-		\item certyfikaty – atrybut wielowartościowy (multivalued) lub TEXT zawierający posiadane certyfikaty
-		\item stawka\_godzinowa – stawka za godzinę pracy (typu Money)
+		\item specjalizacja -- obszar specjalizacji technicznej
+		\item certyfikaty -- atrybut wielowartościowy (multivalued) lub TEXT zawierający posiadane certyfikaty
+		\item stawka\_godzinowa -- stawka za godzinę pracy (typu Money)
 	\end{itemize}
 	
 	\textbf{Właściwości hierarchii:}
 	\begin{itemize}
-		\item Typ: Overlapping – pracownik może być jednocześnie sprzedawcą i serwisantem
-		\item Uczestnictwo: Partial – nie każdy pracownik musi należeć do specjalizacji
+		\item Typ: Overlapping -- pracownik może być jednocześnie sprzedawcą i serwisantem
+		\item Uczestnictwo: Partial -- nie każdy pracownik musi należeć do specjalizacji
 		\item W encjach specjalizacji nie definiujemy osobnych kluczy głównych (dziedziczą nr\_pracownika)
 	\end{itemize}
 	
@@ -279,12 +277,12 @@
 	
 	\textbf{Atrybuty:}
 	\begin{itemize}
-		\item \textbf{nr\_sprzedazy} (PK) – sztuczny klucz główny
-		\item data\_sprzedazy – data zawarcia transakcji
-		\item cena\_sprzedazy – cena wywoławcza (typu Money)
-		\item cena\_koncowa – ostateczna cena po rabacie (typu Money)
-		\item metoda\_platnosci – dziedzina \{Gotowka, Przelew, Finansowanie, Leasing\}
-		\item status – dziedzina \{W\_trakcie, Zakonczona, Anulowana\}
+		\item \textbf{nr\_sprzedazy} (PK) -- sztuczny klucz główny
+		\item data\_sprzedazy -- data zawarcia transakcji
+		\item cena\_sprzedazy -- cena wywoławcza (typu Money)
+		\item cena\_koncowa -- ostateczna cena po rabacie (typu Money)
+		\item metoda\_platnosci -- dziedzina \{Gotowka, Przelew, Finansowanie, Leasing\}
+		\item status -- dziedzina \{W\_trakcie, Zakonczona, Anulowana\}
 	\end{itemize}
 	
 	\subsubsection{WYPOSAZENIE}
@@ -293,10 +291,10 @@
 	
 	\textbf{Atrybuty:}
 	\begin{itemize}
-		\item \textbf{id\_wyposazenia} (PK) – sztuczny klucz główny
-		\item nazwa – nazwa elementu wyposażenia (klucz kandydujący)
-		\item kategoria – dziedzina \{Bezpieczenstwo, Komfort, Multimedia\}
-		\item dodatkowa\_cena – dopłata za element (typu Money)
+		\item \textbf{id\_wyposazenia} (PK) -- sztuczny klucz główny
+		\item nazwa -- nazwa elementu wyposażenia (klucz kandydujący)
+		\item kategoria -- dziedzina \{Bezpieczenstwo, Komfort, Multimedia\}
+		\item dodatkowa\_cena -- dopłata za element (typu Money)
 	\end{itemize}
 	
 	\subsection{Ustalenie związków między encjami i ich typów}
@@ -385,8 +383,8 @@
 	
 	Właściwości:
 	\begin{itemize}
-		\item \textbf{Typ:} Overlapping (nakładające się) – pracownik może być jednocześnie sprzedawcą i serwisantem
-		\item \textbf{Uczestnictwo:} Partial (częściowe) – nie każdy pracownik musi należeć do specjalizacji
+		\item \textbf{Typ:} Overlapping (nakładające się) -- pracownik może być jednocześnie sprzedawcą i serwisantem
+		\item \textbf{Uczestnictwo:} Partial (częściowe) -- nie każdy pracownik musi należeć do specjalizacji
 		\item \textbf{Konwersja do modelu logicznego:} Wymaga ustawienia generacji na N tablic (osobne tabele dla każdej specjalizacji)
 	\end{itemize}
 	
@@ -403,7 +401,7 @@
 	
 	\textbf{Atrybuty wielowartościowe (multivalued):}
 	\begin{itemize}
-		\item certyfikaty – dla SERWISANT
+		\item certyfikaty -- dla SERWISANT
 	\end{itemize}
 	
 	\subsubsection{Dziedziny wartości}
@@ -439,9 +437,10 @@
 	\textbf{Postać SQL dla dziedzin:}
 	
 	W implementacji fizycznej dziedziny będą reprezentowane przez ograniczenia CHECK, np.:
-	\begin{verbatim}
+	
+	\begin{minted}{sql}
 	stan VARCHAR2(10) CHECK (stan IN ('Nowy', 'Uzywany'))
-	\end{verbatim}
+	\end{minted}
 	
 	\subsubsection{Typy danych}
 	
@@ -560,7 +559,7 @@
 		\label{fig:er_konceptualny}
 	\end{figure}
 	
-	\subsection{Problem pułapek szczelinowych i wachlarzowych – analiza i przykłady}
+	\subsection{Problem pułapek szczelinowych i wachlarzowych -- analiza i przykłady}
 	
 	\subsubsection{Pułapka wachlarzowa (Fan Trap)}
 	
@@ -591,9 +590,10 @@
 	\textbf{Reguła weryfikacyjna:}
 	
 	Należy zapewnić, że pojazd i pracownik realizujący sprzedaż należą do tego samego salonu:
-	\begin{verbatim}
+	
+	\begin{minted}{sql}
 	CHECK (POJAZD.nr_salonu = PRACOWNIK.nr_salonu)
-	\end{verbatim}
+	\end{minted}
 	
 	\subsubsection{Pułapka szczelinowa (Chasm Trap)}
 	
@@ -606,7 +606,7 @@
 	
 	\textbf{Problem:} Czy można znaleźć wszystkie pojazdy danego modelu, które oglądał klient (bez zakupu)?
 	
-	Odpowiedź: NIE – jeśli klient nie dokonał zakupu, nie ma ścieżki przez SPRZEDAZ.
+	Odpowiedź: NIE -- jeśli klient nie dokonał zakupu, nie ma ścieżki przez SPRZEDAZ.
 	
 	\textbf{Rozwiązanie:}
 	
@@ -621,33 +621,34 @@
 	\end{itemize}
 	
 	\textbf{Przykładowe zapytanie (SQL):}
-	\begin{verbatim}
+	
+	\begin{minted}{sql}
 	SELECT k.nazwisko, m.nazwa_modelu
 	FROM klient k
 	JOIN test_drive td ON k.nr_klienta = td.nr_klienta
 	JOIN pojazd p ON td.nr_vin = p.nr_vin
 	JOIN model_samochodu m ON p.id_modelu = m.id_modelu
 	WHERE k.nr_klienta NOT IN (SELECT nr_klienta FROM sprzedaz);
-	\end{verbatim}
+	\end{minted}
 	
 	\subsubsection{Weryfikacja braku innych pułapek}
 	
 	\textbf{Sprawdzenie kompletności ścieżek:}
 	
 	\begin{enumerate}
-		\item \textbf{PRODUCENT → MODEL\_SAMOCHODU → POJAZD → SPRZEDAZ}
+		\item \textbf{PRODUCENT $\rightarrow$ MODEL\_SAMOCHODU $\rightarrow$ POJAZD $\rightarrow$ SPRZEDAZ}
 		\begin{itemize}
 			\item Ścieżka kompletna
 			\item Możliwe zapytanie: Jaka jest sprzedaż pojazdów danego producenta?
 		\end{itemize}
 		
-		\item \textbf{SALON → PRACOWNIK → SPRZEDAZ}
+		\item \textbf{SALON $\rightarrow$ PRACOWNIK $\rightarrow$ SPRZEDAZ}
 		\begin{itemize}
 			\item Ścieżka kompletna
 			\item Możliwe zapytanie: Ile sprzedali pracownicy danego salonu?
 		\end{itemize}
 		
-		\item \textbf{SALON → POJAZD → SPRZEDAZ}
+		\item \textbf{SALON $\rightarrow$ POJAZD $\rightarrow$ SPRZEDAZ}
 		\begin{itemize}
 			\item Ścieżka kompletna
 			\item Możliwe zapytanie: Które pojazdy z danego salonu zostały sprzedane?
@@ -662,16 +663,499 @@
 	\end{itemize}
 	
 	\section{Model logiczny}
+
 	\subsection{Charakterystyka modelu relacyjnego}
+
+	Model relacyjny to model danych oparty na teorii relacji matematycznych, w którym dane są organizowane w \textbf{relacje} (tabele). Każda relacja składa się z \textbf{krotek} (wierszy) i \textbf{atrybutów} (kolumn), przy czym każdy atrybut ma określoną \textbf{dziedzinę} -- zbiór dopuszczalnych wartości.
+
+	\subsubsection{Podstawowe właściwości relacji}
+
+	Model relacyjny charakteryzuje się następującymi właściwościami:
+
+	\begin{enumerate}
+		\item \textbf{Atomowość atrybutów} -- wartości atrybutów są atomowe (niepodzielne)
+		\item \textbf{Unikalność krotek} -- każda krotka jest unikalna (wynika z klucza głównego)
+		\item \textbf{Brak uporządkowania krotek} -- kolejność wierszy nie ma znaczenia
+		\item \textbf{Brak uporządkowania atrybutów} -- kolejność kolumn nie ma znaczenia
+		\item \textbf{Jednoznaczność nazw atrybutów} -- w ramach relacji nazwy kolumn są unikalne
+	\end{enumerate}
+
+	\subsubsection{Klucze w modelu relacyjnym}
+
+	\textbf{Klucz główny (Primary Key -- PK)}
+
+	Minimalny zbiór atrybutów jednoznacznie identyfikujący krotkę. Klucz główny nie może przyjmować wartości NULL i tylko jeden klucz główny może istnieć w relacji. W projekcie stosujemy klucze sztuczne typu \texttt{id\_xxx} lub \texttt{nr\_xxx}.
+
+	\textbf{Klucz obcy (Foreign Key -- FK)}
+
+	Atrybut (lub zbiór atrybutów) odnoszący się do klucza głównego innej relacji, służący do zachowania integralności referencyjnej. Klucz obcy może przyjmować wartości NULL, jeśli uczestnictwo jest opcjonalne.
+
+	\textbf{Klucz kandydujący (Candidate Key -- UK)}
+
+	Alternatywny klucz, który mógłby być kluczem głównym, implementowany jako ograniczenie UNIQUE. W projekcie występują klucze kandydujące takie jak PESEL, NIP, nazwa\_producenta.
+
+	\subsubsection{Konwencje nazewnicze w modelu logicznym}
+
+	Podczas transformacji z modelu konceptualnego do logicznego wprowadzone zostały następujące konwencje:
+
+	\begin{itemize}
+		\item \textbf{Nazwy tabel} -- liczba mnoga (konceptualny: pojedyncza), bez polskich znaków
+		\begin{itemize}
+			\item Przykłady: SALON $\rightarrow$ Salony, POJAZD $\rightarrow$ Pojazdy, KLIENT $\rightarrow$ Klienci
+		\end{itemize}
+		\item \textbf{Nazwy atrybutów} -- małe litery ze znakiem podkreślenia, bez polskich znaków
+		\begin{itemize}
+			\item Format: \texttt{nazwa\_atrybutu}
+			\item Klucze główne: \texttt{id\_xxx} lub \texttt{nr\_xxx}
+		\end{itemize}
+		\item \textbf{Nazwy ograniczeń}
+		\begin{itemize}
+			\item PK: \texttt{PK\_NazwaTabeli}
+			\item FK: \texttt{FK\_TabelaZrodlowa\_TabelaDocelowa}
+			\item UK: \texttt{UK\_NazwaTabeli\_Atrybut}
+			\item CK: \texttt{CK\_NazwaTabeli\_Atrybut}
+		\end{itemize}
+	\end{itemize}
+
 	\subsection{Usunięcie właściwości niekompatybilnych z modelem relacyjnym - przykłady}
-	\subsection{Proces normalizacji – analiza i przykłady}
+
+	Proces konwersji z modelu konceptualnego do logicznego wymagał usunięcia konstrukcji niekompatybilnych z modelem relacyjnym.
+
+	\subsubsection{Rozbicie atrybutów złożonych}
+
+	Atrybuty złożone (composite) zostały „spłaszczone" do postaci pojedynczych kolumn.
+
+	\textbf{Przykład 1: Encja SALON}
+
+	Model konceptualny zawierał atrybut złożony \texttt{adres}:
+
+	\begin{verbatim}
+	SALON:
+	- adres (composite)
+	   - ulica
+	   - miasto
+	   - kod_pocztowy
+	\end{verbatim}
+
+	Po transformacji do modelu logicznego:
+
+	\begin{verbatim}
+	Salony:
+	- ulica : VARCHAR2(100)
+	- miasto : VARCHAR2(50)
+	- kod_pocztowy : CHAR(6)
+	\end{verbatim}
+
+	\textbf{Przykład 2: Encja KLIENT}
+
+	Analogicznie, encja KLIENT zawierała trzy atrybuty złożone: \texttt{adres}, \texttt{dane\_osobowe} (dla klientów indywidualnych) oraz \texttt{dane\_firmowe} (dla firm). Wszystkie zostały rozwinięte do postaci atrybutów atomowych w tabeli Klienci.
+
+	\subsubsection{Rozbicie atrybutów wielowartościowych}
+
+	Atrybuty wielowartościowe (multivalued) wymagają utworzenia osobnych tabel powiązanych kluczem obcym.
+
+	\textbf{Przykład: Certyfikaty serwisanta}
+
+	Model konceptualny:
+	\begin{verbatim}
+	SERWISANT:
+	- certyfikaty (multivalued)
+	\end{verbatim}
+
+	Model logiczny:
+	\begin{verbatim}
+	Serwisanci:
+	- nr_pracownika : NUMBER(7) PK, FK
+
+	Certyfikaty_Serwisanta:
+	- id_certyfikatu : NUMBER(10) PK
+	- nr_pracownika : NUMBER(7) FK, NN
+	- certyfikat : VARCHAR2(200) NN
+	\end{verbatim}
+
+	Utworzono osobną tabelę \texttt{Certyfikaty\_Serwisanta} z kluczem obcym \texttt{nr\_pracownika} wskazującym na tabelę \texttt{Serwisanci}.
+
+	\subsubsection{Rozbicie związków M:N}
+
+	Związki typu wiele-do-wielu wymagają utworzenia tabel łączących (asocjacyjnych).
+
+	\textbf{Przykład 1: POJAZD $\leftrightarrow$ WYPOSAZENIE}
+
+	Model konceptualny zawierał bezpośredni związek M:N. W modelu logicznym został on zastąpiony tabelą łączącą:
+
+	\begin{verbatim}
+	Pojazdy_Wyposazenie:
+	- nr_vin : CHAR(17) PK, FK
+	- id_wyposazenia : NUMBER(10) PK, FK
+	\end{verbatim}
+
+	Klucz główny tabeli łączącej jest kompozycją kluczy obcych obu encji.
+
+	\textbf{Przykład 2: KLIENT $\leftrightarrow$ POJAZD (przez TEST\_DRIVE)}
+
+	Analogicznie, związek między klientami a pojazdami (jazdy testowe) został zaimplementowany jako tabela łącząca \texttt{Jazdy\_Testowe} z dodatkowymi atrybutami opisującymi jazdę (data, godzina, status).
+
+	\subsubsection{Implementacja hierarchii specjalizacji (ISA)}
+
+	Hierarchia \texttt{PRACOWNIK [ISA] \{SPRZEDAWCA, SERWISANT\}} (Overlapping, Partial) została zaimplementowana zgodnie ze strategią N tablic:
+
+	\begin{enumerate}
+		\item \textbf{Pracownicy} -- tabela nadrzędna zawierająca atrybuty wspólne
+		\item \textbf{Sprzedawcy} -- tabela specjalizacji z atrybutami specyficznymi dla sprzedawcy
+		\item \textbf{Serwisanci} -- tabela specjalizacji z atrybutami specyficznymi dla serwisanta
+	\end{enumerate}
+
+	\textbf{Kluczowe cechy implementacji:}
+	\begin{itemize}
+		\item Relacje Sprzedawcy i Serwisanci są połączone z Pracownicy związkiem \textbf{1:1} (nie 1:N!)
+		\item Klucz główny \texttt{nr\_pracownika} z tabeli Pracownicy jest jednocześnie kluczem głównym i obcym (PK/FK) w tabelach Sprzedawcy i Serwisanci
+		\item Użyto ograniczenia \texttt{ON DELETE CASCADE} dla zachowania integralności
+	\end{itemize}
+
+	\subsection{Proces normalizacji -- analiza i przykłady}
+
+	Model logiczny został zaprojektowany z uwzględnieniem zasad normalizacji, aby zapewnić co najmniej Trzecią Postać Normalną (3NF).
+
+	\subsubsection{Pierwsza Postać Normalna (1NF)}
+
+	Relacja jest w 1NF, gdy wszystkie atrybuty przyjmują wartości atomowe (niepodzielne).
+
+	\textbf{Zastosowanie w projekcie:}
+	\begin{itemize}
+		\item Rozbicie atrybutów złożonych (np. \texttt{adres} na \texttt{ulica}, \texttt{miasto}, \texttt{kod\_pocztowy}) zapewniło atomowość
+		\item Przeniesienie atrybutów wielowartościowych (np. \texttt{certyfikaty} serwisanta) do oddzielnej tabeli \texttt{Certyfikaty\_Serwisanta} zapewniło 1NF
+	\end{itemize}
+
+	\textbf{Status:} Wszystkie tabele spełniają 1NF
+
+	\subsubsection{Druga Postać Normalna (2NF)}
+
+	Relacja jest w 2NF, gdy jest w 1NF, a wszystkie atrybuty niekluczowe są w pełni funkcyjnie zależne od klucza głównego (brak częściowych zależności funkcyjnych). 2NF ma znaczenie tylko dla tabel z kluczem złożonym.
+
+	\textbf{Analiza tabel z kluczami złożonymi:}
+
+	\begin{enumerate}
+		\item \textbf{Pojazdy\_Wyposazenie} -- klucz główny: (\texttt{nr\_vin}, \texttt{id\_wyposazenia})
+		\begin{itemize}
+			\item Nie zawiera atrybutów zależnych tylko od części klucza
+			\item Wszystkie szczegóły wyposażenia znajdują się w osobnej tabeli Wyposazenia
+			\item Spełnia 2NF
+		\end{itemize}
+		
+		\item \textbf{Jazdy\_Testowe} -- klucz naturalny: (\texttt{nr\_klienta}, \texttt{nr\_vin}, \texttt{data\_jazdy})
+		\begin{itemize}
+			\item Atrybuty \texttt{godzina}, \texttt{status}, \texttt{nr\_prawa\_jazdy}, \texttt{nr\_pracownika} zależą od całego klucza
+			\item Szczegóły klienta w tabeli Klienci, szczegóły pojazdu w tabeli Pojazdy
+			\item Spełnia 2NF
+		\end{itemize}
+	\end{enumerate}
+
+	\textbf{Status:} Wszystkie tabele spełniają 2NF
+
+	\subsubsection{Trzecia Postać Normalna (3NF)}
+
+	Relacja jest w 3NF, gdy jest w 2NF i nie zawiera przechodnich zależności funkcyjnych (każdy atrybut niekluczowy zależy bezpośrednio od klucza głównego).
+
+	\textbf{Przykład eliminacji zależności przechodniej:}
+
+	Potencjalne naruszenie 3NF w tabeli Pojazdy:
+
+	\begin{verbatim}
+	Pojazdy_ZLE:
+	  nr_vin -> id_modelu -> nazwa_modelu, typ_nadwozia
+	  nr_vin -> id_modelu -> id_producenta -> nazwa_producenta
+	\end{verbatim}
+
+	\textbf{Rozwiązanie -- dekompozycja:}
+
+	\begin{verbatim}
+	Producenci:
+	  id_producenta -> nazwa_producenta, kraj_pochodzenia
+
+	Modele_Samochodow:
+	  id_modelu -> nazwa_modelu, typ_nadwozia, ..., id_producenta (FK)
+
+	Pojazdy:
+	  nr_vin -> rok_produkcji, przebieg, ..., id_modelu (FK)
+	\end{verbatim}
+
+	Dane modelu przechowywane są raz w tabeli \texttt{Modele\_Samochodow}, a nie powtarzane dla każdego pojazdu.
+
+	\textbf{Weryfikacja wszystkich tabel:}
+
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|c|c|c|l|}
+			\hline
+			\textbf{Tabela} & \textbf{1NF} & \textbf{2NF} & \textbf{3NF} & \textbf{Uwagi} \\
+			\hline
+			Salony & TAK & TAK & TAK & Klucz prosty, brak zależności \\
+			\hline
+			Pojazdy & TAK & TAK & TAK & FK do Modele\_Samochodow, Salony \\
+			\hline
+			Modele\_Samochodow & TAK & TAK & TAK & FK do Producenci \\
+			\hline
+			Producenci & TAK & TAK & TAK & Brak FK \\
+			\hline
+			Klienci & TAK & TAK & TAK & Klucz prosty \\
+			\hline
+			Pracownicy & TAK & TAK & TAK & FK do Salony \\
+			\hline
+			Sprzedawcy & TAK & TAK & TAK & Specjalizacja, FK do Pracownicy \\
+			\hline
+			Serwisanci & TAK & TAK & TAK & Specjalizacja, FK do Pracownicy \\
+			\hline
+			Sprzedaze & TAK & TAK & TAK & FK do Klienci, Pojazdy, Pracownicy \\
+			\hline
+			Wyposazenia & TAK & TAK & TAK & Klucz prosty \\
+			\hline
+			Pojazdy\_Wyposazenie & TAK & TAK & TAK & Klucz złożony, tabela łącząca \\
+			\hline
+			Jazdy\_Testowe & TAK & TAK & TAK & Klucz złożony, tabela łącząca \\
+			\hline
+			Certyfikaty\_Serwisanta & TAK & TAK & TAK & Z atrybutu wielowartościowego \\
+			\hline
+		\end{tabular}
+		\caption{Weryfikacja normalizacji wszystkich tabel}
+	\end{table}
+
+	\textbf{Status:} Wszystkie tabele spełniają wymagania 3NF oraz dodatkowo BCNF
+
 	\subsection{Schemat ER na poziomie modelu logicznego}
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{tex/logic.png}
+		\caption{Diagram ER modelu logicznego - Salon Samochodowy}
+		\label{fig:er_logiczny}
+	\end{figure}
+
+	Model logiczny składa się z 13 tabel (spełnia wymaganie 12-20 tabel):
+
+	\textbf{Tabele główne:}
+	\begin{enumerate}
+		\item Salony -- główna tabela (lewy górny róg diagramu)
+		\item Pojazdy
+		\item Modele\_Samochodow
+		\item Producenci
+		\item Klienci
+		\item Pracownicy
+		\item Sprzedaze
+		\item Wyposazenia
+	\end{enumerate}
+
+	\textbf{Tabele specjalizacji:}
+	\begin{enumerate}
+		\setcounter{enumi}{8}
+		\item Sprzedawcy
+		\item Serwisanci
+	\end{enumerate}
+
+	\textbf{Tabele łączące (M:N):}
+	\begin{enumerate}
+		\setcounter{enumi}{10}
+		\item Pojazdy\_Wyposazenie
+		\item Jazdy\_Testowe
+	\end{enumerate}
+
+	\textbf{Tabele pomocnicze:}
+	\begin{enumerate}
+		\setcounter{enumi}{12}
+		\item Certyfikaty\_Serwisanta (z atrybutu wielowartościowego)
+	\end{enumerate}
+
 	\subsection{Więzy integralności}
-	\subsection{Proces denominacji – analiza i przykłady}
+
+	\subsubsection{Integralność encji}
+
+	Każda tabela posiada klucz główny, który nie może przyjmować wartości NULL i musi być unikalny.
+
+	\textbf{Klucze główne w projekcie:}
+
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Tabela} & \textbf{Klucz główny} & \textbf{Typ} \\
+			\hline
+			Salony & nr\_salonu & Sztuczny \\
+			\hline
+			Pojazdy & nr\_vin & Naturalny \\
+			\hline
+			Modele\_Samochodow & id\_modelu & Sztuczny \\
+			\hline
+			Producenci & id\_producenta & Sztuczny \\
+			\hline
+			Klienci & nr\_klienta & Sztuczny \\
+			\hline
+			Pracownicy & nr\_pracownika & Sztuczny \\
+			\hline
+			Sprzedawcy & nr\_pracownika & Dziedziczony \\
+			\hline
+			Serwisanci & nr\_pracownika & Dziedziczony \\
+			\hline
+			Sprzedaze & nr\_sprzedazy & Sztuczny \\
+			\hline
+			Wyposazenia & id\_wyposazenia & Sztuczny \\
+			\hline
+			Pojazdy\_Wyposazenie & (nr\_vin, id\_wyposazenia) & Złożony \\
+			\hline
+			Jazdy\_Testowe & nr\_jazdy & Sztuczny \\
+			\hline
+			Certyfikaty\_Serwisanta & id\_certyfikatu & Sztuczny \\
+			\hline
+		\end{tabular}
+		\caption{Klucze główne w modelu logicznym}
+	\end{table}
+
+	\subsubsection{Integralność referencyjna}
+
+	Klucze obce zapewniają integralność referencyjną między tabelami. W projekcie zastosowano następujące akcje referencyjne:
+
+	\textbf{ON DELETE CASCADE:}
+	\begin{itemize}
+		\item Certyfikaty\_Serwisanta $\rightarrow$ Serwisanci (usunięcie serwisanta usuwa jego certyfikaty)
+		\item Pojazdy\_Wyposazenie $\rightarrow$ Pojazdy (usunięcie pojazdu usuwa powiązania z wyposażeniem)
+		\item Sprzedawcy $\rightarrow$ Pracownicy (usunięcie pracownika usuwa rekord specjalizacji)
+		\item Serwisanci $\rightarrow$ Pracownicy (usunięcie pracownika usuwa rekord specjalizacji)
+	\end{itemize}
+
+	\textbf{ON DELETE RESTRICT (domyślne):}
+	\begin{itemize}
+		\item Większość pozostałych relacji wymaga ręcznego zarządzania usuwaniem
+		\item Nie można usunąć producenta, który ma modele
+		\item Nie można usunąć klienta, który ma historię sprzedaży
+	\end{itemize}
+
+	\subsubsection{Integralność domenowa}
+
+	Typy danych i ograniczenia CHECK zapewniają, że wartości atrybutów należą do zdefiniowanych dziedzin.
+
+	\textbf{Przykładowe ograniczenia CHECK:}
+
+	\begin{minted}{sql}
+-- Proste ograniczenia
+rok_produkcji CHECK (rok_produkcji BETWEEN 1900 AND 2025)
+przebieg CHECK (przebieg >= 0)
+stan CHECK (stan IN ('Nowy', 'Uzywany'))
+
+-- Złożone ograniczenia
+CHECK (cena_koncowa <= cena_sprzedazy)  -- rabat nie może być ujemny
+
+-- Reguły biznesowe
+CHECK (
+  (typ_klienta = 'Indywidualny' AND pesel IS NOT NULL) OR
+  (typ_klienta = 'Firma' AND nip IS NOT NULL)
+)
+	\end{minted}
+
+	\textbf{Dziedziny wyliczane w projekcie:}
+
+	\begin{itemize}
+		\item Pojazdy: \texttt{stan}, \texttt{status}
+		\item Modele\_Samochodow: \texttt{typ\_nadwozia}, \texttt{rodzaj\_paliwa}
+		\item Klienci: \texttt{typ\_klienta}
+		\item Sprzedaze: \texttt{metoda\_platnosci}, \texttt{status}
+		\item Wyposazenia: \texttt{kategoria}
+		\item Jazdy\_Testowe: \texttt{status}
+	\end{itemize}
+
+	\subsubsection{Klucze kandydujące}
+
+	W projekcie zdefiniowano następujące klucze kandydujące (UNIQUE constraints):
+
+	\begin{itemize}
+		\item Salony: \texttt{nazwa}
+		\item Producenci: \texttt{nazwa\_producenta}
+		\item Wyposazenia: \texttt{nazwa}
+		\item Klienci: \texttt{pesel}, \texttt{nip}, \texttt{email}
+		\item Pracownicy: \texttt{pesel}
+		\item Sprzedaze: \texttt{nr\_vin} (pojazd może być sprzedany tylko raz)
+	\end{itemize}
+
+	\subsection{Proces denormalizacji -- analiza i przykłady}
+
+	Denormalizacja to świadome naruszenie zasad normalizacji w celu poprawy wydajności zapytań kosztem redundancji danych. Przeanalizowano kilka scenariuszy pod kątem potrzeby denormalizacji.
+
+	\subsubsection{Scenariusz 1: Przeglądanie oferty pojazdów}
+
+	\textbf{Zapytanie wymagające JOIN na 3 tabelach:}
+
+	\begin{minted}{sql}
+SELECT p.nr_vin, p.kolor, p.cena_katalogowa,
+       m.nazwa_modelu, pr.nazwa_producenta
+FROM Pojazdy p
+JOIN Modele_Samochodow m ON p.id_modelu = m.id_modelu
+JOIN Producenci pr ON m.id_producenta = pr.id_producenta
+WHERE p.status = 'Dostepny';
+	\end{minted}
+
+	\textbf{Analiza:}
+	\begin{itemize}
+		\item [+] Zapytanie read-heavy (przeglądanie oferty)
+		\item [+] JOIN na 3 tabelach
+		\item [-] Ale: małe tabele (setki rekordów maximum)
+		\item [-] JOIN jest wystarczająco szybki z indeksami
+	\end{itemize}
+
+	\textbf{Decyzja:} Brak denormalizacji
+
+	\textbf{Uzasadnienie:} Tabele są małe, indeksy na kluczach obcych są wystarczające. Korzyści z zachowania normalizacji (integralność, brak redundancji) przewyższają minimalny zysk wydajnościowy z denormalizacji.
+
+	\subsubsection{Scenariusz 2: Licznik sprzedaży sprzedawcy}
+
+	W tabeli Sprzedawcy znajduje się kolumna \texttt{liczba\_sprzedazy}, która jest przykładem kontrolowanej denormalizacji.
+
+	\textbf{Implementacja:}
+
+	\begin{minted}{sql}
+-- Kolumna zdenormalizowana
+ALTER TABLE Sprzedawcy 
+ADD liczba_sprzedazy NUMBER(5) DEFAULT 0 NOT NULL;
+
+-- Trigger aktualizujący licznik
+CREATE OR REPLACE TRIGGER trg_Sprzedaze_Licznik
+AFTER INSERT OR DELETE ON Sprzedaze
+FOR EACH ROW
+BEGIN
+    IF INSERTING THEN
+        UPDATE Sprzedawcy
+        SET liczba_sprzedazy = liczba_sprzedazy + 1
+        WHERE nr_pracownika = :NEW.nr_pracownika;
+    ELSIF DELETING THEN
+        UPDATE Sprzedawcy
+        SET liczba_sprzedazy = liczba_sprzedazy - 1
+        WHERE nr_pracownika = :OLD.nr_pracownika;
+    END IF;
+END;
+	\end{minted}
+
+	\textbf{Decyzja:} Denormalizacja uzasadniona
+
+	\textbf{Uzasadnienie:}
+	\begin{itemize}
+		\item Zapytanie wykonywane bardzo często (dashboard, prowizje)
+		\item Brak konieczności JOIN i agregacji
+		\item Dane zmieniają się rzadko (kilka razy dziennie)
+		\item Synchronizacja przez triggery jest akceptowalna
+	\end{itemize}
+
+	\subsubsection{Rekomendacja po wnioskach}
+
+	Dla projektu Salon Samochodowy zaleca się \textbf{zachowanie pełnej normalizacji (3NF)} w większości tabel, z wyjątkiem kontrolowanej denormalizacji kolumny \texttt{liczba\_sprzedazy} w tabeli Sprzedawcy. Denormalizacja nie jest konieczna ze względu na:
+
+	\begin{itemize}
+		\item Niewielki rozmiar danych (setki pojazdów, tysiące transakcji)
+		\item Wydajność zapytań zapewnioną przez prawidłowe indeksy
+		\item Krytyczne znaczenie integralności danych transakcyjnych
+		\item Koszt utrzymania denormalizowanych danych przewyższający korzyści
+	\end{itemize}
+
+	W przypadku potrzeby optymalizacji zapytań raportowych rekomenduje się użycie \textbf{widoków zmaterializowanych}, które nie naruszają struktury tabel bazowych.
 	
 	\section{Faza fizyczna}
 	\subsection{Projekt transakcji i weryfikacja ich wykonalności}
-	\subsection{Strojenie bazy danych – dobór indeksów}
+	\subsection{Strojenie bazy danych -- dobór indeksów}
 	\subsection{Skrypt SQL zakładający bazę danych}
 	\subsection{Przykłady zapytań i poleceń SQL odnoszących się do bazy danych}
 	\newpage

@@ -1,0 +1,175 @@
+@startuml logic
+' Schemat ER - Salon Samochodowy - Model Logiczny
+' Format pionowy (A4)
+
+title "Diagram ER - Model Logiczny - Salon Samochodowy"
+
+skinparam ranksep 100
+skinparam nodesep 40
+skinparam defaultFontName "Arial"
+skinparam entity {
+  BorderColor #333
+  BackgroundColor #EEE
+}
+
+' ============ TABELE ============
+
+entity "SALONY" as salony {
+  * **nr_salonu** : NUMBER(5) <<PK>>
+  --
+  * nazwa : VARCHAR2(100) <<NN, UK>>
+  * ulica : VARCHAR2(100) <<NN>>
+  * miasto : VARCHAR2(50) <<NN>>
+  * kod_pocztowy : CHAR(6) <<NN>>
+  * telefon : VARCHAR2(15)
+  * email : VARCHAR2(100)
+}
+
+entity "PRACOWNICY" as pracownicy {
+  * **nr_pracownika** : NUMBER(7) <<PK>>
+  --
+  * nr_salonu : NUMBER(5) <<FK, NN>>
+  * imie : VARCHAR2(50) <<NN>>
+  * nazwisko : VARCHAR2(50) <<NN>>
+  * pesel : CHAR(11) <<NN, UK>>
+  * stanowisko : VARCHAR2(50) <<NN>>
+  * data_zatrudnienia : DATE <<NN>>
+  * pensja_podstawowa : NUMBER(10,2) <<NN>>
+}
+
+entity "SPRZEDAWCY" as sprzedawcy {
+  * **nr_pracownika** : NUMBER(7) <<PK, FK>>
+  --
+  * prowizja_procent : NUMBER(5,2)
+  * limit_rabatu_procent : NUMBER(5,2)
+  * liczba_sprzedazy : NUMBER(5)
+}
+
+entity "SERWISANCI" as serwisanci {
+  * **nr_pracownika** : NUMBER(7) <<PK, FK>>
+  --
+  * specjalizacja : VARCHAR2(100)
+  * stawka_godzinowa : NUMBER(10,2) <<NN>>
+}
+
+entity "CERTYFIKATY_SERWISANTA" as certyfikaty {
+  * **id_certyfikatu** : NUMBER(10) <<PK>>
+  --
+  * nr_pracownika : NUMBER(7) <<FK, NN>>
+  * certyfikat : VARCHAR2(200) <<NN>>
+}
+
+entity "POJAZDY" as pojazdy {
+  * **nr_vin** : CHAR(17) <<PK>>
+  --
+  * id_modelu : NUMBER(10) <<FK, NN>>
+  * nr_salonu : NUMBER(5) <<FK, NN>>
+  * rok_produkcji : NUMBER(4) <<NN>>
+  * przebieg : NUMBER(10)
+  * kolor : VARCHAR2(30)
+  * cena_katalogowa : NUMBER(10,2) <<NN>>
+  * stan : VARCHAR2(10) <<NN>>
+  * status : VARCHAR2(15) <<NN>>
+  * data_przyjecia : DATE
+  * uwagi : VARCHAR2(500)
+}
+
+entity "MODELE_SAMOCHODOW" as modele {
+  * **id_modelu** : NUMBER(10) <<PK>>
+  --
+  * id_producenta : NUMBER(5) <<FK, NN>>
+  * nazwa_modelu : VARCHAR2(50) <<NN>>
+  * typ_nadwozia : VARCHAR2(15) <<NN>>
+  * pojemnosc_silnika : NUMBER(3,1)
+  * moc_km : NUMBER(4)
+  * rodzaj_paliwa : VARCHAR2(15) <<NN>>
+  * liczba_miejsc : NUMBER(1)
+}
+
+entity "PRODUCENCI" as producenci {
+  * **id_producenta** : NUMBER(5) <<PK>>
+  --
+  * nazwa_producenta : VARCHAR2(50) <<NN, UK>>
+  * kraj_pochodzenia : VARCHAR2(50)
+}
+
+entity "SPRZEDAZE" as sprzedaze {
+  * **nr_sprzedazy** : NUMBER(10) <<PK>>
+  --
+  * nr_vin : CHAR(17) <<FK, NN, UK>>
+  * nr_klienta : NUMBER(10) <<FK, NN>>
+  * nr_pracownika : NUMBER(7) <<FK, NN>>
+  * data_sprzedazy : DATE <<NN>>
+  * cena_sprzedazy : NUMBER(10,2) <<NN>>
+  * cena_koncowa : NUMBER(10,2) <<NN>>
+  * metoda_platnosci : VARCHAR2(20) <<NN>>
+  * status : VARCHAR2(15) <<NN>>
+}
+
+entity "KLIENCI" as klienci {
+  * **nr_klienta** : NUMBER(10) <<PK>>
+  --
+  * typ_klienta : VARCHAR2(15) <<NN>>
+  * imie : VARCHAR2(50)
+  * nazwisko : VARCHAR2(50)
+  * pesel : CHAR(11) <<UK>>
+  * nazwa_firmy : VARCHAR2(100)
+  * nip : CHAR(10) <<UK>>
+  * ulica : VARCHAR2(100)
+  * miasto : VARCHAR2(50)
+  * kod_pocztowy : CHAR(6)
+  * telefon : VARCHAR2(15) <<NN>>
+  * email : VARCHAR2(100) <<UK>>
+  * data_rejestracji : DATE
+}
+
+entity "WYPOSAZENIE" as wyposazenie {
+  * **id_wyposazenia** : NUMBER(10) <<PK>>
+  --
+  * nazwa : VARCHAR2(100) <<NN, UK>>
+  * kategoria : VARCHAR2(20)
+  * dodatkowa_cena : NUMBER(10,2)
+}
+
+entity "POJAZDY_WYPOSAZENIE" as poj_wyp {
+  * **nr_vin** : CHAR(17) <<PK, FK>>
+  * **id_wyposazenia** : NUMBER(10) <<PK, FK>>
+}
+
+entity "JAZDY_TESTOWE" as jazdy {
+  * **nr_jazdy** : NUMBER(10) <<PK>>
+  --
+  * nr_klienta : NUMBER(10) <<FK, NN>>
+  * nr_vin : CHAR(17) <<FK, NN>>
+  * data_jazdy : DATE <<NN>>
+  * godzina_jazdy : TIMESTAMP
+  * nr_prawa_jazdy : VARCHAR2(20)
+  * status : VARCHAR2(20)
+}
+
+' ============ UKLAD PIONOWY ============
+
+salony -down-> pracownicy : "zatrudnia"
+salony -down-> pojazdy : "posiada"
+
+pracownicy -down-> sprzedawcy : "1:1"
+pracownicy -down-> serwisanci : "1:1"
+
+serwisanci -down-> certyfikaty : "1:N"
+
+sprzedawcy -down-> sprzedaze : "realizuje"
+
+pojazdy -down-> modele : "jest_typu"
+pojazdy -down-> sprzedaze : "jest_przedmiotem\n(1:0..1)"
+pojazdy -down-> poj_wyp : "M:N"
+pojazdy -down-> jazdy : "M:N"
+
+modele -down-> producenci : "produkuje"
+
+sprzedaze -down-> klienci : "dokonuje"
+
+klienci -down-> jazdy : "M:N"
+
+wyposazenie -down-> poj_wyp : "M:N"
+
+@enduml
