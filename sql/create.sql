@@ -374,4 +374,3 @@ SELECT table_name FROM user_tables ORDER BY table_name;
 SELECT trigger_name, status FROM user_triggers ORDER BY trigger_name;
 
 SPOOL OFF
-EXIT;
