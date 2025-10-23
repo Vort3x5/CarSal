@@ -1184,7 +1184,7 @@ END;
 		\item Zwrot identyfikatora utworzonego klienta przez parametr OUT
 	\end{itemize}
 
-	\textbf{Implementacja:} Procedura \texttt{proc\_dodaj\_klienta\_indywidualnego} w pliku \texttt{sql/04\_transactions.sql}.
+	\textbf{Implementacja:} Procedura \texttt{proc\_dodaj\_klienta\_indywidualnego} w pliku \texttt{sql/trans.sql}.
 
 	\subsubsection{Transakcja 2: Realizacja sprzedaży pojazdu}
 
@@ -1217,7 +1217,7 @@ END;
 		\item Sprzedawca nie może udzielić rabatu wyższego niż jego limit
 	\end{itemize}
 
-	\textbf{Implementacja:} Procedura \texttt{proc\_sprzedaj\_pojazd} w pliku \texttt{sql/04\_transactions.sql}.
+	\textbf{Implementacja:} Procedura \texttt{proc\_sprzedaj\_pojazd} w pliku \texttt{sql/trans.sql}.
 
 	\subsubsection{Transakcja 3: Rezerwacja jazdy testowej}
 
@@ -1246,7 +1246,7 @@ END;
 		\item Status 'Rezerwacja' nie blokuje sprzedaży pojazdu
 	\end{itemize}
 
-	\textbf{Implementacja:} Procedura \texttt{proc\_zarezerwuj\_jazde\_testowa} w pliku \texttt{sql/04\_transactions.sql}.
+	\textbf{Implementacja:} Procedura \texttt{proc\_zarezerwuj\_jazde\_testowa} w pliku \texttt{sql/trans.sql}.
 
 	\subsubsection{Transakcja 4: Zakończenie jazdy testowej}
 
@@ -1259,7 +1259,7 @@ END;
 		\item Jeśli brak innych rezerwacji -- zmiana statusu pojazdu na 'Dostepny'
 	\end{enumerate}
 
-	\textbf{Implementacja:} Procedura \texttt{proc\_zakoncz\_jazde\_testowa} w pliku \texttt{sql/04\_transactions.sql}.
+	\textbf{Implementacja:} Procedura \texttt{proc\_zakoncz\_jazde\_testowa} w pliku \texttt{sql/trans.sql}.
 
 	\subsubsection{Funkcja: Obliczanie prowizji sprzedawcy}
 
@@ -1275,7 +1275,7 @@ END;
 
 	gdzie suma obejmuje tylko sprzedaże ze statusem 'Zakonczona' w danym miesiącu.
 
-	\textbf{Implementacja:} Funkcja \texttt{func\_oblicz\_prowizje} w pliku \texttt{sql/04\_transactions.sql}.
+	\textbf{Implementacja:} Funkcja \texttt{func\_oblicz\_prowizje} w pliku \texttt{sql/trans.sql}.
 
 	\subsubsection{Weryfikacja wykonalności transakcji}
 
@@ -1552,12 +1552,9 @@ END;
 	\textbf{Krok 2: Utworzenie schematu (jako salon\_admin)}
 	\begin{minted}{bash}
 	sqlplus salon_admin/salon123@XEPDB1
-	@/tmp/01_create_schema.sql
-	\end{minted}
-
-	\textbf{Krok 3: Załadowanie danych}
-	\begin{minted}{bash}
-	@/tmp/02_insert_data.sql
+	@/tmp/create.sql
+	@/tmp/index.sql
+	@/tmp/trans.sql
 	\end{minted}
 
 	\textbf{Weryfikacja:}
@@ -1905,7 +1902,9 @@ END;
 		\item ORDER BY (wszystkie zapytania)
 	\end{itemize}
 
-	Wszystkie zapytania zostały przetestowane na danych z \texttt{02\_insert\_data.sql} i zwracają poprawne wyniki zgodne z oczekiwaniami biznesowymi.
+	Wszystkie zapytania zostały przetestowane i zwracają poprawne wyniki 
+	zgodne z oczekiwaniami biznesowymi. Pełny skrypt dostępny w pliku 
+	\texttt{sql/queries.sql}.
 	\newpage
 
 \bibliographystyle{unsrt}
