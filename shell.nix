@@ -4,6 +4,9 @@ pkgs.mkShell {
 		plantuml
 		texlive.combined.scheme-full
 		evince
+
+		jdk17
+		maven
     ];
 
 	shellHook = ''
