@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szczegóły klienta - Panel Administratora</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Szczegóły klienta</h1>
+            <div class="nav-links">
+                <a th:href="@{/admin/klienci}" class="btn">Powrót do listy</a>
+                <a th:href="@{/admin/dashboard}" class="btn">Dashboard</a>
+            </div>
+        </div>
+        
+        <div class="user-info">
+            <h3>Informacje podstawowe</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div>
+                    <p><strong>ID klienta:</strong> <span th:text="${klient.nrKlienta}">-</span></p>
+                    <p><strong>Typ klienta:</strong> <span th:text="${klient.typKlienta}">-</span></p>
+                    
+                    <div th:if="${klient.typKlienta == 'Indywidualny'}">
+                        <p><strong>Imię:</strong> <span th:text="${klient.imie}">-</span></p>
+                        <p><strong>Nazwisko:</strong> <span th:text="${klient.nazwisko}">-</span></p>
+                        <p><strong>PESEL:</strong> <span th:text="${klient.pesel}">-</span></p>
+                    </div>
+                    
+                    <div th:if="${klient.typKlienta == 'Firma'}">
+                        <p><strong>Nazwa firmy:</strong> <span th:text="${klient.nazwaFirmy}">-</span></p>
+                        <p><strong>NIP:</strong> <span th:text="${klient.nip}">-</span></p>
+                    </div>
+                </div>
+                
+                <div>
+                    <p><strong>Telefon:</strong> <span th:text="${klient.telefon}">-</span></p>
+                    <p><strong>Email:</strong> <span th:text="${klient.email}">-</span></p>
+                    <p><strong>Data rejestracji:</strong> 
+                        <span th:text="${klient.dataRejestracji != null ? #temporals.format(klient.dataRejestracji, 'dd-MM-yyyy') : '-'}">-</span>
+                    </p>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 30px;">Adres</h3>
+            <div style="margin-top: 15px;">
+                <p><strong>Ulica:</strong> <span th:text="${klient.ulica ?: 'Brak danych'}">-</span></p>
+                <p><strong>Kod pocztowy:</strong> <span th:text="${klient.kodPocztowy ?: 'Brak danych'}">-</span></p>
+                <p><strong>Miasto:</strong> <span th:text="${klient.miasto ?: 'Brak danych'}">-</span></p>
+            </div>
+        </div>
+        
+        <div class="actions" style="margin-top: 20px;">
+            <a th:href="@{/admin/klienci}" class="btn">Powrót do listy</a>
+        </div>
+    </div>
+</body>
+</html>

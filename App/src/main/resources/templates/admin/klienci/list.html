@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista klientów - Panel Administratora</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 Lista klientów</h1>
+            <div class="nav-links">
+                <a th:href="@{/admin/dashboard}" class="btn">Dashboard</a>
+                <a th:href="@{/home}" class="btn">Strona główna</a>
+            </div>
+        </div>
+        
+        <p>Łączna liczba klientów: <strong th:text="${klienci.size()}">0</strong></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Typ</th>
+                    <th>Imię i nazwisko / Firma</th>
+                    <th>Telefon</th>
+                    <th>Email</th>
+                    <th>Data rejestracji</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${klienci.empty}">
+                    <td colspan="7" style="text-align: center; padding: 30px;">
+                        Brak klientów w bazie danych
+                    </td>
+                </tr>
+                <tr th:each="klient : ${klienci}">
+                    <td th:text="${klient.nrKlienta}">-</td>
+                    <td th:text="${klient.typKlienta}">-</td>
+                    <td th:text="${klient.displayName}">-</td>
+                    <td th:text="${klient.telefon}">-</td>
+                    <td th:text="${klient.email}">-</td>
+                    <td th:text="${klient.dataRejestracji != null ? #temporals.format(klient.dataRejestracji, 'dd-MM-yyyy') : '-'}">-</td>
+                    <td>
+                        <a th:href="@{/admin/klienci/view/{id}(id=${klient.nrKlienta})}" 
+                           class="btn" style="font-size: 12px; padding: 5px 10px;">Szczegóły</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

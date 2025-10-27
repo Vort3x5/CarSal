@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Panel Administratora</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Panel Administratora</h1>
+            <div class="nav-links">
+                <a th:href="@{/home}" class="btn">Strona główna</a>
+                <a th:href="@{/logout}" class="btn btn-danger">Wyloguj</a>
+            </div>
+        </div>
+        
+        <h2>Witaj w panelu zarządzania!</h2>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <p>Liczba pojazdów</p>
+                <h3 th:text="${totalPojazdy}">0</h3>
+            </div>
+            
+            <div class="stat-card">
+                <p>Liczba klientów</p>
+                <h3 th:text="${totalKlienci}">0</h3>
+            </div>
+        </div>
+        
+        <h3>Szybkie akcje</h3>
+        <div class="actions">
+            <a th:href="@{/admin/pojazdy}" class="btn">Zarządzaj pojazdami</a>
+            <a th:href="@{/admin/pojazdy/new}" class="btn btn-success">Dodaj nowy pojazd</a>
+            <a th:href="@{/admin/klienci}" class="btn">Przeglądaj klientów</a>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
+            <h3>Funkcjonalności administratora:</h3>
+            <ul style="line-height: 2;">
+                <li>✅ <strong>Przeglądanie</strong> wszystkich pojazdów i klientów</li>
+                <li>✅ <strong>Dodawanie</strong> nowych pojazdów do systemu</li>
+                <li>✅ <strong>Edycja</strong> istniejących pojazdów</li>
+                <li>✅ <strong>Usuwanie</strong> pojazdów z bazy danych</li>
+                <li>✅ <strong>Podgląd szczegółów</strong> klientów</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
