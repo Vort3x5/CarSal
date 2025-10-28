@@ -37,9 +37,6 @@ public class KlientService {
         if (klient.getDataRejestracji() == null) {
             klient.setDataRejestracji(LocalDate.now());
         }
-        if (klient.getHaslo() != null && !klient.getHaslo().startsWith("$2a$")) {
-            klient.setHaslo(passwordEncoder.encode(klient.getHaslo()));
-        }
         return klientRepository.save(klient);
     }
 

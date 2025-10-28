@@ -64,9 +64,6 @@ public class Klient {
     @Column(name = "data_rejestracji")
     private LocalDate dataRejestracji;
 
-    @Column(name = "haslo")
-    private String haslo;
-
     public String getDisplayName() {
         if ("Indywidualny".equals(typKlienta)) {
             return imie + " " + nazwisko;

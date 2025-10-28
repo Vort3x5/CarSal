@@ -10,13 +10,15 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚗 Salon Samochodowy</h1>
+            <h1>Salon Samochodowy</h1>
             <div class="nav-links">
                 <span sec:authorize="isAuthenticated()">
                     Witaj, <strong th:text="${username}">użytkownik</strong> 
                     (<span th:text="${role}">rola</span>)
                 </span>
-                <a th:href="@{/logout}" class="btn btn-danger">Wyloguj</a>
+				<form th:action="@{/logout}" method="post" style="display: inline;">
+					<button type="submit" class="btn btn-danger">Wyloguj</button>
+				</form>
             </div>
         </div>
         
