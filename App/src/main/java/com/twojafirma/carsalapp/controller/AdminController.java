@@ -6,6 +6,7 @@ import com.twojafirma.carsalapp.model.ModelSamochodu;
 import com.twojafirma.carsalapp.service.KlientService;
 import com.twojafirma.carsalapp.service.PojazdService;
 import com.twojafirma.carsalapp.service.ModelSamochoduService;
+import com.twojafirma.carsalapp.service.SalonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,9 @@ public class AdminController {
     @Autowired
     private ModelSamochoduService modelService;
 
+    @Autowired
+    private SalonService salonService;
+
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         long totalPojazdy = pojazdService.findAll().size();
@@ -52,6 +56,7 @@ public class AdminController {
     public String newPojazd(Model model) {
         model.addAttribute("pojazd", new Pojazd());
         model.addAttribute("modele", modelService.findAll());
+        model.addAttribute("salony", salonService.findAll());
         return "admin/pojazdy/form";
     }
 
@@ -61,6 +66,7 @@ public class AdminController {
         if (pojazdOpt.isPresent()) {
             model.addAttribute("pojazd", pojazdOpt.get());
             model.addAttribute("modele", modelService.findAll());
+            model.addAttribute("salony", salonService.findAll());
             return "admin/pojazdy/form";
         } else {
             return "redirect:/admin/pojazdy?error=notfound";
@@ -74,6 +80,7 @@ public class AdminController {
                             RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("modele", modelService.findAll());
+            model.addAttribute("salony", salonService.findAll());
             return "admin/pojazdy/form";
         }
 

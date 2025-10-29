@@ -40,6 +40,18 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="nrSalonu">Salon: *</label>
+                    <select th:field="*{nrSalonu}" id="nrSalonu" required>
+                        <option value="">-- Wybierz salon --</option>
+                        <option th:each="salon : ${salony}" 
+                                th:value="${salon.nrSalonu}" 
+                                th:text="${salon.displayName}">Salon</option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('nrSalonu')}" th:errors="*{nrSalonu}" 
+                          style="color: red;">Błąd</span>
+                </div>
+                
+                <div class="form-group">
                     <label for="rokProdukcji">Rok produkcji: *</label>
                     <input type="number" th:field="*{rokProdukcji}" id="rokProdukcji" required 
                            min="1900" max="2025" placeholder="np. 2023">

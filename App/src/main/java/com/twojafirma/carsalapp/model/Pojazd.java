@@ -30,7 +30,8 @@ public class Pojazd {
     @JoinColumn(name = "id_modelu", referencedColumnName = "id_modelu", insertable = false, updatable = false)
     private ModelSamochodu model;
 
-    @Column(name = "nr_salonu")
+    @NotNull(message = "Salon jest wymagany")
+    @Column(name = "nr_salonu", nullable = false)
     private Long nrSalonu;
 
     @NotNull(message = "Rok produkcji jest wymagany")
