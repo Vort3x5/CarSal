@@ -20,7 +20,9 @@
         
         <div class="actions" style="margin-top: 30px; justify-content: center;">
             <a th:href="@{/home}" class="btn">Strona główna</a>
-            <a th:href="@{/logout}" class="btn btn-danger">Wyloguj</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Wyloguj</button>
+            </form>
         </div>
     </div>
 </body>

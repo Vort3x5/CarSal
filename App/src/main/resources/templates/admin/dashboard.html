@@ -12,7 +12,9 @@
             <h1>🔧 Panel Administratora</h1>
             <div class="nav-links">
                 <a th:href="@{/home}" class="btn">Strona główna</a>
-                <a th:href="@{/logout}" class="btn btn-danger">Wyloguj</a>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Wyloguj</button>
+                </form>
             </div>
         </div>
         
