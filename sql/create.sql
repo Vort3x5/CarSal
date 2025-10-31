@@ -1,14 +1,7 @@
--- ==============================================
--- Skrypt DDL - Salon Samochodowy
--- Oracle XE 21c
--- Wykonaj jako: salon_admin
--- ==============================================
-
 SET ECHO ON
 SET FEEDBACK ON
 SPOOL logs/01_create_schema.log
 
--- Usunięcie istniejących obiektów (dla bezpieczeństwa)
 BEGIN
    FOR r IN (SELECT table_name FROM user_tables) LOOP
       EXECUTE IMMEDIATE 'DROP TABLE ' || r.table_name || ' CASCADE CONSTRAINTS';
@@ -18,10 +11,6 @@ BEGIN
    END LOOP;
 END;
 /
-
--- ==============================================
--- SEKWENCJE
--- ==============================================
 
 CREATE SEQUENCE seq_salony START WITH 1 INCREMENT BY 1 NOCACHE;
 CREATE SEQUENCE seq_producenci START WITH 1 INCREMENT BY 1 NOCACHE;
@@ -33,11 +22,6 @@ CREATE SEQUENCE seq_wyposazenie START WITH 1 INCREMENT BY 1 NOCACHE;
 CREATE SEQUENCE seq_jazdy_testowe START WITH 1 INCREMENT BY 1 NOCACHE;
 CREATE SEQUENCE seq_certyfikaty START WITH 1 INCREMENT BY 1 NOCACHE;
 
--- ==============================================
--- TABELE GŁÓWNE
--- ==============================================
-
--- Tabela SALONY
 CREATE TABLE Salony (
     nr_salonu NUMBER(5) PRIMARY KEY,
     nazwa VARCHAR2(100) NOT NULL UNIQUE,
@@ -49,14 +33,12 @@ CREATE TABLE Salony (
     CONSTRAINT ck_salony_kod CHECK (REGEXP_LIKE(kod_pocztowy, '^\d{2}-\d{3}$'))
 );
 
--- Tabela PRODUCENCI
 CREATE TABLE Producenci (
     id_producenta NUMBER(5) PRIMARY KEY,
     nazwa_producenta VARCHAR2(50) NOT NULL UNIQUE,
     kraj_pochodzenia VARCHAR2(50)
 );
 
--- Tabela MODELE_SAMOCHODOW
 CREATE TABLE Modele_Samochodow (
     id_modelu NUMBER(10) PRIMARY KEY,
     id_producenta NUMBER(5) NOT NULL,
@@ -73,7 +55,6 @@ CREATE TABLE Modele_Samochodow (
     CONSTRAINT ck_modele_miejsca CHECK (liczba_miejsc BETWEEN 2 AND 9)
 );
 
--- Tabela POJAZDY
 CREATE TABLE Pojazdy (
     nr_vin CHAR(17) PRIMARY KEY,
     id_modelu NUMBER(10) NOT NULL,
@@ -98,7 +79,6 @@ CREATE TABLE Pojazdy (
     CONSTRAINT ck_pojazdy_vin CHECK (LENGTH(nr_vin) = 17)
 );
 
--- Tabela KLIENCI
 CREATE TABLE Klienci (
     nr_klienta NUMBER(10) PRIMARY KEY,
     typ_klienta VARCHAR2(15) NOT NULL,
@@ -125,7 +105,6 @@ CREATE TABLE Klienci (
     )
 );
 
--- Tabela PRACOWNICY
 CREATE TABLE Pracownicy (
     nr_pracownika NUMBER(7) PRIMARY KEY,
     nr_salonu NUMBER(5) NOT NULL,
@@ -141,11 +120,6 @@ CREATE TABLE Pracownicy (
     CONSTRAINT ck_pracownicy_pensja CHECK (pensja_podstawowa > 0)
 );
 
--- ==============================================
--- TABELE SPECJALIZACJI (ISA)
--- ==============================================
-
--- Tabela SPRZEDAWCY (specjalizacja Pracownika)
 CREATE TABLE Sprzedawcy (
     nr_pracownika NUMBER(7) PRIMARY KEY,
     prowizja_procent NUMBER(5,2),
@@ -158,7 +132,6 @@ CREATE TABLE Sprzedawcy (
     CONSTRAINT ck_sprzedawcy_liczba CHECK (liczba_sprzedazy >= 0)
 );
 
--- Tabela SERWISANCI (specjalizacja Pracownika)
 CREATE TABLE Serwisanci (
     nr_pracownika NUMBER(7) PRIMARY KEY,
     specjalizacja VARCHAR2(100),
@@ -168,7 +141,6 @@ CREATE TABLE Serwisanci (
     CONSTRAINT ck_serwisanci_stawka CHECK (stawka_godzinowa > 0)
 );
 
--- Tabela CERTYFIKATY_SERWISANTA (z atrybutu wielowartościowego)
 CREATE TABLE Certyfikaty_Serwisanta (
     id_certyfikatu NUMBER(10) PRIMARY KEY,
     nr_pracownika NUMBER(7) NOT NULL,
@@ -178,11 +150,6 @@ CREATE TABLE Certyfikaty_Serwisanta (
         REFERENCES Serwisanci(nr_pracownika) ON DELETE CASCADE
 );
 
--- ==============================================
--- TABELE TRANSAKCYJNE
--- ==============================================
-
--- Tabela SPRZEDAZE
 CREATE TABLE Sprzedaze (
     nr_sprzedazy NUMBER(10) PRIMARY KEY,
     nr_vin CHAR(17) NOT NULL UNIQUE,
@@ -204,7 +171,6 @@ CREATE TABLE Sprzedaze (
     CONSTRAINT ck_sprzedaze_status CHECK (status IN ('W_trakcie', 'Zakonczona', 'Anulowana'))
 );
 
--- Tabela WYPOSAZENIE
 CREATE TABLE Wyposazenie (
     id_wyposazenia NUMBER(10) PRIMARY KEY,
     nazwa VARCHAR2(100) NOT NULL UNIQUE,
@@ -214,11 +180,6 @@ CREATE TABLE Wyposazenie (
     CONSTRAINT ck_wyposazenie_cena CHECK (dodatkowa_cena >= 0)
 );
 
--- ==============================================
--- TABELE ŁĄCZĄCE (M:N)
--- ==============================================
-
--- Tabela łącząca POJAZDY_WYPOSAZENIE
 CREATE TABLE Pojazdy_Wyposazenie (
     nr_vin CHAR(17),
     id_wyposazenia NUMBER(10),
@@ -229,7 +190,6 @@ CREATE TABLE Pojazdy_Wyposazenie (
         REFERENCES Wyposazenie(id_wyposazenia) ON DELETE CASCADE
 );
 
--- Tabela łącząca JAZDY_TESTOWE
 CREATE TABLE Jazdy_Testowe (
     nr_jazdy NUMBER(10) PRIMARY KEY,
     nr_klienta NUMBER(10) NOT NULL,
@@ -246,11 +206,6 @@ CREATE TABLE Jazdy_Testowe (
     CONSTRAINT ck_jazdy_status CHECK (status IN ('Zarezerwowana', 'Odbyta', 'Anulowana'))
 );
 
--- ==============================================
--- TRIGGERY - AUTO-INCREMENT
--- ==============================================
-
--- Trigger dla Salony
 CREATE OR REPLACE TRIGGER trg_salony_bi
 BEFORE INSERT ON Salony
 FOR EACH ROW
@@ -261,7 +216,6 @@ BEGIN
 END;
 /
 
--- Trigger dla Producenci
 CREATE OR REPLACE TRIGGER trg_producenci_bi
 BEFORE INSERT ON Producenci
 FOR EACH ROW
@@ -272,7 +226,6 @@ BEGIN
 END;
 /
 
--- Trigger dla Modele_Samochodow
 CREATE OR REPLACE TRIGGER trg_modele_bi
 BEFORE INSERT ON Modele_Samochodow
 FOR EACH ROW
@@ -283,7 +236,6 @@ BEGIN
 END;
 /
 
--- Trigger dla Klienci
 CREATE OR REPLACE TRIGGER trg_klienci_bi
 BEFORE INSERT ON Klienci
 FOR EACH ROW
@@ -294,7 +246,6 @@ BEGIN
 END;
 /
 
--- Trigger dla Pracownicy
 CREATE OR REPLACE TRIGGER trg_pracownicy_bi
 BEFORE INSERT ON Pracownicy
 FOR EACH ROW
@@ -305,7 +256,6 @@ BEGIN
 END;
 /
 
--- Trigger dla Sprzedaze
 CREATE OR REPLACE TRIGGER trg_sprzedaze_bi
 BEFORE INSERT ON Sprzedaze
 FOR EACH ROW
@@ -316,7 +266,6 @@ BEGIN
 END;
 /
 
--- Trigger dla Wyposazenie
 CREATE OR REPLACE TRIGGER trg_wyposazenie_bi
 BEFORE INSERT ON Wyposazenie
 FOR EACH ROW
@@ -327,7 +276,6 @@ BEGIN
 END;
 /
 
--- Trigger dla Jazdy_Testowe
 CREATE OR REPLACE TRIGGER trg_jazdy_bi
 BEFORE INSERT ON Jazdy_Testowe
 FOR EACH ROW
@@ -338,7 +286,6 @@ BEGIN
 END;
 /
 
--- Trigger dla Certyfikaty_Serwisanta
 CREATE OR REPLACE TRIGGER trg_certyfikaty_bi
 BEFORE INSERT ON Certyfikaty_Serwisanta
 FOR EACH ROW
@@ -348,10 +295,6 @@ BEGIN
     END IF;
 END;
 /
-
--- ==============================================
--- TRIGGER - Licznik sprzedaży (denormalizacja)
--- ==============================================
 
 CREATE OR REPLACE TRIGGER trg_sprzedaze_licznik
 AFTER INSERT OR DELETE ON Sprzedaze
@@ -369,7 +312,6 @@ BEGIN
 END;
 /
 
--- Potwierdzenie
 SELECT table_name FROM user_tables ORDER BY table_name;
 SELECT trigger_name, status FROM user_triggers ORDER BY trigger_name;
 

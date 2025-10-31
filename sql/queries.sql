@@ -1,8 +1,3 @@
--- ==============================================
--- Przykładowe zapytania SQL
--- Sekcja 5.4 dokumentacji
--- ==============================================
-
 SET ECHO ON
 SET FEEDBACK ON
 SET LINESIZE 150
@@ -12,10 +7,6 @@ PROMPT ========================================
 PROMPT Przykładowe zapytania SQL
 PROMPT ========================================
 PROMPT
-
--- ==============================================
--- ZAPYTANIE 1: Lista dostępnych pojazdów z ceną
--- ==============================================
 
 PROMPT === Q1: Dostępne pojazdy z informacją o modelu ===
 SELECT 
@@ -35,10 +26,6 @@ WHERE p.status = 'Dostepny'
 ORDER BY p.cena_katalogowa;
 
 PROMPT
-
--- ==============================================
--- ZAPYTANIE 2: Sprzedaż z informacjami o kliencie
--- ==============================================
 
 PROMPT === Q2: Historia sprzedaży z danymi klienta ===
 SELECT 
@@ -63,10 +50,6 @@ ORDER BY sp.data_sprzedazy DESC;
 
 PROMPT
 
--- ==============================================
--- ZAPYTANIE 3: Ranking sprzedawców
--- ==============================================
-
 PROMPT === Q3: Ranking sprzedawców według liczby sprzedaży ===
 SELECT 
     p.imie || ' ' || p.nazwisko AS sprzedawca,
@@ -83,10 +66,6 @@ GROUP BY p.imie, p.nazwisko, s.liczba_sprzedazy, s.prowizja_procent
 ORDER BY laczna_wartosc DESC;
 
 PROMPT
-
--- ==============================================
--- ZAPYTANIE 4: Pojazdy z wyposażeniem
--- ==============================================
 
 PROMPT === Q4: Pojazdy z pełnym wyposażeniem ===
 SELECT 
@@ -108,10 +87,6 @@ ORDER BY pojazd;
 
 PROMPT
 
--- ==============================================
--- ZAPYTANIE 5: Statystyki salonów
--- ==============================================
-
 PROMPT === Q5: Statystyki sprzedaży według salonów ===
 SELECT 
     s.nazwa AS salon,
@@ -129,10 +104,6 @@ GROUP BY s.nazwa, s.miasto
 ORDER BY laczna_sprzedaz DESC;
 
 PROMPT
-
--- ==============================================
--- ZAPYTANIE 6: Jazdy testowe z konwersją
--- ==============================================
 
 PROMPT === Q6: Jazdy testowe i efektywność konwersji ===
 SELECT 
@@ -159,10 +130,6 @@ ORDER BY wspolczynnik_konwersji_procent DESC;
 
 PROMPT
 
--- ==============================================
--- ZAPYTANIE 7: Serwisanci z certyfikatami
--- ==============================================
-
 PROMPT === Q7: Serwisanci i ich certyfikaty ===
 SELECT 
     p.imie || ' ' || p.nazwisko AS serwisant,
@@ -177,10 +144,6 @@ GROUP BY p.imie, p.nazwisko, srv.specjalizacja, srv.stawka_godzinowa
 ORDER BY liczba_certyfikatow DESC, serwisant;
 
 PROMPT
-
--- ==============================================
--- ZAPYTANIE 8: Najpopularniejsze modele
--- ==============================================
 
 PROMPT === Q8: Najpopularniejsze modele (sprzedaż) ===
 SELECT 
@@ -201,10 +164,6 @@ ORDER BY liczba_sprzedanych DESC, srednia_cena DESC;
 
 PROMPT
 
--- ==============================================
--- ZAPYTANIE 9: Klienci z historią zakupów
--- ==============================================
-
 PROMPT === Q9: Klienci i ich historia zakupów ===
 SELECT 
     k.nr_klienta,
@@ -224,10 +183,6 @@ ORDER BY laczna_wartosc_zakupow DESC;
 
 PROMPT
 
--- ==============================================
--- ZAPYTANIE 10: Analiza rabatów
--- ==============================================
-
 PROMPT === Q10: Analiza udzielonych rabatów ===
 SELECT 
     p.imie || ' ' || p.nazwisko AS sprzedawca,
@@ -243,8 +198,3 @@ LEFT JOIN Sprzedaze sp ON s.nr_pracownika = sp.nr_pracownika
 GROUP BY p.imie, p.nazwisko, s.limit_rabatu_procent
 HAVING COUNT(sp.nr_sprzedazy) > 0
 ORDER BY sredni_rabat_procent DESC;
-
-PROMPT
-PROMPT ========================================
-PROMPT Zapytania wykonane pomyślnie!
-PROMPT ========================================
