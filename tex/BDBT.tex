@@ -142,7 +142,7 @@
 	
 	\subsection{Definicja zbiorów encji określonych w projekcie (decyzje projektowe)}
 	
-	Model konceptualny składa się z ośmiu głównych encji. Zgodnie z zasadami modelowania konceptualnego, wszystkie encje są nazwane w liczbie pojedynczej.
+	Model konceptualny składa się z ośmiu głównych encji.
 	
 	\subsubsection{SALON}
 	
@@ -357,7 +357,7 @@
 		\item Pojazd może być przedmiotem maksymalnie jednej sprzedaży (nie można sprzedać tego samego pojazdu dwa razy)
 	\end{itemize}
 	
-	\subsubsection{Związki typu M:N (wymagane w modelu konceptualnym)}
+	\subsubsection{Związki typu M:N}
 	
 	\textbf{1. POJAZD [ma\_wyposazenie] WYPOSAŻENIE (M:N)}
 	
@@ -444,8 +444,6 @@
 	
 	\subsubsection{Typy danych}
 	
-	Dobór typów danych zgodnie z zasadami:
-	
 	\begin{table}[H]
 		\centering
 		\begin{tabular}{|l|l|l|}
@@ -472,7 +470,7 @@
 		\caption{Mapowanie typów danych}
 	\end{table}
 	
-	\subsection{Dodatkowe reguły integralnościowe (reguły biznesowe)}
+	\subsection{Dodatkowe reguły integralnościowe}
 	
 	\subsubsection{Reguły domenowe}
 	
@@ -719,8 +717,7 @@
 
 	\subsection{Usunięcie właściwości niekompatybilnych z modelem relacyjnym - przykłady}
 
-	Proces konwersji z modelu konceptualnego do logicznego wymagał usunięcia konstrukcji niekompatybilnych z modelem relacyjnym.
-
+	\newpage
 	\subsubsection{Rozbicie atrybutów złożonych}
 
 	Atrybuty złożone (composite) zostały „spłaszczone" do postaci pojedynczych kolumn.
@@ -807,7 +804,7 @@
 
 	\textbf{Kluczowe cechy implementacji:}
 	\begin{itemize}
-		\item Relacje Sprzedawcy i Serwisanci są połączone z Pracownicy związkiem \textbf{1:1} (nie 1:N!)
+		\item Relacje Sprzedawcy i Serwisanci są połączone z Pracownicy związkiem \textbf{1:1}
 		\item Klucz główny \texttt{nr\_pracownika} z tabeli Pracownicy jest jednocześnie kluczem głównym i obcym (PK/FK) w tabelach Sprzedawcy i Serwisanci
 		\item Użyto ograniczenia \texttt{ON DELETE CASCADE} dla zachowania integralności
 	\end{itemize}
@@ -825,8 +822,6 @@
 		\item Rozbicie atrybutów złożonych (np. \texttt{adres} na \texttt{ulica}, \texttt{miasto}, \texttt{kod\_pocztowy}) zapewniło atomowość
 		\item Przeniesienie atrybutów wielowartościowych (np. \texttt{certyfikaty} serwisanta) do oddzielnej tabeli \texttt{Certyfikaty\_Serwisanta} zapewniło 1NF
 	\end{itemize}
-
-	\textbf{Status:} Wszystkie tabele spełniają 1NF
 
 	\subsubsection{Druga Postać Normalna (2NF)}
 
@@ -849,8 +844,6 @@
 			\item Spełnia 2NF
 		\end{itemize}
 	\end{enumerate}
-
-	\textbf{Status:} Wszystkie tabele spełniają 2NF
 
 	\subsubsection{Trzecia Postać Normalna (3NF)}
 
@@ -919,8 +912,6 @@
 		\caption{Weryfikacja normalizacji wszystkich tabel}
 	\end{table}
 
-	\textbf{Status:} Wszystkie tabele spełniają wymagania 3NF oraz dodatkowo BCNF
-
 	\subsection{Schemat ER na poziomie modelu logicznego}
 
 	\begin{figure}[H]
@@ -930,7 +921,7 @@
 		\label{fig:er_logiczny}
 	\end{figure}
 
-	Model logiczny składa się z 13 tabel (spełnia wymaganie 12-20 tabel):
+	Model logiczny składa się z 13 tabel
 
 	\textbf{Tabele główne:}
 	\begin{enumerate}
@@ -1468,7 +1459,7 @@ END;
 		\item Jazdy\_Testowe -- związek M:N z dodatkowymi atrybutami
 	\end{itemize}
 
-	\textbf{Razem: 13 tabel} (spełnia wymaganie 12-20 tabel)
+	\textbf{Razem: 13 tabel}
 
 	\textbf{5. Triggery (11 sztuk):}
 

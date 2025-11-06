@@ -7,8 +7,6 @@ skinparam ranksep 100
 skinparam nodesep 40
 skinparam defaultFontName "Arial"
 
-' ============ ENCJE ============
-
 entity "SALON" as salon {
   * **nr_salonu** : PK
   --
@@ -128,8 +126,6 @@ entity "POJAZD_WYPOSAZENIE" as pojazd_wyp {
   * **nr_vin** : PK, FK
   * **id_wyposazenia** : PK, FK
 }
-
-' ============ UKLAD PIONOWY ============
 
 salon -down-> pracownik : "zatrudnia\n(1,1):(0,N)"
 salon -down-> pojazd : "posiada\n(1,1):(0,N)"
