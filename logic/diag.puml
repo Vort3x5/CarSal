@@ -12,8 +12,6 @@ skinparam entity {
   BackgroundColor #EEE
 }
 
-' ============ TABELE ============
-
 entity "SALONY" as salony {
   * **nr_salonu** : NUMBER(5) <<PK>>
   --
@@ -146,8 +144,6 @@ entity "JAZDY_TESTOWE" as jazdy {
   * nr_prawa_jazdy : VARCHAR2(20)
   * status : VARCHAR2(20)
 }
-
-' ============ UKLAD PIONOWY ============
 
 salony -down-> pracownicy : "zatrudnia"
 salony -down-> pojazdy : "posiada"

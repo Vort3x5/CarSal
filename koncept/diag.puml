@@ -158,8 +158,6 @@ note right of pracownik
   - Overlapping: pracownik moze
     byc jednoczesnie sprzedawca
     i serwisantem
-  - Partial: nie kazdy pracownik
-    musi miec specjalizacje
 end note
 
 @enduml
