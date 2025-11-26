@@ -1,163 +1,158 @@
 @startuml koncept
 ' Schemat ER - Salon Samochodowy - Model Konceptualny
-' Notacja: Chen/Crow's Foot
-' Format pionowy (A4)
+' Zgodny z BDBT.tex (8 głównych encji) i stylem Toad Data Modeler
 
-skinparam ranksep 100
-skinparam nodesep 40
-skinparam defaultFontName "Arial"
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 80
+skinparam roundcorner 0
+skinparam shadow false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
 
-entity "SALON" as salon {
-  * **nr_salonu** : PK
-  --
-  * nazwa : VARCHAR(100) <<UK>>
-  * <<composite>> adres
-    ** ulica : VARCHAR(100)
-    ** miasto : VARCHAR(50)
-    ** kod_pocztowy : CHAR(6)
-  * telefon : VARCHAR(15)
-  * email : VARCHAR(100)
+' Stylizacja encji a la Toad
+skinparam class {
+    BackgroundColor #FFFFFF
+    ArrowColor #000000
+    BorderColor #000000
+    HeaderBackgroundColor #D9D9D9
+}
+hide circle
+
+' ============ 8 ENCJI GŁÓWNYCH (zgodnie ze sprawozdaniem) ============
+
+entity "SALON" {
+    *nr_salonu : PK
+    --
+    nazwa : UK
+    -- adres (złożony) --
+    ulica
+    miasto
+    kod_pocztowy
+    --
+    telefon
+    email
 }
 
-entity "PRACOWNIK" as pracownik {
-  * **nr_pracownika** : PK
-  --
-  * imie : VARCHAR(50)
-  * nazwisko : VARCHAR(50)
-  * pesel : CHAR(11) <<UK>>
-  * stanowisko : VARCHAR(50)
-  * data_zatrudnienia : DATE
-  * pensja_podstawowa : NUMBER(10,2)
+entity "POJAZD" {
+    *nr_vin : PK
+    --
+    rok_produkcji
+    przebieg
+    kolor
+    cena_katalogowa
+    stan
+    status
+    data_przyjecia
+    uwagi
 }
 
-entity "SPRZEDAWCA" as sprzedawca {
-  * **nr_pracownika** : PK, FK
-  --
-  * prowizja_procent : NUMBER(5,2)
-  * limit_rabatu_procent : NUMBER(5,2)
-  liczba_sprzedazy : NUMBER(5)
+entity "MODEL_SAMOCHODU" {
+    *id_modelu : PK
+    --
+    nazwa_modelu
+    typ_nadwozia
+    pojemnosc_silnika
+    moc_km
+    rodzaj_paliwa
+    liczba_miejsc
+    nazwa_producenta : UK
+    kraj_pochodzenia
 }
 
-entity "SERWISANT" as serwisant {
-  * **nr_pracownika** : PK, FK
-  --
-  * specjalizacja : VARCHAR(100)
-  <<multivalued>> certyfikaty : VARCHAR(500)
-  * stawka_godzinowa : NUMBER(10,2)
+entity "KLIENT" {
+    *nr_klienta : PK
+    --
+    typ_klienta
+    -- dane osobowe --
+    imie
+    nazwisko
+    pesel : UK
+    -- dane firmowe --
+    nazwa_firmy
+    nip : UK
+    -- adres (złożony) --
+    ulica
+    miasto
+    kod_pocztowy
+    --
+    telefon
+    email
+    data_rejestracji
 }
 
-entity "POJAZD" as pojazd {
-  * **nr_vin** : PK, CHAR(17)
-  --
-  * rok_produkcji : NUMBER(4)
-  * przebieg : NUMBER(10)
-  * kolor : VARCHAR(30)
-  * cena_katalogowa : NUMBER(10,2)
-  * stan : {Nowy, Uzywany}
-  * status : {Dostepny, Sprzedany,\nRezerwacja, Serwis}
-  * data_przyjecia : DATE
-  uwagi : VARCHAR(500)
+entity "PRACOWNIK" {
+    *nr_pracownika : PK
+    --
+    imie
+    nazwisko
+    pesel : UK
+    stanowisko
+    data_zatrudnienia
+    pensja_podstawowa
 }
 
-entity "MODEL_SAMOCHODU" as model {
-  * **id_modelu** : PK
-  --
-  * nazwa_modelu : VARCHAR(50)
-  * typ_nadwozia : {Sedan, SUV,\nHatchback, Kombi}
-  * pojemnosc_silnika : NUMBER(3,1)
-  * moc_km : NUMBER(4)
-  * rodzaj_paliwa : {Benzyna, Diesel,\nElektryczny, Hybryda}
-  * liczba_miejsc : NUMBER(1)
+' Podtypy (Specjalizacja)
+entity "SPRZEDAWCA" {
+    --
+    prowizja_procent
+    limit_rabatu_procent
+    liczba_sprzedazy
 }
 
-entity "PRODUCENT" as producent {
-  * **id_producenta** : PK
-  --
-  * nazwa_producenta : VARCHAR(50) <<UK>>
-  * kraj_pochodzenia : VARCHAR(50)
+entity "SERWISANT" {
+    --
+    specjalizacja
+    stawka_godzinowa
+    <<multivalued>> certyfikaty
 }
 
-entity "SPRZEDAZ" as sprzedaz {
-  * **nr_sprzedazy** : PK
-  --
-  * data_sprzedazy : DATE
-  * cena_sprzedazy : NUMBER(10,2)
-  * cena_koncowa : NUMBER(10,2)
-  * metoda_platnosci : {Gotowka,\nPrzelew, Finansowanie, Leasing}
-  * status : {W_trakcie,\nZakonczona, Anulowana}
+entity "SPRZEDAZ" {
+    *nr_sprzedazy : PK
+    --
+    data_sprzedazy
+    cena_sprzedazy
+    cena_koncowa
+    metoda_platnosci
+    status
 }
 
-entity "KLIENT" as klient {
-  * **nr_klienta** : PK
-  --
-  * typ_klienta : {Indywidualny, Firma}
-  <<composite>> dane_osobowe
-    ** imie : VARCHAR(50)
-    ** nazwisko : VARCHAR(50)
-    ** pesel : CHAR(11) <<UK>>
-  <<composite>> dane_firmowe
-    ** nazwa_firmy : VARCHAR(100)
-    ** nip : CHAR(10) <<UK>>
-  * <<composite>> adres
-  * telefon : VARCHAR(15)
-  * email : VARCHAR(100)
-  * data_rejestracji : DATE
+entity "WYPOSAZENIE" {
+    *id_wyposazenia : PK
+    --
+    nazwa : UK
+    kategoria
+    dodatkowa_cena
 }
 
-entity "WYPOSAZENIE" as wyposazenie {
-  * **id_wyposazenia** : PK
-  --
-  * nazwa : VARCHAR(100) <<UK>>
-  * kategoria : {Bezpieczenstwo,\nKomfort, Multimedia}
-  * dodatkowa_cena : NUMBER(10,2)
-}
+' ============ ZWIĄZKI ============
 
-entity "TEST_DRIVE" as test_drive {
-  * **nr_klienta** : PK, FK
-  * **nr_vin** : PK, FK
-  * **data_jazdy** : PK
-  --
-  godzina : TIME
-  nr_prawa_jazdy : VARCHAR(20)
-  status : VARCHAR(20)
-}
+' 1. SALON posiada POJAZD (1:M)
+SALON ||..o{ POJAZD : "posiada"
 
-entity "POJAZD_WYPOSAZENIE" as pojazd_wyp {
-  * **nr_vin** : PK, FK
-  * **id_wyposazenia** : PK, FK
-}
+' 2. SALON zatrudnia PRACOWNIK (1:M)
+SALON ||..o{ PRACOWNIK : "zatrudnia"
 
-salon -down-> pracownik : "zatrudnia\n(1,1):(0,N)"
-salon -down-> pojazd : "posiada\n(1,1):(0,N)"
+' 3. MODEL jest instancją POJAZD (1:M)
+MODEL_SAMOCHODU ||..|{ POJAZD : "jest_instancja"
 
-pracownik -down-> sprzedawca : "<<ISA>>\nOverlapping\nPartial"
-pracownik -down-> serwisant : "<<ISA>>\nOverlapping\nPartial"
+' 4. KLIENT dokonuje SPRZEDAZ (1:M)
+KLIENT ||..o{ SPRZEDAZ : "dokonuje"
 
-pracownik -down-> sprzedaz : "realizuje\n(1,1):(0,N)"
+' 5. PRACOWNIK (Sprzedawca) realizuje SPRZEDAZ (1:M)
+SPRZEDAWCA ||..o{ SPRZEDAZ : "realizuje"
 
-pojazd -down-> model : "jest_instancja\n(1,1):(1,N)"
-pojazd -down-> sprzedaz : "jest_przedmiotem\n(1,1):(0,1)"
-pojazd -down-> pojazd_wyp : "(1,N)"
-pojazd -down-> test_drive : "(0,N)"
+' 6. POJAZD jest przedmiotem SPRZEDAZ (1:1 / M:1)
+POJAZD ||..o| SPRZEDAZ : "jest_przedmiotem"
 
-model -down-> producent : "produkuje\n(1,1):(1,N)"
+' 7. POJAZD ma WYPOSAZENIE (M:N)
+POJAZD }o..o{ WYPOSAZENIE : "ma_wyposazenie"
 
-sprzedaz -down-> klient : "dokonuje\n(1,1):(0,N)"
+' 8. KLIENT rezerwuje POJAZD (Jazda testowa - M:N)
+KLIENT }o..o{ POJAZD : "rezerwuje (TEST_DRIVE)"
 
-klient -down-> test_drive : "(0,N)"
-
-wyposazenie -down-> pojazd_wyp : "(0,N)"
-
-note right of salon
-  Encja glowna
-  (lewy gorny rog)
-end note
-
-note right of pracownik
-  Hierarchia specjalizacji:
-  - Overlapping: pracownik moze
-    byc jednoczesnie sprzedawca
-    i serwisantem
-end note
+' Hierarchia ISA
+PRACOWNIK <|-- SPRZEDAWCA : "ISA (Overlapping)"
+PRACOWNIK <|-- SERWISANT : "ISA (Overlapping)"
 
 @enduml

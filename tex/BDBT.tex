@@ -26,10 +26,10 @@
 \renewcommand\figurename{Rys.}
 \renewcommand\lstlistingname{Wydruk}
 
-\title{{\Huge  Projekt BDBT}\\ - \\{\Large Zespół A2}\\ {\Large Salon Samochodowy}}
-
-\author{Szymon Boniuk 337314 \and Jakub Celiński 337318}
-
+\title{{\Huge  Projekt Bazy Danych i Big Data}
+\\ - \\
+{\Large Zespół A2}\\ {\Large Salon Samochodowy}}
+\author{ - \and Szymon Boniuk 337314 \and Jakub Celiński 337318 \and - }
 \affil{Politechnika Warszawska, Wydział EiTI}
 \date{\today}
 
@@ -142,7 +142,7 @@
 	
 	\subsection{Definicja zbiorów encji określonych w projekcie (decyzje projektowe)}
 	
-	Model konceptualny składa się z ośmiu głównych encji.
+	Model konceptualny składa się z siedmiu głównych encji.
 	
 	\subsubsection{SALON}
 	
@@ -188,7 +188,7 @@
 		\item rodzaj\_paliwa -- dziedzina \{Benzyna, Diesel, Elektryczny, Hybryda\}
 		\item liczba\_miejsc -- liczba miejsc siedzących
 		\item producent\_nazwa -- nazwa producenta
-		\item producent_kraj -- kraj producenta
+		\item producent\_kraj -- kraj producenta
 	\end{itemize}
 	
 	\subsubsection{KLIENT}
@@ -358,13 +358,19 @@
 		\item Element wyposażenia może nie być przypisany do żadnego pojazdu (jeśli nie jest obecnie używany)
 	\end{itemize}
 	
-	\textbf{2. KLIENT [rezerwuje] POJAZD poprzez TEST\_DRIVE (M:N)}
-	
+	\textbf{2. KLIENT [rezerwuje\_jazde\_testowa] POJAZD (M:N)}
+
 	Krotność: (0,N) : (0,N)
+
+	\textbf{Opis związku:} Bezpośredni związek wiele-do-wielu reprezentujący możliwość 
+	rezerwacji jazd testowych. W modelu konceptualnym jest to czysty związek M:N bez 
+	encji pośredniczącej.
+
 	\begin{itemize}
-		\item Klient może zarezerwować wiele jazd testowych (dla różnych pojazdów)
-		\item Pojazd może być użyty w wielu jazdach testowych (przez różnych klientów)
+		\item Klient może zarezerwować wiele jazd testowych dla różnych pojazdów
+		\item Pojazd może być użyty w wielu jazdach testowych przez różnych klientów
 		\item Zarówno klient jak i pojazd mogą nie mieć żadnych jazd testowych
+		\item Każda rezerwacja jazdy testowej jest identyfikowana przez kombinację: klient + pojazd + data
 	\end{itemize}
 	
 	\subsubsection{Związek specjalizacji (ISA)}
@@ -423,14 +429,6 @@
 		\end{tabular}
 		\caption{Dziedziny atrybutów wyliczanych}
 	\end{table}
-	
-	\textbf{Postać SQL dla dziedzin:}
-	
-	W implementacji fizycznej dziedziny będą reprezentowane przez ograniczenia CHECK, np.:
-	
-	\begin{minted}{sql}
-	stan VARCHAR2(10) CHECK (stan IN ('Nowy', 'Uzywany'))
-	\end{minted}
 	
 	\subsubsection{Typy danych}
 	
@@ -495,7 +493,7 @@
 		\item TEST\_DRIVE wymaga ważnego numeru prawa jazdy
 	\end{enumerate}
 	
-	\subsection{Klucze kandydujące i główne (decyzje projektowe)}
+	\subsection{Klucze kandydujące i główne}
 	
 	\subsubsection{Zasady wyboru kluczy}
 	
@@ -506,6 +504,7 @@
 		\item \textbf{Klucze kandydujące (UK):} Identyfikujemy naturalne klucze, które mogą służyć jako alternatywne identyfikatory
 	\end{itemize}
 	
+	\newpage
 	\subsubsection{Zestawienie kluczy}
 	
 	\begin{table}[H]
@@ -518,17 +517,11 @@
 			\hline
 			POJAZD & nr\_vin & - \\
 			\hline
-			MODEL\_SAMOCHODU & id\_modelu & - \\
-			\hline
-			PRODUCENT & id\_producenta & nazwa\_producenta \\
+			MODEL\_SAMOCHODU & id\_modelu & nazwa\_producenta \\
 			\hline
 			KLIENT & nr\_klienta & pesel (indywidualny), nip (firma) \\
 			\hline
 			PRACOWNIK & nr\_pracownika & pesel \\
-			\hline
-			SPRZEDAWCA & (nr\_pracownika) & - \\
-			\hline
-			SERWISANT & (nr\_pracownika) & - \\
 			\hline
 			SPRZEDAZ & nr\_sprzedazy & - \\
 			\hline
@@ -537,6 +530,7 @@
 		\end{tabular}
 		\caption{Klucze główne i kandydujące}
 	\end{table}
+	\newpage
 	
 	\subsection{Schemat ER na poziomie konceptualnym}
 
@@ -597,27 +591,14 @@
 	Odpowiedź: NIE -- jeśli klient nie dokonał zakupu, nie ma ścieżki przez SPRZEDAZ.
 	
 	\textbf{Rozwiązanie:}
-	
-	Wprowadzono encję TEST\_DRIVE, która tworzy alternatywną ścieżkę:
-	$$\text{KLIENT} \rightarrow \text{TEST\_DRIVE} \leftarrow \text{POJAZD} \rightarrow \text{MODEL\_SAMOCHODU}$$
-	
-	Teraz możliwe są zapytania:
-	\begin{itemize}
-		\item Jakie modele testował klient?
-		\item Którzy klienci testowali pojazdy, ale nie kupili?
-		\item Jaki odsetek jazd testowych kończy się zakupem?
-	\end{itemize}
-	
-	\textbf{Przykładowe zapytanie (SQL):}
-	
-	\begin{minted}{sql}
-	SELECT k.nazwisko, m.nazwa_modelu
-	FROM klient k
-	JOIN test_drive td ON k.nr_klienta = td.nr_klienta
-	JOIN pojazd p ON td.nr_vin = p.nr_vin
-	JOIN model_samochodu m ON p.id_modelu = m.id_modelu
-	WHERE k.nr_klienta NOT IN (SELECT nr_klienta FROM sprzedaz);
-	\end{minted}
+
+	Wprowadzono związek M:N między KLIENT a POJAZD (rezerwacja jazd testowych), 
+	który tworzy alternatywną ścieżkę:
+	$$\text{KLIENT} \leftrightarrow \text{POJAZD (jazdy testowe)} \rightarrow \text{MODEL\_SAMOCHODU}$$
+
+	Ten związek M:N w modelu logicznym zostanie zaimplementowany jako tabela 
+	łącząca JAZDY\_TESTOWE, co umożliwi przechowywanie informacji o 
+	rezerwacjach niezależnie od tego, czy zakończyły się zakupem.
 	
 	\subsubsection{Weryfikacja braku innych pułapek}
 	
@@ -646,7 +627,6 @@
 	\textbf{Wnioski:}
 	\begin{itemize}
 		\item Model nie zawiera pułapek wachlarzowych dzięki odpowiedniej strukturze związków
-		\item Pułapka szczelinowa została wyeliminowana przez encję TEST\_DRIVE
 		\item Wszystkie wymagane zapytania biznesowe są możliwe do zrealizowania
 	\end{itemize}
 	
@@ -705,9 +685,9 @@
 		\end{itemize}
 	\end{itemize}
 
+	\newpage
 	\subsection{Usunięcie właściwości niekompatybilnych z modelem relacyjnym - przykłady}
 
-	\newpage
 	\subsubsection{Rozbicie atrybutów złożonych}
 
 	Atrybuty złożone (composite) zostały „spłaszczone" do postaci pojedynczych kolumn.
@@ -764,23 +744,19 @@
 
 	\subsubsection{Rozbicie związków M:N}
 
-	Związki typu wiele-do-wielu wymagają utworzenia tabel łączących (asocjacyjnych).
+	Związki typu M:N zidentyfikowane w modelu konceptualnym są implementowane w modelu relacyjnym za pomocą tabel łączących (asocjacyjnych).
 
-	\textbf{Przykład 1: POJAZD $\leftrightarrow$ WYPOSAZENIE}
-
-	Model konceptualny zawierał bezpośredni związek M:N. W modelu logicznym został on zastąpiony tabelą łączącą:
-
-	\begin{verbatim}
-	Pojazdy_Wyposazenie:
-	- nr_vin : CHAR(17) PK, FK
-	- id_wyposazenia : NUMBER(10) PK, FK
-	\end{verbatim}
-
-	Klucz główny tabeli łączącej jest kompozycją kluczy obcych obu encji.
-
-	\textbf{Przykład 2: KLIENT $\leftrightarrow$ POJAZD (przez TEST\_DRIVE)}
-
-	Analogicznie, związek między klientami a pojazdami (jazdy testowe) został zaimplementowany jako tabela łącząca \texttt{Jazdy\_Testowe} z dodatkowymi atrybutami opisującymi jazdę (data, godzina, status).
+	\begin{itemize}
+		\item \textbf{Związek \texttt{POJAZD [ma\_wyposazenie] WYPOSAZENIE} (M:N)}
+		\begin{itemize}
+			\item[$\rightarrow$] Przekształcono w nową tabelę \texttt{POJAZDY\_WYPOSAZENIE} z kluczem złożonym \texttt{(nr\_vin, id\_wyposazenia)}, gdzie obie kolumny są kluczami obcymi wskazującymi odpowiednio na tabele \texttt{POJAZDY} i \texttt{WYPOSAZENIE}.
+		\end{itemize}
+		
+		\item \textbf{Relacja asocjacyjna \texttt{KLIENT [testuje] POJAZD} (M:N)}
+		\begin{itemize}
+			\item[$\rightarrow$] Asocjacja ta, posiadająca na modelu konceptualnym atrybuty (data, status), została zaimplementowana jako tabela \texttt{JAZDY\_TESTOWE}. Pełni ona rolę tabeli łączącej z kluczem sztucznym \texttt{nr\_jazdy} oraz kluczami obcymi do klienta i pojazdu.
+		\end{itemize}
+	\end{itemize}
 
 	\subsubsection{Implementacja hierarchii specjalizacji (ISA)}
 
@@ -827,29 +803,18 @@
 			\item Spełnia 2NF
 		\end{itemize}
 		
-		\item \textbf{Jazdy\_Testowe} -- klucz naturalny: (\texttt{nr\_klienta}, \texttt{nr\_vin}, \texttt{data\_jazdy})
+		\item \textbf{Tabela JAZDY\_TESTOWE} -- klucz główny: \texttt{nr\_jazdy} (sztuczny)
 		\begin{itemize}
-			\item Atrybuty \texttt{godzina}, \texttt{status}, \texttt{nr\_prawa\_jazdy}, \texttt{nr\_pracownika} zależą od całego klucza
-			\item Szczegóły klienta w tabeli Klienci, szczegóły pojazdu w tabeli Pojazdy
-			\item Spełnia 2NF
+			\item Klucz główny to pojedynczy atrybut \texttt{nr\_jazdy} dla uproszczenia operacji
+			\item Unikalność biznesową zapewnia constraint UNIQUE(\texttt{nr\_klienta}, \texttt{nr\_vin}, \texttt{data\_jazdy})
+			\item Atrybuty \texttt{godzina\_jazdy}, \texttt{status}, \texttt{nr\_prawa\_jazdy} zależą funkcyjnie od klucza głównego \texttt{nr\_jazdy}
+			\item Spełnia 2NF (brak częściowych zależności funkcyjnych)
 		\end{itemize}
 	\end{enumerate}
 
 	\subsubsection{Trzecia Postać Normalna (3NF)}
 
 	Relacja jest w 3NF, gdy jest w 2NF i nie zawiera przechodnich zależności funkcyjnych (każdy atrybut niekluczowy zależy bezpośrednio od klucza głównego).
-
-	\textbf{Przykład eliminacji zależności przechodniej:}
-
-	Potencjalne naruszenie 3NF w tabeli Pojazdy:
-
-	\begin{verbatim}
-	Pojazdy_ZLE:
-	  nr_vin -> id_modelu -> nazwa_modelu, typ_nadwozia
-	  nr_vin -> id_modelu -> id_producenta -> nazwa_producenta
-	\end{verbatim}
-
-	\textbf{Rozwiązanie -- dekompozycja:}
 
 	\begin{verbatim}
 	Producenci:
@@ -863,44 +828,6 @@
 	\end{verbatim}
 
 	Dane modelu przechowywane są raz w tabeli \texttt{Modele\_Samochodow}, a nie powtarzane dla każdego pojazdu.
-
-	\textbf{Weryfikacja wszystkich tabel:}
-
-	\begin{table}[H]
-		\centering
-		\begin{tabular}{|l|c|c|c|l|}
-			\hline
-			\textbf{Tabela} & \textbf{1NF} & \textbf{2NF} & \textbf{3NF} & \textbf{Uwagi} \\
-			\hline
-			Salony & TAK & TAK & TAK & Klucz prosty, brak zależności \\
-			\hline
-			Pojazdy & TAK & TAK & TAK & FK do Modele\_Samochodow, Salony \\
-			\hline
-			Modele\_Samochodow & TAK & TAK & TAK & FK do Producenci \\
-			\hline
-			Producenci & TAK & TAK & TAK & Brak FK \\
-			\hline
-			Klienci & TAK & TAK & TAK & Klucz prosty \\
-			\hline
-			Pracownicy & TAK & TAK & TAK & FK do Salony \\
-			\hline
-			Sprzedawcy & TAK & TAK & TAK & Specjalizacja, FK do Pracownicy \\
-			\hline
-			Serwisanci & TAK & TAK & TAK & Specjalizacja, FK do Pracownicy \\
-			\hline
-			Sprzedaze & TAK & TAK & TAK & FK do Klienci, Pojazdy, Pracownicy \\
-			\hline
-			Wyposazenia & TAK & TAK & TAK & Klucz prosty \\
-			\hline
-			Pojazdy\_Wyposazenie & TAK & TAK & TAK & Klucz złożony, tabela łącząca \\
-			\hline
-			Jazdy\_Testowe & TAK & TAK & TAK & Klucz złożony, tabela łącząca \\
-			\hline
-			Certyfikaty\_Serwisanta & TAK & TAK & TAK & Z atrybutu wielowartościowego \\
-			\hline
-		\end{tabular}
-		\caption{Weryfikacja normalizacji wszystkich tabel}
-	\end{table}
 
 	\subsection{Schemat ER na poziomie modelu logicznego}
 
@@ -1121,19 +1048,6 @@ END;
 		\item Synchronizacja przez triggery jest akceptowalna
 	\end{itemize}
 
-	\subsubsection{Rekomendacja po wnioskach}
-
-	Dla projektu Salon Samochodowy zaleca się \textbf{zachowanie pełnej normalizacji (3NF)} w większości tabel, z wyjątkiem kontrolowanej denormalizacji kolumny \texttt{liczba\_sprzedazy} w tabeli Sprzedawcy. Denormalizacja nie jest konieczna ze względu na:
-
-	\begin{itemize}
-		\item Niewielki rozmiar danych (setki pojazdów, tysiące transakcji)
-		\item Wydajność zapytań zapewnioną przez prawidłowe indeksy
-		\item Krytyczne znaczenie integralności danych transakcyjnych
-		\item Koszt utrzymania denormalizowanych danych przewyższający korzyści
-	\end{itemize}
-
-	W przypadku potrzeby optymalizacji zapytań raportowych rekomenduje się użycie \textbf{widoków zmaterializowanych}, które nie naruszają struktury tabel bazowych.
-	
 	\section{Faza fizyczna}
 
 	\subsection{Projekt transakcji i weryfikacja ich wykonalności}
