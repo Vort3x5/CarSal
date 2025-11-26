@@ -187,17 +187,8 @@
 		\item moc\_km -- moc silnika w koniach mechanicznych
 		\item rodzaj\_paliwa -- dziedzina \{Benzyna, Diesel, Elektryczny, Hybryda\}
 		\item liczba\_miejsc -- liczba miejsc siedzących
-	\end{itemize}
-	
-	\subsubsection{PRODUCENT}
-	
-	Reprezentuje producenta samochodów (markę).
-	
-	\textbf{Atrybuty:}
-	\begin{itemize}
-		\item \textbf{id\_producenta} (PK) -- sztuczny klucz główny
-		\item nazwa\_producenta -- nazwa marki
-		\item kraj\_pochodzenia -- kraj siedziby producenta
+		\item producent\_nazwa -- nazwa producenta
+		\item producent_kraj -- kraj producenta
 	\end{itemize}
 	
 	\subsubsection{KLIENT}
@@ -248,7 +239,6 @@
 	
 	\textbf{Specjalizacja: SPRZEDAWCA}
 	
-	Atrybuty specyficzne (2-3 atrybuty zgodnie z wytycznymi):
 	\begin{itemize}
 		\item prowizja\_procent -- procent prowizji od sprzedaży
 		\item limit\_rabatu\_procent -- maksymalny rabat jaki może przyznać
@@ -273,7 +263,7 @@
 	
 	\subsubsection{SPRZEDAZ}
 	
-	Reprezentuje transakcję sprzedaży pojazdu.
+	Reprezentuje związek sprzedaży łączący klienta i pojazd.
 	
 	\textbf{Atrybuty:}
 	\begin{itemize}
