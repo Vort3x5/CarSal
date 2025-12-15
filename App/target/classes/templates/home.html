@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona główna - Salon Samochodowy</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Salon Samochodowy</h1>
+            <div class="nav-links">
+                <span sec:authorize="isAuthenticated()">
+                    Witaj, <strong th:text="${username}">użytkownik</strong> 
+                    (<span th:text="${role}">rola</span>)
+                </span>
+				<form th:action="@{/logout}" method="post" style="display: inline;">
+					<button type="submit" class="btn btn-danger">Wyloguj</button>
+				</form>
+            </div>
+        </div>
+        
+        <div sec:authorize="hasRole('ADMIN')">
+            <h2>Panel Administratora</h2>
+            <p>Masz pełny dostęp do zarządzania systemem salonu samochodowego.</p>
+            
+            <div class="actions">
+                <a th:href="@{/admin/dashboard}" class="btn">Dashboard</a>
+                <a th:href="@{/admin/pojazdy}" class="btn">Zarządzaj pojazdami</a>
+                <a th:href="@{/admin/klienci}" class="btn">Przeglądaj klientów</a>
+            </div>
+        </div>
+        
+        <div sec:authorize="hasRole('USER')">
+            <h2>Panel Klienta</h2>
+            <p>Możesz przeglądać i edytować swoje dane osobowe.</p>
+            
+            <div class="actions">
+                <a th:href="@{/user/profile}" class="btn">Mój profil</a>
+                <a th:href="@{/user/edit}" class="btn btn-success">Edytuj dane</a>
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 5px; border: 1px solid #ddd;">
+            <h3 style="color: #1a1a1a; margin-bottom: 15px;">Funkcjonalności aplikacji:</h3>
+            <ul style="line-height: 2; color: #333333;">
+                <li><strong style="color: #000;">Perspektywa ADMIN (szeroka):</strong> Pełne zarządzanie pojazdami (dodawanie, edycja, usuwanie, przeglądanie) oraz podgląd klientów</li>
+                <li><strong style="color: #000;">Perspektywa USER (wąska):</strong> Przeglądanie i modyfikacja własnych danych osobowych</li>
+                <li><strong style="color: #000;">Zabezpieczenia:</strong> Spring Security z rolami, blokada dostępu do /admin dla użytkowników bez uprawnień</li>
+                <li><strong style="color: #000;">Operacje CRUD:</strong> Wszystkie 4 operacje (Create, Read, Update, Delete) dla pojazdów w panelu admina</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

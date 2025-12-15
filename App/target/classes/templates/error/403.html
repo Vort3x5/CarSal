@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brak dostępu - 403</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container error-page">
+        <h1>403</h1>
+        <h2>Brak dostępu</h2>
+        <p th:text="${errorMessage}">Nie masz uprawnień do wyświetlenia tej strony.</p>
+        
+        <div style="margin-top: 30px; padding: 20px; background: #2d2d00; border-radius: 5px; border: 1px solid #665500;">
+            <p style="color: #e0e0e0;"><strong>Co się stało?</strong></p>
+            <p style="color: #d0d0d0;">Próbowałeś uzyskać dostęp do zasobu, do którego nie masz uprawnień.</p>
+            <p style="color: #d0d0d0;">Jeśli uważasz, że to błąd, skontaktuj się z administratorem systemu.</p>
+        </div>
+        
+        <div class="actions" style="margin-top: 30px; justify-content: center;">
+            <a th:href="@{/home}" class="btn">Strona główna</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Wyloguj</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
