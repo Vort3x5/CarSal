@@ -9,6 +9,7 @@ import com.twojafirma.carsalapp.service.ModelSamochoduService;
 import com.twojafirma.carsalapp.service.SalonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -91,9 +92,21 @@ public class AdminController {
 
     @GetMapping("/pojazdy/delete/{id}")
     public String deletePojazd(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
+        // Check if vehicle exists and is sold
+        Optional<Pojazd> pojazdOpt = pojazdService.findById(nrVin);
+        if (pojazdOpt.isPresent()) {
+            Pojazd pojazd = pojazdOpt.get();
+            if ("Sprzedany".equals(pojazd.getStatus())) {
+                redirectAttributes.addFlashAttribute("error", "Nie można usunąć pojazdu, który został sprzedany");
+                return "redirect:/admin/pojazdy";
+            }
+        }
+        
         try {
             pojazdService.deleteById(nrVin);
             redirectAttributes.addFlashAttribute("success", "Pojazd został usunięty pomyślnie");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("error", "Nie można usunąć pojazdu - istnieją powiązane rekordy (np. jazdy testowe)");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Nie można usunąć pojazdu: " + e.getMessage());
         }
