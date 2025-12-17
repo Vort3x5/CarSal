@@ -1,11 +1,11 @@
 package com.twojafirma.carsalapp.controller;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import com.twojafirma.carsalapp.model.Klient;
 import com.twojafirma.carsalapp.model.Pojazd;
-import com.twojafirma.carsalapp.model.ModelSamochodu;
 import com.twojafirma.carsalapp.service.KlientService;
-import com.twojafirma.carsalapp.service.PojazdService;
 import com.twojafirma.carsalapp.service.ModelSamochoduService;
+import com.twojafirma.carsalapp.service.PojazdService;
 import com.twojafirma.carsalapp.service.SalonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +38,10 @@ public class AdminController {
     public String dashboard(Model model) {
         long totalPojazdy = pojazdService.findAll().size();
         long totalKlienci = klientService.findAll().size();
-        
+
         model.addAttribute("totalPojazdy", totalPojazdy);
         model.addAttribute("totalKlienci", totalKlienci);
-        
+
         return "admin/dashboard";
     }
 
@@ -75,9 +75,9 @@ public class AdminController {
 
     @PostMapping("/pojazdy/save")
     public String savePojazd(@Valid @ModelAttribute("pojazd") Pojazd pojazd,
-                            BindingResult result,
-                            Model model,
-                            RedirectAttributes redirectAttributes) {
+                             BindingResult result,
+                             Model model,
+                             RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("modele", modelService.findAll());
             model.addAttribute("salony", salonService.findAll());
@@ -89,16 +89,31 @@ public class AdminController {
         return "redirect:/admin/pojazdy";
     }
 
-    @GetMapping("/pojazdy/delete/{id}")
-    public String deletePojazd(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
-        try {
-            pojazdService.deleteById(nrVin);
-            redirectAttributes.addFlashAttribute("success", "Pojazd został usunięty pomyślnie");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Nie można usunąć pojazdu: " + e.getMessage());
-        }
-        return "redirect:/admin/pojazdy";
-    }
+	@PostMapping("/pojazdy/delete/{id}")
+	public String deletePojazd(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
+		Optional<Pojazd> pojazdOpt = pojazdService.findById(nrVin);
+		if (pojazdOpt.isEmpty()) {
+			redirectAttributes.addFlashAttribute("error", "Pojazd nie istnieje");
+			return "redirect:/admin/pojazdy";
+		}
+
+		Pojazd pojazd = pojazdOpt.get();
+		if ("Sprzedany".equalsIgnoreCase(pojazd.getStatus())) {
+			redirectAttributes.addFlashAttribute("error", "Nie można usunąć pojazdu, ponieważ jest powiązany ze sprzedażą");
+			return "redirect:/admin/pojazdy";
+		}
+
+		try {
+			pojazdService.deleteById(nrVin);
+			redirectAttributes.addFlashAttribute("success", "Pojazd został usunięty pomyślnie");
+		} catch (DataIntegrityViolationException ex) {
+			redirectAttributes.addFlashAttribute("error",
+					"Nie można usunąć pojazdu, ponieważ istnieją powiązane dane (np. sprzedaże, jazdy testowe)");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Nie można usunąć pojazdu: " + e.getMessage());
+		}
+		return "redirect:/admin/pojazdy";
+	}
 
     @GetMapping("/klienci")
     public String listKlienci(Model model) {

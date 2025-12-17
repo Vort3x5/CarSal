@@ -271,3 +271,48 @@ textarea:focus {
 .error-page p {
     color: #b0b0b0;
 }
+
+:focus-visible {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+.btn:focus-visible {
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.5);
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table-responsive table {
+    min-width: 720px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 900px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .actions {
+        flex-wrap: wrap;
+    }
+
+    .container {
+        padding: 20px 16px;
+    }
+}
