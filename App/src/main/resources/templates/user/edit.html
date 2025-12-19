@@ -30,13 +30,13 @@
 
             <div class="form-group">
                 <label for="telefon">Telefon: *</label>
-                <input type="text"
-                       th:field="*{telefon}"
-                       id="telefon"
-                       required
-                       inputmode="tel"
-                       pattern="[0-9+\\-\\s]{7,15}"
-                       placeholder="np. 501-234-567">
+				<input type="text"
+					   th:field="*{telefon}"
+					   id="telefon"
+					   required
+					   inputmode="tel"
+					   pattern="[0-9+\s-]{7,15}"
+					   placeholder="np. 501-234-567">
                 <span th:if="${#fields.hasErrors('telefon')}" th:errors="*{telefon}" style="color: red;">Błąd</span>
             </div>
 
