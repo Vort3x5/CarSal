@@ -22,7 +22,7 @@
             <input type="hidden" th:field="*{dataRejestracji}">
 
             <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-                <p><strong>⚠️ Uwaga:</strong> Możesz edytować tylko swoje dane kontaktowe i adres. 
+                <p><strong>Uwaga:</strong> Możesz edytować tylko swoje dane kontaktowe i adres. 
                 Dane osobowe (imię, nazwisko, PESEL/NIP) nie mogą być zmieniane.</p>
             </div>
 
@@ -65,7 +65,7 @@
                 <input type="text"
                        th:field="*{kodPocztowy}"
                        id="kodPocztowy"
-                       pattern="\\d{2}-\\d{3}"
+                       pattern="[0-9]{2}[-\s]?[0-9]{3}"
                        maxlength="6"
                        placeholder="np. 00-123">
             </div>
