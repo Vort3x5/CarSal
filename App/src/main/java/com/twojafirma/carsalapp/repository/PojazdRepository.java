@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 public interface PojazdRepository extends JpaRepository<Pojazd, String> {
-    List<Pojazd> findByDeletedFalse();
-    List<Pojazd> findByStatusAndDeletedFalse(String status);
-    List<Pojazd> findByIdModeluAndDeletedFalse(Long idModelu);
+    List<Pojazd> findByStatus(String status);
+    List<Pojazd> findByIdModelu(Long idModelu);
 }
