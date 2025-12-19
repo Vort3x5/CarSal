@@ -17,26 +17,39 @@ public class PojazdService {
     private PojazdRepository pojazdRepository;
 
     public List<Pojazd> findAll() {
-        return pojazdRepository.findAll();
+        return pojazdRepository.findByDeletedFalse();
     }
 
     public Optional<Pojazd> findById(String nrVin) {
-        return pojazdRepository.findById(nrVin);
+        return pojazdRepository.findById(nrVin).filter(p -> p.getDeleted() == null || !p.getDeleted());
     }
 
     public List<Pojazd> findByStatus(String status) {
-        return pojazdRepository.findByStatus(status);
+        return pojazdRepository.findByStatusAndDeletedFalse(status);
+    }
+
+    public List<Pojazd> findByIdModelu(Long idModelu) {
+        return pojazdRepository.findByIdModeluAndDeletedFalse(idModelu);
     }
 
     public Pojazd save(Pojazd pojazd) {
+        if (pojazd.getDeleted() == null) {
+            pojazd.setDeleted(false);
+        }
         return pojazdRepository.save(pojazd);
     }
 
     public void deleteById(String nrVin) {
-        pojazdRepository.deleteById(nrVin);
+        Optional<Pojazd> opt = pojazdRepository.findById(nrVin);
+        if (opt.isPresent()) {
+            Pojazd p = opt.get();
+            p.setDeleted(true);
+            p.setStatus("Wycofany");
+            pojazdRepository.save(p);
+        }
     }
 
     public boolean existsById(String nrVin) {
-        return pojazdRepository.existsById(nrVin);
+        return pojazdRepository.existsById(nrVin) && findById(nrVin).isPresent();
     }
 }

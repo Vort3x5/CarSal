@@ -57,13 +57,16 @@ public class Pojazd {
     private String status;
 
     @Column(name = "data_przyjecia")
-    private LocalDate dataPrzyjecia;
+    private LocalDate dataPrzycia;
 
     @Column(name = "uwagi", length = 500)
     private String uwagi;
 
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted = false;
+
     public String getFullDescription() {
-        return (model != null ? model.getNazwaModelu() : "Nieznany model") + 
+        return (model != null ? model.getNazwaModelu() : "Nieznany model") +
                " (" + rokProdukcji + ", " + kolor + ")";
     }
 }
