@@ -62,8 +62,11 @@ public class Pojazd {
     @Column(name = "uwagi", length = 500)
     private String uwagi;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
     public String getFullDescription() {
-        return (model != null ? model.getNazwaModelu() : "Nieznany model") + 
+        return (model != null ? model.getNazwaModelu() : "Nieznany model") +
                " (" + rokProdukcji + ", " + kolor + ")";
     }
 }

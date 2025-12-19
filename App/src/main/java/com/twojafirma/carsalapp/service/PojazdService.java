@@ -17,23 +17,26 @@ public class PojazdService {
     private PojazdRepository pojazdRepository;
 
     public List<Pojazd> findAll() {
-        return pojazdRepository.findAll();
+        return pojazdRepository.findByDeletedFalse();
     }
 
     public Optional<Pojazd> findById(String nrVin) {
-        return pojazdRepository.findById(nrVin);
+        return pojazdRepository.findById(nrVin).filter(p -> !p.isDeleted());
     }
 
     public List<Pojazd> findByStatus(String status) {
-        return pojazdRepository.findByStatus(status);
+        return pojazdRepository.findByStatusAndDeletedFalse(status);
     }
 
     public Pojazd save(Pojazd pojazd) {
         return pojazdRepository.save(pojazd);
     }
 
-    public void deleteById(String nrVin) {
-        pojazdRepository.deleteById(nrVin);
+    public void softDeleteById(String nrVin) {
+        pojazdRepository.findById(nrVin).ifPresent(p -> {
+            p.setDeleted(true);
+            pojazdRepository.save(p);
+        });
     }
 
     public boolean existsById(String nrVin) {

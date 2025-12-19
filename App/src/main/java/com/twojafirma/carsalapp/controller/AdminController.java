@@ -89,31 +89,18 @@ public class AdminController {
         return "redirect:/admin/pojazdy";
     }
 
-	@PostMapping("/pojazdy/delete/{id}")
-	public String deletePojazd(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
-		Optional<Pojazd> pojazdOpt = pojazdService.findById(nrVin);
-		if (pojazdOpt.isEmpty()) {
-			redirectAttributes.addFlashAttribute("error", "Pojazd nie istnieje");
-			return "redirect:/admin/pojazdy";
-		}
+    @PostMapping("/pojazdy/delete/{id}")
+    public String deletePojazd(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
+        Optional<Pojazd> pojazdOpt = pojazdService.findById(nrVin);
+        if (pojazdOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Pojazd nie istnieje");
+            return "redirect:/admin/pojazdy";
+        }
 
-		Pojazd pojazd = pojazdOpt.get();
-		if ("Sprzedany".equalsIgnoreCase(pojazd.getStatus())) {
-			redirectAttributes.addFlashAttribute("error", "Nie można usunąć pojazdu, ponieważ jest powiązany ze sprzedażą");
-			return "redirect:/admin/pojazdy";
-		}
-
-		try {
-			pojazdService.deleteById(nrVin);
-			redirectAttributes.addFlashAttribute("success", "Pojazd został usunięty pomyślnie");
-		} catch (DataIntegrityViolationException ex) {
-			redirectAttributes.addFlashAttribute("error",
-					"Nie można usunąć pojazdu, ponieważ istnieją powiązane dane (np. sprzedaże, jazdy testowe)");
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("error", "Nie można usunąć pojazdu: " + e.getMessage());
-		}
-		return "redirect:/admin/pojazdy";
-	}
+        pojazdService.softDeleteById(nrVin);
+        redirectAttributes.addFlashAttribute("success", "Pojazd został oznaczony jako usunięty");
+        return "redirect:/admin/pojazdy";
+    }
 
     @GetMapping("/klienci")
     public String listKlienci(Model model) {
