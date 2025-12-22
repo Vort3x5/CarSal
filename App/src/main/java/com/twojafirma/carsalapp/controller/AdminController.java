@@ -9,6 +9,7 @@ import com.twojafirma.carsalapp.service.PojazdService;
 import com.twojafirma.carsalapp.service.SalonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     @Autowired
@@ -47,7 +49,7 @@ public class AdminController {
 
     @GetMapping("/pojazdy")
     public String listPojazdy(Model model) {
-        List<Pojazd> pojazdy = pojazdService.findAll();
+        List pojazdy = pojazdService.findAll();
         model.addAttribute("pojazdy", pojazdy);
         return "admin/pojazdy/list";
     }
@@ -62,7 +64,7 @@ public class AdminController {
 
     @GetMapping("/pojazdy/edit/{id}")
     public String editPojazd(@PathVariable("id") String nrVin, Model model) {
-        Optional<Pojazd> pojazdOpt = pojazdService.findById(nrVin);
+        Optional pojazdOpt = pojazdService.findById(nrVin);
         if (pojazdOpt.isPresent()) {
             model.addAttribute("pojazd", pojazdOpt.get());
             model.addAttribute("modele", modelService.findAll());
@@ -91,7 +93,7 @@ public class AdminController {
 
     @PostMapping("/pojazdy/delete/{id}")
     public String deletePojazd(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
-        Optional<Pojazd> pojazdOpt = pojazdService.findById(nrVin);
+        Optional pojazdOpt = pojazdService.findById(nrVin);
         if (pojazdOpt.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Pojazd nie istnieje");
             return "redirect:/admin/pojazdy";
@@ -104,14 +106,14 @@ public class AdminController {
 
     @GetMapping("/klienci")
     public String listKlienci(Model model) {
-        List<Klient> klienci = klientService.findAll();
+        List klienci = klientService.findAll();
         model.addAttribute("klienci", klienci);
         return "admin/klienci/list";
     }
 
     @GetMapping("/klienci/view/{id}")
     public String viewKlient(@PathVariable("id") Long id, Model model) {
-        Optional<Klient> klientOpt = klientService.findById(id);
+        Optional klientOpt = klientService.findById(id);
         if (klientOpt.isPresent()) {
             model.addAttribute("klient", klientOpt.get());
             return "admin/klienci/view";

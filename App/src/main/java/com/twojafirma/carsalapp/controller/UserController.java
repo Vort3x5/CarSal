@@ -23,10 +23,10 @@ public class UserController {
     @GetMapping("/profile")
     public String viewProfile(Authentication authentication, Model model) {
         String username = authentication.getName();
-        
+
         Long klientId = getUserIdFromUsername(username);
         Optional<Klient> klientOpt = klientService.findById(klientId);
-        
+
         if (klientOpt.isPresent()) {
             model.addAttribute("klient", klientOpt.get());
             return "user/profile";
@@ -40,7 +40,7 @@ public class UserController {
     public String editProfile(Authentication authentication, Model model) {
         String username = authentication.getName();
         Long klientId = getUserIdFromUsername(username);
-        
+
         Optional<Klient> klientOpt = klientService.findById(klientId);
         if (klientOpt.isPresent()) {
             model.addAttribute("klient", klientOpt.get());
@@ -61,21 +61,21 @@ public class UserController {
 
         String username = authentication.getName();
         Long klientId = getUserIdFromUsername(username);
-        
+
         Optional<Klient> existingKlientOpt = klientService.findById(klientId);
         if (existingKlientOpt.isPresent()) {
             Klient existingKlient = existingKlientOpt.get();
-            
+
             existingKlient.setTelefon(klient.getTelefon());
             existingKlient.setEmail(klient.getEmail());
             existingKlient.setUlica(klient.getUlica());
             existingKlient.setMiasto(klient.getMiasto());
             existingKlient.setKodPocztowy(klient.getKodPocztowy());
-            
+
             klientService.save(existingKlient);
             redirectAttributes.addFlashAttribute("success", "Profil został zaktualizowany");
         }
-        
+
         return "redirect:/user/profile";
     }
 
