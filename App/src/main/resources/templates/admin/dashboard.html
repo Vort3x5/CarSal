@@ -12,9 +12,10 @@
             <h1>Panel Administratora</h1>
             <div class="nav-links">
                 <a th:href="@{/home}" class="btn">Strona główna</a>
-                <form th:action="@{/logout}" method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-danger">Wyloguj</button>
-                </form>
+				<form th:action="@{/logout}" method="post" style="display:inline;">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+					<button type="submit" class="btn">Wyloguj</button>
+				</form>
             </div>
         </div>
         
