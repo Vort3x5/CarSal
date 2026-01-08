@@ -31,6 +31,10 @@ public class KlientService {
         return klientRepository.findByEmail(email);
     }
 
+    public Optional<Klient> findByUsername(String username) {
+        return klientRepository.findByUsername(username);
+    }
+
     public Klient save(Klient klient) {
         if (klient.getDataRejestracji() == null) {
             klient.setDataRejestracji(LocalDate.now());
