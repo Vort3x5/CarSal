@@ -1,4 +1,4 @@
-package com.twojafirma.carsalapp.controller;
+package carsalapp.controller;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,4 +16,4 @@ public class AppErrorController implements ErrorController {
         model.addAttribute("status", status);
         return "error/500";
     }
-}
+} 

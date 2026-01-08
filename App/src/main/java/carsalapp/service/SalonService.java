@@ -1,7 +1,7 @@
-package com.twojafirma.carsalapp.service;
+package carsalapp.service;
 
-import com.twojafirma.carsalapp.model.Salon;
-import com.twojafirma.carsalapp.repository.SalonRepository;
+import carsalapp.model.Salon;
+import carsalapp.repository.SalonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

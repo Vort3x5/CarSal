@@ -1,7 +1,7 @@
-package com.twojafirma.carsalapp.service;
+package carsalapp.service;
 
-import com.twojafirma.carsalapp.model.Klient;
-import com.twojafirma.carsalapp.repository.KlientRepository;
+import carsalapp.model.Klient;
+import carsalapp.repository.KlientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

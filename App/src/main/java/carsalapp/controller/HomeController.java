@@ -1,4 +1,4 @@
-package com.twojafirma.carsalapp.controller;
+package carsalapp.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

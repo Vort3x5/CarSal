@@ -1,4 +1,4 @@
-package com.twojafirma.carsalapp.model;
+package carsalapp.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

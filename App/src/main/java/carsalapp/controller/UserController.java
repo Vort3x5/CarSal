@@ -1,7 +1,7 @@
-package com.twojafirma.carsalapp.controller;
+package carsalapp.controller;
 
-import com.twojafirma.carsalapp.model.Klient;
-import com.twojafirma.carsalapp.service.KlientService;
+import carsalapp.model.Klient;
+import carsalapp.service.KlientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

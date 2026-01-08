@@ -1,12 +1,12 @@
-package com.twojafirma.carsalapp.controller;
+package carsalapp.controller;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import com.twojafirma.carsalapp.model.Klient;
-import com.twojafirma.carsalapp.model.Pojazd;
-import com.twojafirma.carsalapp.service.KlientService;
-import com.twojafirma.carsalapp.service.ModelSamochoduService;
-import com.twojafirma.carsalapp.service.PojazdService;
-import com.twojafirma.carsalapp.service.SalonService;
+import carsalapp.model.Klient;
+import carsalapp.model.Pojazd;
+import carsalapp.service.KlientService;
+import carsalapp.service.ModelSamochoduService;
+import carsalapp.service.PojazdService;
+import carsalapp.service.SalonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
