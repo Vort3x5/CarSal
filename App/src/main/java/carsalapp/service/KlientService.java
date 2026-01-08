@@ -2,8 +2,6 @@ package carsalapp.service;
 
 import carsalapp.model.Klient;
 import carsalapp.repository.KlientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +13,11 @@ import java.util.Optional;
 @Transactional
 public class KlientService {
 
-    @Autowired
-    private KlientRepository klientRepository;
+    private final KlientRepository klientRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public KlientService(KlientRepository klientRepository) {
+        this.klientRepository = klientRepository;
+    }
 
     public List<Klient> findAll() {
         return klientRepository.findAll();

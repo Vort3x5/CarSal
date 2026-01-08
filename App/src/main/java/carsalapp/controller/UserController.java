@@ -3,12 +3,14 @@ package carsalapp.controller;
 import carsalapp.model.Klient;
 import carsalapp.service.KlientService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
@@ -17,8 +19,11 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private KlientService klientService;
+    private final KlientService klientService;
+
+    public UserController(KlientService klientService) {
+        this.klientService = klientService;
+    }
 
     @GetMapping("/profile")
     public String viewProfile(Authentication authentication, Model model) {
@@ -52,9 +57,9 @@ public class UserController {
 
     @PostMapping("/update")
     public String updateProfile(@Valid @ModelAttribute("klient") Klient klient,
-                               BindingResult result,
-                               Authentication authentication,
-                               RedirectAttributes redirectAttributes) {
+                                BindingResult result,
+                                Authentication authentication,
+                                RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "user/edit";
         }

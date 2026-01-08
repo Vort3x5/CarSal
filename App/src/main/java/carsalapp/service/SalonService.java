@@ -2,7 +2,6 @@ package carsalapp.service;
 
 import carsalapp.model.Salon;
 import carsalapp.repository.SalonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +12,11 @@ import java.util.Optional;
 @Transactional
 public class SalonService {
 
-    @Autowired
-    private SalonRepository salonRepository;
+    private final SalonRepository salonRepository;
+
+    public SalonService(SalonRepository salonRepository) {
+        this.salonRepository = salonRepository;
+    }
 
     public List<Salon> findAll() {
         return salonRepository.findAll();

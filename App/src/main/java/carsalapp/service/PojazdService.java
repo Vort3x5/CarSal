@@ -2,7 +2,6 @@ package carsalapp.service;
 
 import carsalapp.model.Pojazd;
 import carsalapp.repository.PojazdRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +12,11 @@ import java.util.Optional;
 @Transactional
 public class PojazdService {
 
-    @Autowired
-    private PojazdRepository pojazdRepository;
+    private final PojazdRepository pojazdRepository;
+
+    public PojazdService(PojazdRepository pojazdRepository) {
+        this.pojazdRepository = pojazdRepository;
+    }
 
     public List<Pojazd> findAll() {
         return pojazdRepository.findByDeletedFalse();

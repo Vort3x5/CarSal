@@ -1,6 +1,5 @@
 package carsalapp.controller;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import carsalapp.model.Klient;
 import carsalapp.model.Pojazd;
 import carsalapp.service.KlientService;
@@ -8,12 +7,15 @@ import carsalapp.service.ModelSamochoduService;
 import carsalapp.service.PojazdService;
 import carsalapp.service.SalonService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -24,17 +26,20 @@ import java.util.Optional;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-    @Autowired
-    private PojazdService pojazdService;
+    private final PojazdService pojazdService;
+    private final KlientService klientService;
+    private final ModelSamochoduService modelService;
+    private final SalonService salonService;
 
-    @Autowired
-    private KlientService klientService;
-
-    @Autowired
-    private ModelSamochoduService modelService;
-
-    @Autowired
-    private SalonService salonService;
+    public AdminController(PojazdService pojazdService,
+                           KlientService klientService,
+                           ModelSamochoduService modelService,
+                           SalonService salonService) {
+        this.pojazdService = pojazdService;
+        this.klientService = klientService;
+        this.modelService = modelService;
+        this.salonService = salonService;
+    }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
@@ -49,7 +54,7 @@ public class AdminController {
 
     @GetMapping("/pojazdy")
     public String listPojazdy(Model model) {
-        List pojazdy = pojazdService.findAll();
+        List<Pojazd> pojazdy = pojazdService.findAll();
         model.addAttribute("pojazdy", pojazdy);
         return "admin/pojazdy/list";
     }
@@ -64,7 +69,7 @@ public class AdminController {
 
     @GetMapping("/pojazdy/edit/{id}")
     public String editPojazd(@PathVariable("id") String nrVin, Model model) {
-        Optional pojazdOpt = pojazdService.findById(nrVin);
+        Optional<Pojazd> pojazdOpt = pojazdService.findById(nrVin);
         if (pojazdOpt.isPresent()) {
             model.addAttribute("pojazd", pojazdOpt.get());
             model.addAttribute("modele", modelService.findAll());
@@ -93,7 +98,7 @@ public class AdminController {
 
     @PostMapping("/pojazdy/delete/{id}")
     public String deletePojazd(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
-        Optional pojazdOpt = pojazdService.findById(nrVin);
+        Optional<Pojazd> pojazdOpt = pojazdService.findById(nrVin);
         if (pojazdOpt.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Pojazd nie istnieje");
             return "redirect:/admin/pojazdy";
@@ -106,14 +111,14 @@ public class AdminController {
 
     @GetMapping("/klienci")
     public String listKlienci(Model model) {
-        List klienci = klientService.findAll();
+        List<Klient> klienci = klientService.findAll();
         model.addAttribute("klienci", klienci);
         return "admin/klienci/list";
     }
 
     @GetMapping("/klienci/view/{id}")
     public String viewKlient(@PathVariable("id") Long id, Model model) {
-        Optional klientOpt = klientService.findById(id);
+        Optional<Klient> klientOpt = klientService.findById(id);
         if (klientOpt.isPresent()) {
             model.addAttribute("klient", klientOpt.get());
             return "admin/klienci/view";

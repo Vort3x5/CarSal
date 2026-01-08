@@ -2,7 +2,6 @@ package carsalapp.service;
 
 import carsalapp.model.ModelSamochodu;
 import carsalapp.repository.ModelSamochoduRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +12,11 @@ import java.util.Optional;
 @Transactional
 public class ModelSamochoduService {
 
-    @Autowired
-    private ModelSamochoduRepository modelRepository;
+    private final ModelSamochoduRepository modelRepository;
+
+    public ModelSamochoduService(ModelSamochoduRepository modelRepository) {
+        this.modelRepository = modelRepository;
+    }
 
     public List<ModelSamochodu> findAll() {
         return modelRepository.findAll();
