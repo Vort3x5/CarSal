@@ -1,7 +1,6 @@
 package carsalapp.controller;
 
 import carsalapp.model.Klient;
-import carsalapp.model.Pojazd;
 import carsalapp.service.KlientService;
 import carsalapp.service.ModelSamochoduService;
 import carsalapp.service.PojazdService;
@@ -111,9 +110,11 @@ public class UserController {
                                 @RequestParam(value = "minCena", required = false) BigDecimal minCena,
                                 @RequestParam(value = "maxCena", required = false) BigDecimal maxCena,
                                 @RequestParam(value = "stan", required = false) String stan,
+                                Authentication authentication,
                                 Model model) {
 
-        List<Pojazd> pojazdy = pojazdService.findAvailableForClients(modelId, salonId, minRok, maxRok, minCena, maxCena, stan);
+        Long klientId = getUserIdFromUsername(authentication.getName());
+        List<?> pojazdy = pojazdService.findAvailableForClients(modelId, salonId, minRok, maxRok, minCena, maxCena, stan);
 
         model.addAttribute("pojazdy", pojazdy);
         model.addAttribute("modele", modelService.findAll());
@@ -125,13 +126,22 @@ public class UserController {
         model.addAttribute("minCena", minCena);
         model.addAttribute("maxCena", maxCena);
         model.addAttribute("stan", stan);
+        model.addAttribute("currentUserId", klientId);
 
         return "user/pojazdy";
     }
 
     @PostMapping("/pojazdy/reserve/{id}")
-    public String reservePojazd(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
-        boolean reserved = pojazdService.reserveIfAvailable(nrVin);
+    public String reservePojazd(@PathVariable("id") String nrVin,
+                                Authentication authentication,
+                                RedirectAttributes redirectAttributes) {
+        Long klientId = getUserIdFromUsername(authentication.getName());
+        if (klientId == null) {
+            redirectAttributes.addFlashAttribute("error", "Nie znaleziono profilu");
+            return "redirect:/user/pojazdy";
+        }
+
+        boolean reserved = pojazdService.reserveIfAvailable(nrVin, klientId);
         if (reserved) {
             redirectAttributes.addFlashAttribute("success", "Pojazd został zarezerwowany");
         } else {
@@ -141,8 +151,16 @@ public class UserController {
     }
 
     @PostMapping("/pojazdy/cancel/{id}")
-    public String cancelReservation(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
-        boolean cancelled = pojazdService.cancelReservation(nrVin);
+    public String cancelReservation(@PathVariable("id") String nrVin,
+                                    Authentication authentication,
+                                    RedirectAttributes redirectAttributes) {
+        Long klientId = getUserIdFromUsername(authentication.getName());
+        if (klientId == null) {
+            redirectAttributes.addFlashAttribute("error", "Nie znaleziono profilu");
+            return "redirect:/user/pojazdy";
+        }
+
+        boolean cancelled = pojazdService.cancelReservation(nrVin, klientId);
         if (cancelled) {
             redirectAttributes.addFlashAttribute("success", "Rezerwacja została anulowana");
         } else {

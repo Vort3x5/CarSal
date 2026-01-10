@@ -68,6 +68,7 @@ CREATE TABLE Pojazdy (
     data_przyjecia DATE DEFAULT SYSDATE,
     uwagi VARCHAR2(500),
 	deleted NUMBER(1) DEFAULT 0 NOT NULL,
+    nr_klienta_rezerwujacego NUMBER(10),
     CONSTRAINT fk_pojazdy_model FOREIGN KEY (id_modelu) 
         REFERENCES Modele_Samochodow(id_modelu),
     CONSTRAINT fk_pojazdy_salon FOREIGN KEY (nr_salonu) 

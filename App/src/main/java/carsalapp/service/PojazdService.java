@@ -65,12 +65,13 @@ public class PojazdService {
             .toList();
     }
 
-    public boolean reserveIfAvailable(String nrVin) {
+    public boolean reserveIfAvailable(String nrVin, Long klientId) {
         Optional<Pojazd> pojazdOpt = findById(nrVin);
-        if (pojazdOpt.isPresent()) {
+        if (pojazdOpt.isPresent() && klientId != null) {
             Pojazd pojazd = pojazdOpt.get();
             if ("Dostepny".equals(pojazd.getStatus())) {
                 pojazd.setStatus("Rezerwacja");
+                pojazd.setNrKlientaRezerwujacego(klientId);
                 pojazdRepository.save(pojazd);
                 return true;
             }
@@ -78,12 +79,13 @@ public class PojazdService {
         return false;
     }
 
-    public boolean cancelReservation(String nrVin) {
+    public boolean cancelReservation(String nrVin, Long klientId) {
         Optional<Pojazd> pojazdOpt = findById(nrVin);
-        if (pojazdOpt.isPresent()) {
+        if (pojazdOpt.isPresent() && klientId != null) {
             Pojazd pojazd = pojazdOpt.get();
-            if ("Rezerwacja".equals(pojazd.getStatus())) {
+            if ("Rezerwacja".equals(pojazd.getStatus()) && klientId.equals(pojazd.getNrKlientaRezerwujacego())) {
                 pojazd.setStatus("Dostepny");
+                pojazd.setNrKlientaRezerwujacego(null);
                 pojazdRepository.save(pojazd);
                 return true;
             }
