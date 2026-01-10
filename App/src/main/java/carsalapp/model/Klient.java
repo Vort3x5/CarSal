@@ -23,6 +23,21 @@ public class Klient {
     @Column(name = "nr_klienta")
     private Long nrKlienta;
 
+    @NotBlank(message = "Nazwa użytkownika jest wymagana")
+    @Column(name = "username", length = 50, nullable = false, unique = true)
+    private String username;
+
+    @NotBlank(message = "Hasło jest wymagane")
+    @Column(name = "password_hash", length = 255, nullable = false)
+    private String passwordHash;
+
+    @NotBlank(message = "Rola jest wymagana")
+    @Column(name = "rola", length = 20, nullable = false)
+    private String rola;
+
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled = true;
+
     @NotBlank(message = "Typ klienta jest wymagany")
     @Column(name = "typ_klienta", length = 15, nullable = false)
     private String typKlienta;
