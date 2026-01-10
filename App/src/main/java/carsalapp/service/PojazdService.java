@@ -5,6 +5,7 @@ import carsalapp.repository.PojazdRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,5 +44,50 @@ public class PojazdService {
 
     public boolean existsById(String nrVin) {
         return pojazdRepository.existsById(nrVin);
+    }
+
+    public List<Pojazd> findAvailableForClients(Long modelId,
+                                                Long salonId,
+                                                Integer minRok,
+                                                Integer maxRok,
+                                                BigDecimal minCena,
+                                                BigDecimal maxCena,
+                                                String stan) {
+        return pojazdRepository.findByDeletedFalse().stream()
+            .filter(p -> "Dostepny".equals(p.getStatus()) || "Rezerwacja".equals(p.getStatus()))
+            .filter(p -> modelId == null || modelId.equals(p.getIdModelu()))
+            .filter(p -> salonId == null || salonId.equals(p.getNrSalonu()))
+            .filter(p -> minRok == null || p.getRokProdukcji() >= minRok)
+            .filter(p -> maxRok == null || p.getRokProdukcji() <= maxRok)
+            .filter(p -> minCena == null || (p.getCenaKatalogowa() != null && p.getCenaKatalogowa().compareTo(minCena) >= 0))
+            .filter(p -> maxCena == null || (p.getCenaKatalogowa() != null && p.getCenaKatalogowa().compareTo(maxCena) <= 0))
+            .filter(p -> stan == null || stan.isBlank() || stan.equalsIgnoreCase(p.getStan()))
+            .toList();
+    }
+
+    public boolean reserveIfAvailable(String nrVin) {
+        Optional<Pojazd> pojazdOpt = findById(nrVin);
+        if (pojazdOpt.isPresent()) {
+            Pojazd pojazd = pojazdOpt.get();
+            if ("Dostepny".equals(pojazd.getStatus())) {
+                pojazd.setStatus("Rezerwacja");
+                pojazdRepository.save(pojazd);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean cancelReservation(String nrVin) {
+        Optional<Pojazd> pojazdOpt = findById(nrVin);
+        if (pojazdOpt.isPresent()) {
+            Pojazd pojazd = pojazdOpt.get();
+            if ("Rezerwacja".equals(pojazd.getStatus())) {
+                pojazd.setStatus("Dostepny");
+                pojazdRepository.save(pojazd);
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,7 +1,11 @@
 package carsalapp.controller;
 
 import carsalapp.model.Klient;
+import carsalapp.model.Pojazd;
 import carsalapp.service.KlientService;
+import carsalapp.service.ModelSamochoduService;
+import carsalapp.service.PojazdService;
+import carsalapp.service.SalonService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -9,10 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -20,18 +28,30 @@ import java.util.Optional;
 public class UserController {
 
     private final KlientService klientService;
+    private final PojazdService pojazdService;
+    private final ModelSamochoduService modelService;
+    private final SalonService salonService;
 
-    public UserController(KlientService klientService) {
+    public UserController(KlientService klientService,
+                          PojazdService pojazdService,
+                          ModelSamochoduService modelService,
+                          SalonService salonService) {
         this.klientService = klientService;
+        this.pojazdService = pojazdService;
+        this.modelService = modelService;
+        this.salonService = salonService;
     }
 
     @GetMapping("/profile")
     public String viewProfile(Authentication authentication, Model model) {
         String username = authentication.getName();
-
         Long klientId = getUserIdFromUsername(username);
-        Optional<Klient> klientOpt = klientService.findById(klientId);
+        if (klientId == null) {
+            model.addAttribute("error", "Nie znaleziono profilu");
+            return "error/404";
+        }
 
+        Optional<Klient> klientOpt = klientService.findById(klientId);
         if (klientOpt.isPresent()) {
             model.addAttribute("klient", klientOpt.get());
             return "user/profile";
@@ -66,17 +86,16 @@ public class UserController {
 
         String username = authentication.getName();
         Long klientId = getUserIdFromUsername(username);
+        if (klientId == null) {
+            redirectAttributes.addFlashAttribute("error", "Nie znaleziono profilu");
+            return "redirect:/user/profile";
+        }
 
         Optional<Klient> existingKlientOpt = klientService.findById(klientId);
         if (existingKlientOpt.isPresent()) {
             Klient existingKlient = existingKlientOpt.get();
-
             existingKlient.setTelefon(klient.getTelefon());
             existingKlient.setEmail(klient.getEmail());
-            existingKlient.setUlica(klient.getUlica());
-            existingKlient.setMiasto(klient.getMiasto());
-            existingKlient.setKodPocztowy(klient.getKodPocztowy());
-
             klientService.save(existingKlient);
             redirectAttributes.addFlashAttribute("success", "Profil został zaktualizowany");
         }
@@ -84,12 +103,57 @@ public class UserController {
         return "redirect:/user/profile";
     }
 
-    private Long getUserIdFromUsername(String username) {
-        if ("klient1".equals(username)) {
-            return 1L;
-        } else if ("klient2".equals(username)) {
-            return 2L;
+    @GetMapping("/pojazdy")
+    public String browsePojazdy(@RequestParam(value = "modelId", required = false) Long modelId,
+                                @RequestParam(value = "salonId", required = false) Long salonId,
+                                @RequestParam(value = "minRok", required = false) Integer minRok,
+                                @RequestParam(value = "maxRok", required = false) Integer maxRok,
+                                @RequestParam(value = "minCena", required = false) BigDecimal minCena,
+                                @RequestParam(value = "maxCena", required = false) BigDecimal maxCena,
+                                @RequestParam(value = "stan", required = false) String stan,
+                                Model model) {
+
+        List<Pojazd> pojazdy = pojazdService.findAvailableForClients(modelId, salonId, minRok, maxRok, minCena, maxCena, stan);
+
+        model.addAttribute("pojazdy", pojazdy);
+        model.addAttribute("modele", modelService.findAll());
+        model.addAttribute("salony", salonService.findAll());
+        model.addAttribute("selectedModelId", modelId);
+        model.addAttribute("selectedSalonId", salonId);
+        model.addAttribute("minRok", minRok);
+        model.addAttribute("maxRok", maxRok);
+        model.addAttribute("minCena", minCena);
+        model.addAttribute("maxCena", maxCena);
+        model.addAttribute("stan", stan);
+
+        return "user/pojazdy";
+    }
+
+    @PostMapping("/pojazdy/reserve/{id}")
+    public String reservePojazd(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
+        boolean reserved = pojazdService.reserveIfAvailable(nrVin);
+        if (reserved) {
+            redirectAttributes.addFlashAttribute("success", "Pojazd został zarezerwowany");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Nie można zarezerwować pojazdu");
         }
-        return 1L;
+        return "redirect:/user/pojazdy";
+    }
+
+    @PostMapping("/pojazdy/cancel/{id}")
+    public String cancelReservation(@PathVariable("id") String nrVin, RedirectAttributes redirectAttributes) {
+        boolean cancelled = pojazdService.cancelReservation(nrVin);
+        if (cancelled) {
+            redirectAttributes.addFlashAttribute("success", "Rezerwacja została anulowana");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Nie można anulować rezerwacji");
+        }
+        return "redirect:/user/pojazdy";
+    }
+
+    private Long getUserIdFromUsername(String username) {
+        return klientService.findByUsername(username)
+            .map(Klient::getNrKlienta)
+            .orElse(null);
     }
 }

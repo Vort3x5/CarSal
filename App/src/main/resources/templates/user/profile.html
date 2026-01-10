@@ -2,69 +2,50 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mój profil - Salon Samochodowy</title>
+    <title>Mój profil</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Mój profil</h1>
-            <div class="nav-links">
-                <a th:href="@{/home}" class="btn">Strona główna</a>
-                <a th:href="@{/user/edit}" class="btn btn-success">Edytuj profil</a>
-                <form th:action="@{/logout}" method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-danger">Wyloguj</button>
-                </form>
-            </div>
-        </div>
-        
-        <div th:if="${success}" class="alert alert-success">
-            <p th:text="${success}">Sukces!</p>
-        </div>
-        
-        <div class="user-info">
-            <h3>Dane osobowe</h3>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
-                <div>
-                    <p><strong>Typ klienta:</strong> <span th:text="${klient.typKlienta}">-</span></p>
-                    <p th:if="${klient.typKlienta == 'Indywidualny'}">
-                        <strong>Imię i nazwisko:</strong> 
-                        <span th:text="${klient.imie + ' ' + klient.nazwisko}">-</span>
-                    </p>
-                    <p th:if="${klient.typKlienta == 'Indywidualny'}">
-                        <strong>PESEL:</strong> <span th:text="${klient.pesel}">-</span>
-                    </p>
-                    <p th:if="${klient.typKlienta == 'Firma'}">
-                        <strong>Nazwa firmy:</strong> <span th:text="${klient.nazwaFirmy}">-</span>
-                    </p>
-                    <p th:if="${klient.typKlienta == 'Firma'}">
-                        <strong>NIP:</strong> <span th:text="${klient.nip}">-</span>
-                    </p>
-                </div>
-                
-                <div>
-                    <p><strong>Telefon:</strong> <span th:text="${klient.telefon}">-</span></p>
-                    <p><strong>Email:</strong> <span th:text="${klient.email}">-</span></p>
-                    <p><strong>Data rejestracji:</strong> 
-                        <span th:text="${#temporals.format(klient.dataRejestracji, 'dd-MM-yyyy')}">-</span>
-                    </p>
-                </div>
-            </div>
-            
-            <h3 style="margin-top: 30px;">Adres</h3>
-            <div style="margin-top: 15px;">
-                <p><strong>Ulica:</strong> <span th:text="${klient.ulica}">-</span></p>
-                <p><strong>Kod pocztowy:</strong> <span th:text="${klient.kodPocztowy}">-</span></p>
-                <p><strong>Miasto:</strong> <span th:text="${klient.miasto}">-</span></p>
-            </div>
-        </div>
-        
-        <div style="margin-top: 20px; padding: 15px; background: #d1ecf1; color: #000000; border-radius: 5px;">
-            <p><strong>ℹ️ Informacja:</strong> Możesz edytować swoje dane kontaktowe i adres, 
-            klikając przycisk "Edytuj profil" powyżej.</p>
+<div class="container">
+    <div class="header">
+        <h1>Mój profil</h1>
+        <div class="actions">
+            <a class="btn" th:href="@{/home}">Strona główna</a>
+            <a class="btn" th:href="@{/user/edit}">Edytuj profil</a>
+            <a class="btn" th:href="@{/logout}">Wyloguj</a>
         </div>
     </div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <h3>Dane osobowe</h3>
+
+    <div class="user-info" th:if="${klient}">
+        <p><strong>Typ klienta:</strong> <span th:text="${klient.typKlienta}">-</span></p>
+        <p th:if="${klient.typKlienta == 'Indywidualny'}">
+            <strong>Imię i nazwisko:</strong>
+            <span th:text="${klient.imie}">-</span>
+            <span th:text="${klient.nazwisko}">-</span>
+        </p>
+        <p th:if="${klient.typKlienta == 'Indywidualny'}">
+            <strong>PESEL:</strong> <span th:text="${klient.pesel}">-</span>
+        </p>
+        <p th:if="${klient.typKlienta == 'Firma'}">
+            <strong>Nazwa firmy:</strong> <span th:text="${klient.nazwaFirmy}">-</span>
+        </p>
+        <p th:if="${klient.typKlienta == 'Firma'}">
+            <strong>NIP:</strong> <span th:text="${klient.nip}">-</span>
+        </p>
+        <p><strong>Telefon:</strong> <span th:text="${klient.telefon}">-</span></p>
+        <p><strong>Email:</strong> <span th:text="${klient.email}">-</span></p>
+        <p>
+            <strong>Data rejestracji:</strong>
+            <span th:text="${klient.dataRejestracji}">-</span>
+        </p>
+    </div>
+
+    <p><strong>ℹ️ Informacja:</strong> Możesz edytować swoje dane kontaktowe, klikając przycisk "Edytuj profil" powyżej.</p>
+</div>
 </body>
 </html>
