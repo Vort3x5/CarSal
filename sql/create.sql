@@ -83,6 +83,10 @@ CREATE TABLE Pojazdy (
 
 CREATE TABLE Klienci (
     nr_klienta NUMBER(10) PRIMARY KEY,
+	username VARCHAR2(50) UNIQUE,
+    password_hash VARCHAR2(255),
+    rola VARCHAR2(20) DEFAULT 'USER',
+    enabled NUMBER(1) DEFAULT 1,
     typ_klienta VARCHAR2(15) NOT NULL,
     imie VARCHAR2(50),
     nazwisko VARCHAR2(50),
