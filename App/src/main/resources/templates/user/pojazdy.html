@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dostępne pojazdy</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .filter-section {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            border: 1px solid #404040;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .pagination a,
+        .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #e0e0e0;
+            background: #2d2d2d;
+        }
+        .pagination a:hover {
+            background: #4a90e2;
+            border-color: #4a90e2;
+        }
+        .pagination .active {
+            background: #4a90e2;
+            border-color: #4a90e2;
+            color: white;
+        }
+        .pagination .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .vehicle-card {
+            background: #1a1a1a;
+            border: 1px solid #404040;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #404040;
+        }
+        .vehicle-title {
+            font-size: 20px;
+            color: #4a90e2;
+            margin: 0 0 5px 0;
+        }
+        .vehicle-price {
+            font-size: 24px;
+            color: #66bb6a;
+            font-weight: bold;
+        }
+        .vehicle-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .vehicle-detail {
+            display: flex;
+            flex-direction: column;
+        }
+        .vehicle-detail-label {
+            font-size: 12px;
+            color: #b0b0b0;
+            margin-bottom: 3px;
+        }
+        .vehicle-detail-value {
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-dostepny {
+            background: #1b5e20;
+            color: #a5d6a7;
+        }
+        .status-rezerwacja {
+            background: #e65100;
+            color: #ffb74d;
+        }
+        .vehicle-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .reserved-by-me {
+            border: 2px solid #4a90e2;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #b0b0b0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Dostępne pojazdy</h1>
+            <div class="nav-links">
+                <a th:href="@{/home}" class="btn">Strona główna</a>
+                <a th:href="@{/user/profile}" class="btn">Mój profil</a>
+            </div>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <p th:text="${success}">Sukces!</p>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error">
+            <p th:text="${error}">Błąd!</p>
+        </div>
+
+        <div class="filter-section">
+            <h3>Filtry</h3>
+            <form th:action="@{/user/pojazdy}" method="get" id="filterForm">
+                <div class="filter-grid">
+                    <div class="form-group">
+                        <label for="modelId">Model:</label>
+                        <select name="modelId" id="modelId">
+                            <option value="">Wszystkie</option>
+                            <option th:each="model : ${modele}"
+                                    th:value="${model.idModelu}"
+                                    th:text="${model.fullName}"
+                                    th:selected="${model.idModelu == selectedModelId}">Model</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salonId">Salon:</label>
+                        <select name="salonId" id="salonId">
+                            <option value="">Wszystkie</option>
+                            <option th:each="salon : ${salony}"
+                                    th:value="${salon.nrSalonu}"
+                                    th:text="${salon.displayName}"
+                                    th:selected="${salon.nrSalonu == selectedSalonId}">Salon</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stan">Stan:</label>
+                        <select name="stan" id="stan">
+                            <option value="">Wszystkie</option>
+                            <option value="Nowy" th:selected="${stan == 'Nowy'}">Nowy</option>
+                            <option value="Uzywany" th:selected="${stan == 'Uzywany'}">Używany</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="minRok">Rok od:</label>
+                        <input type="number" 
+                               name="minRok" 
+                               id="minRok" 
+                               th:value="${minRok}"
+                               min="1900" 
+                               max="2025"
+                               placeholder="np. 2020">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxRok">Rok do:</label>
+                        <input type="number" 
+                               name="maxRok" 
+                               id="maxRok" 
+                               th:value="${maxRok}"
+                               min="1900" 
+                               max="2025"
+                               placeholder="np. 2024">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="minCena">Cena od (PLN):</label>
+                        <input type="number" 
+                               name="minCena" 
+                               id="minCena" 
+                               th:value="${minCena}"
+                               step="1000"
+                               min="0"
+                               placeholder="np. 50000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxCena">Cena do (PLN):</label>
+                        <input type="number" 
+                               name="maxCena" 
+                               id="maxCena" 
+                               th:value="${maxCena}"
+                               step="1000"
+                               min="0"
+                               placeholder="np. 200000">
+                    </div>
+                </div>
+
+                <input type="hidden" name="page" th:value="${currentPage}" id="pageInput">
+                <input type="hidden" name="size" th:value="${pageSize}">
+
+                <div class="actions" style="margin-top: 20px;">
+                    <button type="submit" class="btn btn-success">Zastosuj filtry</button>
+                    <a th:href="@{/user/pojazdy}" class="btn">Wyczyść filtry</a>
+                </div>
+            </form>
+        </div>
+
+        <p>Znaleziono: <strong th:text="${totalElements}">0</strong> pojazdów</p>
+
+        <div th:if="${pojazdy.empty}" class="no-results">
+            <h3>Brak pojazdów spełniających kryteria</h3>
+            <p>Spróbuj zmienić filtry lub <a th:href="@{/user/pojazdy}">wyczyść wszystkie filtry</a></p>
+        </div>
+
+        <div th:each="pojazd : ${pojazdy}" 
+             class="vehicle-card"
+             th:classappend="${pojazd.nrKlientaRezerwujacego != null && pojazd.nrKlientaRezerwujacego == currentUserId} ? 'reserved-by-me' : ''">
+            
+            <div class="vehicle-header">
+                <div>
+                    <h3 class="vehicle-title" th:text="${pojazd.model != null ? pojazd.model.nazwaModelu : 'Nieznany model'}">Model</h3>
+                    <span class="status-badge" 
+                          th:classappend="${pojazd.status == 'Dostepny' ? 'status-dostepny' : 'status-rezerwacja'}"
+                          th:text="${pojazd.status == 'Dostepny' ? 'Dostępny' : (pojazd.nrKlientaRezerwujacego == currentUserId ? 'Zarezerwowany przez Ciebie' : 'Zarezerwowany')}">
+                        Status
+                    </span>
+                </div>
+                <div class="vehicle-price" th:text="${#numbers.formatDecimal(pojazd.cenaKatalogowa, 1, 2)} + ' PLN'">Cena</div>
+            </div>
+
+            <div class="vehicle-details">
+                <div class="vehicle-detail">
+                    <span class="vehicle-detail-label">Rok produkcji</span>
+                    <span class="vehicle-detail-value" th:text="${pojazd.rokProdukcji}">-</span>
+                </div>
+                <div class="vehicle-detail">
+                    <span class="vehicle-detail-label">Przebieg</span>
+                    <span class="vehicle-detail-value" th:text="${pojazd.przebieg != null ? #numbers.formatInteger(pojazd.przebieg, 1, 'WHITESPACE') + ' km' : '0 km'}">-</span>
+                </div>
+                <div class="vehicle-detail">
+                    <span class="vehicle-detail-label">Kolor</span>
+                    <span class="vehicle-detail-value" th:text="${pojazd.kolor ?: 'Brak danych'}">-</span>
+                </div>
+                <div class="vehicle-detail">
+                    <span class="vehicle-detail-label">Stan</span>
+                    <span class="vehicle-detail-value" th:text="${pojazd.stan}">-</span>
+                </div>
+                <div class="vehicle-detail">
+                    <span class="vehicle-detail-label">VIN</span>
+                    <span class="vehicle-detail-value" th:text="${pojazd.nrVin}">-</span>
+                </div>
+                <div class="vehicle-detail" th:if="${pojazd.model != null}">
+                    <span class="vehicle-detail-label">Paliwo</span>
+                    <span class="vehicle-detail-value" th:text="${pojazd.model.rodzajPaliwa}">-</span>
+                </div>
+                <div class="vehicle-detail" th:if="${pojazd.model != null}">
+                    <span class="vehicle-detail-label">Moc</span>
+                    <span class="vehicle-detail-value" th:text="${pojazd.model.mocKm} + ' KM'">-</span>
+                </div>
+            </div>
+
+            <div th:if="${pojazd.uwagi}" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #404040;">
+                <span class="vehicle-detail-label">Uwagi:</span>
+                <p style="color: #e0e0e0; margin: 5px 0 0 0;" th:text="${pojazd.uwagi}">-</p>
+            </div>
+
+            <div class="vehicle-actions">
+                <form th:if="${pojazd.status == 'Dostepny'}" 
+                      th:action="@{/user/pojazdy/reserve/{id}(id=${pojazd.nrVin})}" 
+                      method="post"
+                      onsubmit="return confirmReservation()">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="btn btn-success">Zarezerwuj pojazd</button>
+                </form>
+
+                <form th:if="${pojazd.status == 'Rezerwacja' && pojazd.nrKlientaRezerwujacego == currentUserId}" 
+                      th:action="@{/user/pojazdy/cancel/{id}(id=${pojazd.nrVin})}" 
+                      method="post"
+                      onsubmit="return confirmCancellation()">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="btn btn-danger">Anuluj rezerwację</button>
+                </form>
+
+                <span th:if="${pojazd.status == 'Rezerwacja' && pojazd.nrKlientaRezerwujacego != currentUserId}" 
+                      style="color: #b0b0b0; font-style: italic;">
+                    Zarezerwowany przez innego klienta
+                </span>
+            </div>
+        </div>
+
+        <div th:if="${totalPages > 1}" class="pagination">
+            <a th:if="${currentPage > 0}" 
+               th:href="@{/user/pojazdy(page=${currentPage - 1}, size=${pageSize}, modelId=${selectedModelId}, salonId=${selectedSalonId}, minRok=${minRok}, maxRok=${maxRok}, minCena=${minCena}, maxCena=${maxCena}, stan=${stan})}"
+               class="btn">
+                ← Poprzednia
+            </a>
+            
+            <span th:if="${currentPage == 0}" class="disabled">
+                ← Poprzednia
+            </span>
+
+            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:if="${i == currentPage}" 
+                   class="active">
+                    [[${i + 1}]]
+                </a>
+                <a th:if="${i != currentPage}" 
+                   th:href="@{/user/pojazdy(page=${i}, size=${pageSize}, modelId=${selectedModelId}, salonId=${selectedSalonId}, minRok=${minRok}, maxRok=${maxRok}, minCena=${minCena}, maxCena=${maxCena}, stan=${stan})}">
+                    [[${i + 1}]]
+                </a>
+            </th:block>
+
+            <a th:if="${currentPage < totalPages - 1}" 
+               th:href="@{/user/pojazdy(page=${currentPage + 1}, size=${pageSize}, modelId=${selectedModelId}, salonId=${selectedSalonId}, minRok=${minRok}, maxRok=${maxRok}, minCena=${minCena}, maxCena=${maxCena}, stan=${stan})}"
+               class="btn">
+                Następna →
+            </a>
+            
+            <span th:if="${currentPage == totalPages - 1}" class="disabled">
+                Następna →
+            </span>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; color: #b0b0b0;">
+            Strona [[${currentPage + 1}]] z [[${totalPages}]]
+        </div>
+    </div>
+
+    <script>
+        function confirmReservation() {
+            return confirm('Czy na pewno chcesz zarezerwować ten pojazd?');
+        }
+
+        function confirmCancellation() {
+            return confirm('Czy na pewno chcesz anulować rezerwację tego pojazdu?');
+        }
+
+        document.getElementById('filterForm').addEventListener('submit', function(e) {
+            const minRok = parseInt(document.getElementById('minRok').value);
+            const maxRok = parseInt(document.getElementById('maxRok').value);
+            const minCena = parseFloat(document.getElementById('minCena').value);
+            const maxCena = parseFloat(document.getElementById('maxCena').value);
+
+            if (minRok && maxRok && minRok > maxRok) {
+                e.preventDefault();
+                alert('Rok "od" nie może być większy niż rok "do"');
+                return false;
+            }
+
+            if (minCena && maxCena && minCena > maxCena) {
+                e.preventDefault();
+                alert('Cena "od" nie może być większa niż cena "do"');
+                return false;
+            }
+
+            document.getElementById('pageInput').value = 0;
+        });
+
+        const inputs = document.querySelectorAll('#filterForm input[type="number"]');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value < 0) {
+                    this.value = 0;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
