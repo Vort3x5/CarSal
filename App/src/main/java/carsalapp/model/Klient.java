@@ -69,6 +69,7 @@ public class Klient {
     private String kodPocztowy;
 
     @NotBlank(message = "Telefon jest wymagany")
+    @Pattern(regexp = "[0-9\\- ]{7,15}", message = "Telefon musi mieć 7-15 cyfr i może zawierać myślniki lub spacje")
     @Column(name = "telefon", length = 15, nullable = false)
     private String telefon;
 

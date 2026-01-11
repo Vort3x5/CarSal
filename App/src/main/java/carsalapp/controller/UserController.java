@@ -1,5 +1,6 @@
 package carsalapp.controller;
 
+import carsalapp.dto.KlientContactDto;
 import carsalapp.model.Klient;
 import carsalapp.service.KlientService;
 import carsalapp.service.ModelSamochoduService;
@@ -67,7 +68,10 @@ public class UserController {
 
         Optional<Klient> klientOpt = klientService.findById(klientId);
         if (klientOpt.isPresent()) {
-            model.addAttribute("klient", klientOpt.get());
+            Klient klient = klientOpt.get();
+            if (!model.containsAttribute("contact")) {
+                model.addAttribute("contact", new KlientContactDto(klient.getTelefon(), klient.getEmail()));
+            }
             return "user/edit";
         } else {
             return "redirect:/user/profile?error=notfound";
@@ -75,10 +79,11 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateProfile(@Valid @ModelAttribute("klient") Klient klient,
+    public String updateProfile(@Valid @ModelAttribute("contact") KlientContactDto contact,
                                 BindingResult result,
                                 Authentication authentication,
-                                RedirectAttributes redirectAttributes) {
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
         if (result.hasErrors()) {
             return "user/edit";
         }
@@ -93,8 +98,8 @@ public class UserController {
         Optional<Klient> existingKlientOpt = klientService.findById(klientId);
         if (existingKlientOpt.isPresent()) {
             Klient existingKlient = existingKlientOpt.get();
-            existingKlient.setTelefon(klient.getTelefon());
-            existingKlient.setEmail(klient.getEmail());
+            existingKlient.setTelefon(contact.getTelefon());
+            existingKlient.setEmail(contact.getEmail());
             klientService.save(existingKlient);
             redirectAttributes.addFlashAttribute("success", "Profil został zaktualizowany");
         }
