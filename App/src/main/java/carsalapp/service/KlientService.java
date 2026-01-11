@@ -2,6 +2,8 @@ package carsalapp.service;
 
 import carsalapp.model.Klient;
 import carsalapp.repository.KlientRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,10 @@ public class KlientService {
 
     public List<Klient> findAll() {
         return klientRepository.findAll();
+    }
+
+    public Page<Klient> findAllPaginated(Pageable pageable) {
+        return klientRepository.findAll(pageable);
     }
 
     public Optional<Klient> findById(Long id) {

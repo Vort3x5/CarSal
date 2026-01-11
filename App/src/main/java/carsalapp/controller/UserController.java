@@ -2,11 +2,16 @@ package carsalapp.controller;
 
 import carsalapp.dto.KlientContactDto;
 import carsalapp.model.Klient;
+import carsalapp.model.Pojazd;
 import carsalapp.service.KlientService;
 import carsalapp.service.ModelSamochoduService;
 import carsalapp.service.PojazdService;
 import carsalapp.service.SalonService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -115,13 +119,24 @@ public class UserController {
                                 @RequestParam(value = "minCena", required = false) BigDecimal minCena,
                                 @RequestParam(value = "maxCena", required = false) BigDecimal maxCena,
                                 @RequestParam(value = "stan", required = false) String stan,
+                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                @RequestParam(value = "size", defaultValue = "10") int size,
                                 Authentication authentication,
                                 Model model) {
 
         Long klientId = getUserIdFromUsername(authentication.getName());
-        List<?> pojazdy = pojazdService.findAvailableForClients(modelId, salonId, minRok, maxRok, minCena, maxCena, stan);
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by("cenaKatalogowa").ascending());
+        Page<Pojazd> pojazdyPage = pojazdService.findAvailableForClients(
+            modelId, salonId, minRok, maxRok, minCena, maxCena, stan, pageable
+        );
 
-        model.addAttribute("pojazdy", pojazdy);
+        model.addAttribute("pojazdy", pojazdyPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pojazdyPage.getTotalPages());
+        model.addAttribute("totalElements", pojazdyPage.getTotalElements());
+        model.addAttribute("pageSize", size);
+        
         model.addAttribute("modele", modelService.findAll());
         model.addAttribute("salony", salonService.findAll());
         model.addAttribute("selectedModelId", modelId);
@@ -142,16 +157,33 @@ public class UserController {
                                 RedirectAttributes redirectAttributes) {
         Long klientId = getUserIdFromUsername(authentication.getName());
         if (klientId == null) {
-            redirectAttributes.addFlashAttribute("error", "Nie znaleziono profilu");
+            redirectAttributes.addFlashAttribute("error", "Nie znaleziono profilu użytkownika");
             return "redirect:/user/pojazdy";
         }
 
-        boolean reserved = pojazdService.reserveIfAvailable(nrVin, klientId);
-        if (reserved) {
-            redirectAttributes.addFlashAttribute("success", "Pojazd został zarezerwowany");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Nie można zarezerwować pojazdu");
+        try {
+            PojazdService.ReservationResult result = pojazdService.reserveIfAvailable(nrVin, klientId);
+            
+            switch (result) {
+                case SUCCESS:
+                    redirectAttributes.addFlashAttribute("success", "Pojazd został pomyślnie zarezerwowany");
+                    break;
+                case VEHICLE_NOT_FOUND:
+                    redirectAttributes.addFlashAttribute("error", "Pojazd nie został znaleziony");
+                    break;
+                case ALREADY_RESERVED:
+                    redirectAttributes.addFlashAttribute("error", "Pojazd jest już zarezerwowany przez innego klienta");
+                    break;
+                case NOT_AVAILABLE:
+                    redirectAttributes.addFlashAttribute("error", "Pojazd nie jest dostępny do rezerwacji");
+                    break;
+                default:
+                    redirectAttributes.addFlashAttribute("error", "Nie można zarezerwować pojazdu");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Wystąpił błąd podczas rezerwacji: " + e.getMessage());
         }
+        
         return "redirect:/user/pojazdy";
     }
 
@@ -161,16 +193,33 @@ public class UserController {
                                     RedirectAttributes redirectAttributes) {
         Long klientId = getUserIdFromUsername(authentication.getName());
         if (klientId == null) {
-            redirectAttributes.addFlashAttribute("error", "Nie znaleziono profilu");
+            redirectAttributes.addFlashAttribute("error", "Nie znaleziono profilu użytkownika");
             return "redirect:/user/pojazdy";
         }
 
-        boolean cancelled = pojazdService.cancelReservation(nrVin, klientId);
-        if (cancelled) {
-            redirectAttributes.addFlashAttribute("success", "Rezerwacja została anulowana");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Nie można anulować rezerwacji");
+        try {
+            PojazdService.CancellationResult result = pojazdService.cancelReservation(nrVin, klientId);
+            
+            switch (result) {
+                case SUCCESS:
+                    redirectAttributes.addFlashAttribute("success", "Rezerwacja została anulowana");
+                    break;
+                case VEHICLE_NOT_FOUND:
+                    redirectAttributes.addFlashAttribute("error", "Pojazd nie został znaleziony");
+                    break;
+                case NOT_RESERVED:
+                    redirectAttributes.addFlashAttribute("error", "Pojazd nie jest zarezerwowany");
+                    break;
+                case WRONG_USER:
+                    redirectAttributes.addFlashAttribute("error", "Nie możesz anulować rezerwacji innego użytkownika");
+                    break;
+                default:
+                    redirectAttributes.addFlashAttribute("error", "Nie można anulować rezerwacji");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Wystąpił błąd podczas anulowania rezerwacji: " + e.getMessage());
         }
+        
         return "redirect:/user/pojazdy";
     }
 

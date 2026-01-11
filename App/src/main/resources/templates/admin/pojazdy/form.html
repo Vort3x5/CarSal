@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${pojazd.nrVin != null ? 'Edytuj pojazd' : 'Dodaj pojazd'}">Pojazd</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .error-message {
+            color: #ef5350;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+        .error-message.show {
+            display: block;
+        }
+        input.invalid,
+        select.invalid {
+            border-color: #ef5350 !important;
+        }
+        .form-hint {
+            font-size: 12px;
+            color: #b0b0b0;
+            margin-top: 3px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -16,7 +36,7 @@
             </div>
         </div>
 
-        <form th:action="@{/admin/pojazdy/save}" th:object="${pojazd}" method="post">
+        <form th:action="@{/admin/pojazdy/save}" th:object="${pojazd}" method="post" id="pojazdForm" novalidate>
             <div class="form-grid">
                 <div class="form-group">
                     <label for="nrVin">Numer VIN: *</label>
@@ -28,7 +48,9 @@
                            pattern="[A-HJ-NPR-Z0-9]{17}"
                            placeholder="17-znakowy numer VIN"
                            th:readonly="${pojazd.nrVin != null}">
-                    <span th:if="${#fields.hasErrors('nrVin')}" th:errors="*{nrVin}" style="color: red;">Błąd</span>
+                    <div class="form-hint">Musi zawierać dokładnie 17 znaków (bez I, O, Q)</div>
+                    <span class="error-message" id="nrVinError">Numer VIN musi mieć dokładnie 17 znaków (A-H, J-N, P-R, Z, 0-9)</span>
+                    <span th:if="${#fields.hasErrors('nrVin')}" th:errors="*{nrVin}" class="error-message show"></span>
                 </div>
 
                 <div class="form-group">
@@ -39,7 +61,8 @@
                                 th:value="${model.idModelu}"
                                 th:text="${model.fullName}">Model</option>
                     </select>
-                    <span th:if="${#fields.hasErrors('idModelu')}" th:errors="*{idModelu}" style="color: red;">Błąd</span>
+                    <span class="error-message" id="idModeluError">Wybierz model pojazdu</span>
+                    <span th:if="${#fields.hasErrors('idModelu')}" th:errors="*{idModelu}" class="error-message show"></span>
                 </div>
 
                 <div class="form-group">
@@ -50,7 +73,8 @@
                                 th:value="${salon.nrSalonu}"
                                 th:text="${salon.displayName}">Salon</option>
                     </select>
-                    <span th:if="${#fields.hasErrors('nrSalonu')}" th:errors="*{nrSalonu}" style="color: red;">Błąd</span>
+                    <span class="error-message" id="nrSalonuError">Wybierz salon</span>
+                    <span th:if="${#fields.hasErrors('nrSalonu')}" th:errors="*{nrSalonu}" class="error-message show"></span>
                 </div>
 
                 <div class="form-group">
@@ -62,7 +86,9 @@
                            min="1900"
                            max="2025"
                            placeholder="np. 2023">
-                    <span th:if="${#fields.hasErrors('rokProdukcji')}" th:errors="*{rokProdukcji}" style="color: red;">Błąd</span>
+                    <div class="form-hint">Rok od 1900 do 2025</div>
+                    <span class="error-message" id="rokProdukcjiError">Rok musi być w zakresie 1900-2025</span>
+                    <span th:if="${#fields.hasErrors('rokProdukcji')}" th:errors="*{rokProdukcji}" class="error-message show"></span>
                 </div>
 
                 <div class="form-group">
@@ -72,6 +98,8 @@
                            id="przebieg"
                            min="0"
                            placeholder="np. 50000">
+                    <div class="form-hint">Wartość nie może być ujemna</div>
+                    <span class="error-message" id="przebiegError">Przebieg nie może być ujemny</span>
                 </div>
 
                 <div class="form-group">
@@ -79,6 +107,7 @@
                     <input type="text"
                            th:field="*{kolor}"
                            id="kolor"
+                           maxlength="30"
                            placeholder="np. Czerwony">
                 </div>
 
@@ -91,7 +120,9 @@
                            required
                            min="0.01"
                            placeholder="np. 75000.00">
-                    <span th:if="${#fields.hasErrors('cenaKatalogowa')}" th:errors="*{cenaKatalogowa}" style="color: red;">Błąd</span>
+                    <div class="form-hint">Musi być większa od 0</div>
+                    <span class="error-message" id="cenaKatalogowaError">Cena musi być większa od 0</span>
+                    <span th:if="${#fields.hasErrors('cenaKatalogowa')}" th:errors="*{cenaKatalogowa}" class="error-message show"></span>
                 </div>
 
                 <div class="form-group">
@@ -101,7 +132,8 @@
                         <option value="Nowy">Nowy</option>
                         <option value="Uzywany">Używany</option>
                     </select>
-                    <span th:if="${#fields.hasErrors('stan')}" th:errors="*{stan}" style="color: red;">Błąd</span>
+                    <span class="error-message" id="stanError">Wybierz stan pojazdu</span>
+                    <span th:if="${#fields.hasErrors('stan')}" th:errors="*{stan}" class="error-message show"></span>
                 </div>
 
                 <div class="form-group">
@@ -113,13 +145,19 @@
                         <option value="Rezerwacja">Rezerwacja</option>
                         <option value="Serwis">Serwis</option>
                     </select>
-                    <span th:if="${#fields.hasErrors('status')}" th:errors="*{status}" style="color: red;">Błąd</span>
+                    <span class="error-message" id="statusError">Wybierz status pojazdu</span>
+                    <span th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="error-message show"></span>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="uwagi">Uwagi:</label>
-                <textarea th:field="*{uwagi}" id="uwagi" rows="4" placeholder="Dodatkowe informacje o pojeździe"></textarea>
+                <textarea th:field="*{uwagi}" 
+                          id="uwagi" 
+                          rows="4" 
+                          maxlength="500"
+                          placeholder="Dodatkowe informacje o pojeździe"></textarea>
+                <div class="form-hint">Maksymalnie 500 znaków (<span id="uwagiCount">0</span>/500)</div>
             </div>
 
             <div class="actions">
@@ -130,5 +168,161 @@
             </div>
         </form>
     </div>
+
+    <script>
+        const form = document.getElementById('pojazdForm');
+        const nrVin = document.getElementById('nrVin');
+        const idModelu = document.getElementById('idModelu');
+        const nrSalonu = document.getElementById('nrSalonu');
+        const rokProdukcji = document.getElementById('rokProdukcji');
+        const przebieg = document.getElementById('przebieg');
+        const cenaKatalogowa = document.getElementById('cenaKatalogowa');
+        const stan = document.getElementById('stan');
+        const status = document.getElementById('status');
+        const uwagi = document.getElementById('uwagi');
+        const uwagiCount = document.getElementById('uwagiCount');
+
+        function showError(element, errorId) {
+            element.classList.add('invalid');
+            document.getElementById(errorId).classList.add('show');
+        }
+
+        function hideError(element, errorId) {
+            element.classList.remove('invalid');
+            document.getElementById(errorId).classList.remove('show');
+        }
+
+        function validateVIN() {
+            const vinPattern = /^[A-HJ-NPR-Z0-9]{17}$/;
+            if (!nrVin.readOnly) {
+                if (!vinPattern.test(nrVin.value)) {
+                    showError(nrVin, 'nrVinError');
+                    return false;
+                }
+            }
+            hideError(nrVin, 'nrVinError');
+            return true;
+        }
+
+        function validateModel() {
+            if (!idModelu.value) {
+                showError(idModelu, 'idModeluError');
+                return false;
+            }
+            hideError(idModelu, 'idModeluError');
+            return true;
+        }
+
+        function validateSalon() {
+            if (!nrSalonu.value) {
+                showError(nrSalonu, 'nrSalonuError');
+                return false;
+            }
+            hideError(nrSalonu, 'nrSalonuError');
+            return true;
+        }
+
+        function validateRok() {
+            const rok = parseInt(rokProdukcji.value);
+            if (!rok || rok < 1900 || rok > 2025) {
+                showError(rokProdukcji, 'rokProdukcjiError');
+                return false;
+            }
+            hideError(rokProdukcji, 'rokProdukcjiError');
+            return true;
+        }
+
+        function validatePrzebieg() {
+            const przebiogVal = parseInt(przebieg.value);
+            if (przebieg.value && przebiogVal < 0) {
+                showError(przebieg, 'przebiegError');
+                return false;
+            }
+            hideError(przebieg, 'przebiegError');
+            return true;
+        }
+
+        function validateCena() {
+            const cena = parseFloat(cenaKatalogowa.value);
+            if (!cena || cena <= 0) {
+                showError(cenaKatalogowa, 'cenaKatalogowaError');
+                return false;
+            }
+            hideError(cenaKatalogowa, 'cenaKatalogowaError');
+            return true;
+        }
+
+        function validateStan() {
+            if (!stan.value) {
+                showError(stan, 'stanError');
+                return false;
+            }
+            hideError(stan, 'stanError');
+            return true;
+        }
+
+        function validateStatus() {
+            if (!status.value) {
+                showError(status, 'statusError');
+                return false;
+            }
+            hideError(status, 'statusError');
+            return true;
+        }
+
+        nrVin.addEventListener('blur', validateVIN);
+        nrVin.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+        });
+        
+        idModelu.addEventListener('change', validateModel);
+        nrSalonu.addEventListener('change', validateSalon);
+        rokProdukcji.addEventListener('blur', validateRok);
+        przebieg.addEventListener('blur', validatePrzebieg);
+        cenaKatalogowa.addEventListener('blur', validateCena);
+        stan.addEventListener('change', validateStan);
+        status.addEventListener('change', validateStatus);
+
+        uwagi.addEventListener('input', function() {
+            const length = this.value.length;
+            uwagiCount.textContent = length;
+            if (length > 500) {
+                this.value = this.value.substring(0, 500);
+                uwagiCount.textContent = '500';
+            }
+        });
+
+        if (uwagi.value) {
+            uwagiCount.textContent = uwagi.value.length;
+        }
+
+        form.addEventListener('submit', function(e) {
+            const validations = [
+                validateVIN(),
+                validateModel(),
+                validateSalon(),
+                validateRok(),
+                validatePrzebieg(),
+                validateCena(),
+                validateStan(),
+                validateStatus()
+            ];
+
+            if (validations.includes(false)) {
+                e.preventDefault();
+                alert('Proszę poprawić błędy w formularzu przed zapisaniem');
+                return false;
+            }
+        });
+
+        const numberInputs = document.querySelectorAll('input[type="number"]');
+        numberInputs.forEach(input => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'e' || e.key === 'E' || e.key === '+') {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

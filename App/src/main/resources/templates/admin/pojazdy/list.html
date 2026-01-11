@@ -5,6 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zarządzanie pojazdami - Panel Administratora</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .pagination a,
+        .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #e0e0e0;
+            background: #2d2d2d;
+        }
+        .pagination a:hover {
+            background: #4a90e2;
+            border-color: #4a90e2;
+        }
+        .pagination .active {
+            background: #4a90e2;
+            border-color: #4a90e2;
+            color: white;
+        }
+        .pagination .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .search-section {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            border: 1px solid #404040;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -25,7 +63,28 @@
             <p th:text="${error}">Błąd!</p>
         </div>
 
-        <p>Łączna liczba pojazdów: <strong th:text="${pojazdy.size()}">0</strong></p>
+        <div class="search-section">
+            <h3>Wyszukiwanie</h3>
+            <form th:action="@{/admin/pojazdy}" method="get" style="display: flex; gap: 10px; align-items: flex-end;">
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label for="search">Szukaj (VIN, model, kolor):</label>
+                    <input type="text" 
+                           id="search" 
+                           name="search" 
+                           th:value="${searchTerm}"
+                           placeholder="Wpisz VIN, nazwę modelu lub kolor">
+                </div>
+                <button type="submit" class="btn btn-success">Szukaj</button>
+                <a th:href="@{/admin/pojazdy}" class="btn">Wyczyść</a>
+            </form>
+        </div>
+
+        <p>
+            <span th:if="${searchTerm != null && !searchTerm.isEmpty()}">
+                Wyniki wyszukiwania dla: "<strong th:text="${searchTerm}">-</strong>" - 
+            </span>
+            Łączna liczba pojazdów: <strong th:text="${totalElements}">0</strong>
+        </p>
 
         <div class="table-responsive">
             <table>
@@ -44,7 +103,12 @@
                 <tbody>
                     <tr th:if="${pojazdy.empty}">
                         <td colspan="8" style="text-align: center; padding: 30px;">
-                            Brak pojazdów w bazie danych
+                            <span th:if="${searchTerm != null && !searchTerm.isEmpty()}">
+                                Nie znaleziono pojazdów dla podanego zapytania
+                            </span>
+                            <span th:if="${searchTerm == null || searchTerm.isEmpty()}">
+                                Brak pojazdów w bazie danych
+                            </span>
                         </td>
                     </tr>
                     <tr th:each="pojazd : ${pojazdy}">
@@ -62,13 +126,13 @@
                                aria-label="Edytuj pojazd [[${pojazd.nrVin}]]">Edytuj</a>
                             <form th:action="@{/admin/pojazdy/delete/{id}(id=${pojazd.nrVin})}"
                                   method="post"
-                                  style="display: inline;">
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Czy na pewno chcesz usunąć ten pojazd?');">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                 <button type="submit"
                                         class="btn btn-danger"
                                         style="font-size: 12px; padding: 5px 10px;"
-                                        aria-label="Usuń pojazd [[${pojazd.nrVin}]]"
-                                        onclick="return confirm('Czy na pewno chcesz usunąć ten pojazd?');">
+                                        aria-label="Usuń pojazd [[${pojazd.nrVin}]]">
                                     Usuń
                                 </button>
                             </form>
@@ -76,6 +140,43 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div th:if="${totalPages > 1}" class="pagination">
+            <a th:if="${currentPage > 0}" 
+               th:href="@{/admin/pojazdy(page=${currentPage - 1}, size=${pageSize}, search=${searchTerm})}"
+               class="btn">
+                ← Poprzednia
+            </a>
+            
+            <span th:if="${currentPage == 0}" class="disabled">
+                ← Poprzednia
+            </span>
+
+            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:if="${i == currentPage}" 
+                   class="active">
+                    [[${i + 1}]]
+                </a>
+                <a th:if="${i != currentPage}" 
+                   th:href="@{/admin/pojazdy(page=${i}, size=${pageSize}, search=${searchTerm})}">
+                    [[${i + 1}]]
+                </a>
+            </th:block>
+
+            <a th:if="${currentPage < totalPages - 1}" 
+               th:href="@{/admin/pojazdy(page=${currentPage + 1}, size=${pageSize}, search=${searchTerm})}"
+               class="btn">
+                Następna →
+            </a>
+            
+            <span th:if="${currentPage == totalPages - 1}" class="disabled">
+                Następna →
+            </span>
+        </div>
+
+        <div th:if="${totalPages > 1}" style="text-align: center; margin-top: 20px; color: #b0b0b0;">
+            Strona [[${currentPage + 1}]] z [[${totalPages}]]
         </div>
     </div>
 </body>
