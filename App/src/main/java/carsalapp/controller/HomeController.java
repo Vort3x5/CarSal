@@ -12,17 +12,20 @@ public class HomeController {
 
     @GetMapping({"/", "/home"})
     public String home(Authentication authentication, Model model) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            model.addAttribute("username", authentication.getName());
-            
-            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-                model.addAttribute("role", "Administrator");
-                model.addAttribute("isAdmin", true);
-            } else {
-                model.addAttribute("role", "Klient");
-                model.addAttribute("isAdmin", false);
-            }
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
         }
+
+        model.addAttribute("username", authentication.getName());
+
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            model.addAttribute("role", "Administrator");
+            model.addAttribute("isAdmin", true);
+        } else {
+            model.addAttribute("role", "Klient");
+            model.addAttribute("isAdmin", false);
+        }
+
         return "home";
     }
 
