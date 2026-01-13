@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Rejestracja | Salon Samochodowy</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="register-page">
+    <div class="auth-card">
+        <div class="auth-illustration car-illustration"></div>
+        <div class="auth-form">
+            <h2>Utwórz konto</h2>
+
+            <div class="alert alert-error" th:if="${#fields.hasErrors('*')}">
+                <span th:each="err : ${#fields.errors('*')}" th:text="${err}">Błąd</span>
+            </div>
+
+            <form th:action="@{/register}" th:object="${form}" method="post">
+                <div class="form-group">
+                    <label for="username">Login</label>
+                    <input id="username" type="text" th:field="*{username}" placeholder="np. jan_kowalski">
+                </div>
+                <div class="form-group">
+                    <label for="password">Hasło</label>
+                    <input id="password" type="password" th:field="*{password}" placeholder="minimum 6 znaków">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Powtórz hasło</label>
+                    <input id="confirmPassword" type="password" th:field="*{confirmPassword}" placeholder="powtórz hasło">
+                </div>
+                <button class="btn btn-success" type="submit">Zarejestruj</button>
+            </form>
+
+            <p class="auth-switch">Masz już konto?
+                <a th:href="@{/login}">Zaloguj się</a>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
