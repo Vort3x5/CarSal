@@ -1,45 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Strona główna</title>
+    <title>Salon Samochodowy</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>Salon Samochodowy</h1>
-        <div class="nav-links" th:if="${username}">
-            <span th:text="'Witaj, ' + ${username} + ' (' + ${role} + ')'">Witaj</span>
-            <form th:action="@{/logout}" method="post">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                <button type="submit" class="btn btn-danger">Wyloguj</button>
-            </form>
+        <div class="nav-links">
+            <span>Witaj</span>
+            <strong th:text="${username}">użytkownik</strong>
         </div>
-        <div class="nav-links" th:if="${username == null}">
-            <a class="btn" th:href="@{/login}">Zaloguj</a>
+        <div class="actions">
+            <a th:href="@{/logout}" class="btn">Wyloguj</a>
         </div>
     </div>
 
-    <div th:if="${isAdmin}">
-        <h2>Panel Administratora</h2>
-        <p>Masz pełny dostęp do zarządzania systemem salonu samochodowego.</p>
-        <div class="actions">
-            <a class="btn" th:href="@{/admin/dashboard}">Dashboard</a>
-            <a class="btn" th:href="@{/admin/pojazdy}">Zarządzaj pojazdami</a>
-            <a class="btn" th:href="@{/admin/klienci}">Przeglądaj klientów</a>
+    <div class="hero-banner">
+        <div class="hero-overlay">
+            <p class="hero-kicker">Twój garaż online</p>
+            <h1>Znajdź auto swoich marzeń</h1>
+            <p class="hero-subtitle">Zarządzaj flotą, rezerwuj, kupuj i oglądaj – w jednym miejscu.</p>
+            <div class="hero-actions">
+                <a th:if="${isAdmin}" th:href="@{/admin/dashboard}" class="btn btn-success">Panel administratora</a>
+                <a th:href="@{/user/pojazdy}" class="btn">Dostępne pojazdy</a>
+            </div>
         </div>
     </div>
 
-    <div th:if="${username != null and !isAdmin}">
-        <h2>Panel Klienta</h2>
-        <p>Możesz przeglądać dostępne pojazdy oraz edytować swoje dane kontaktowe.</p>
-        <div class="actions">
-            <a class="btn" th:href="@{/user/pojazdy}">Dostępne pojazdy</a>
-            <a class="btn" th:href="@{/user/profile}">Mój profil</a>
-            <a class="btn" th:href="@{/user/edit}">Edytuj dane</a>
+    <section class="panels">
+        <div class="panel">
+            <h2>Panel Administratora</h2>
+            <p>Masz pełny dostęp do zarządzania systemem salonu samochodowego.</p>
+            <div class="actions">
+                <a th:href="@{/admin/dashboard}" class="btn" th:if="${isAdmin}">Dashboard</a>
+                <a th:href="@{/admin/pojazdy}" class="btn" th:if="${isAdmin}">Zarządzaj pojazdami</a>
+                <a th:href="@{/admin/klienci}" class="btn" th:if="${isAdmin}">Przeglądaj klientów</a>
+            </div>
         </div>
-    </div>
+
+        <div class="panel">
+            <h2>Panel Klienta</h2>
+            <p>Możesz przeglądać dostępne pojazdy oraz edytować swoje dane kontaktowe.</p>
+            <div class="actions">
+                <a th:href="@{/user/pojazdy}" class="btn">Dostępne pojazdy</a>
+                <a th:href="@{/user/profile}" class="btn">Mój profil</a>
+                <a th:href="@{/user/edit}" class="btn">Edytuj dane</a>
+            </div>
+        </div>
+    </section>
 </div>
 </body>
 </html>
